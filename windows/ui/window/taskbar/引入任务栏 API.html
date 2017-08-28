@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+
+
+
+
+<html dir="ltr" lang="zh" data-amd-enabled="true" xmlns="http://www.w3.org/1999/xhtml">
+<head><link rel="canonical" href="https://msdn.microsoft.com/zh-cn/magazine/dd942846.aspx" />
+    <title>引入任务栏 API</title>
+
+
+
+
+
+<meta name="DCS.dcsuri" content="/zh-cn/magazine/dd942846(d=default,l=zh-cn,v=msdn.10).aspx" />
+
+<meta name="NormalizedUrl" content="https://msdn.microsoft.com/zh-cn/magazine/dd942846(d=default,l=zh-cn,v=msdn.10).aspx" />
+
+<meta name="ms.normalizedurl" content="https://msdn.microsoft.com/zh-cn/magazine/dd942846(d=default,l=zh-cn,v=msdn.10).aspx" />
+
+<meta name="DCSext.MTPublishedBy" content="MSDN_MTPSMT" />
+
+<meta name="AmbientContext" content="{&quot;layout.limit_max_width&quot;:true,&quot;AmbientContextId&quot;:&quot;CA598178-8244-4ADD-A61C-E80FCD1F73BB&quot;,&quot;display.use_large_font&quot;:false,&quot;insight.perf_timing&quot;:true,&quot;AmbientContextDownstream&quot;:{&quot;LogTrace&quot;:false},&quot;display.high_contrast&quot;:false,&quot;insight.use_wedcs_vnext&quot;:true}" />
+
+<meta name="VotingContextUrl" content="https://msdn.microsoft.com/zh-cn/magazine/dd942846(d=default,l=zh-cn,v=msdn.10).aspx" />
+
+<meta name="MN" content="61C41DD6-12:24:38 AM" />
+
+<meta name="Search.ShortId" content="dd942846" />
+
+<meta name="ms.shortidmsdn" content="dd942846" />
+
+<meta name="ms.locale" content="zh-cn" />
+
+<meta name="ms.prodver" content="MSDN.10" />
+
+<meta name="ms.contentlang" content="ZH" />
+
+<meta name="ms.lang" content="ZH" />
+
+<meta name="ms.loc" content="CN" />
+
+<meta name="ms.sitever" content="2017.08.13.1" />
+
+<meta name="ms.assetid" content="0915adf4-b472-4075-9b0e-253d792bf886" />
+
+<meta name="ms.auth" content="0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+
+
+
+
+
+
+
+    
+    <link rel="alternate" type="application/rss+xml" title="MSDN Magazine" href="http://sxp.microsoft.com/feeds/3.0/msdntn/MSDNMagazine_enus" />
+    <link rel="alternate" type="application/rss+xml" title="MSDN Magazine Blog" href="http://blogs.msdn.com/msdnmagazine/rss.xml" />
+    
+
+    
+
+    
+
+    
+    
+    
+    
+
+
+    <script type="text/javascript" data-do-not-move="true">
+        //<![CDATA[
+        window.appInsightsId = 'f1505ffb-5942-4877-9717-de45ab5d843b';
+        //]]>
+    </script>
+    
+    
+    
+    
+<link rel="stylesheet" type="text/css" href="https://i-msdn.sec.s-msft.com/Combined.css?resources=0:CodeSnippet,0:ProgrammingSelector,0:ExpandableCollapsibleArea,1:CommunityContent,0:TopicNotInScope,0:FeedViewerBasic,0:ImageSprite,2:Layout,3:Magazine2,3:Msdn10a,4:Header,4:HeaderFooterSprite,4:Header.MediaQueries,5:Banner.MediaQueries,0:Breadcrumbs,3:Breadcrumbs,4:Footer,4:Footer.MediaQueries,6:NewFooterSock,6:NewFooterSock.MediaQueries,6:LinkList,0:Locale_zh-cn;/Areas/Epx/Content/Css:0,/Areas/Library/Content:1,/Areas/Magazine/Themes/Magazine/Content:2,/Areas/Magazine/Themes/MsdnMagazine/Content:3,/Areas/Centers/Themes/StandardDevCenter/Content:4,/Areas/Epx/Shared/Content:5,/Areas/Epx/Themes/Base/Content:6&amp;amp;v=D9BE875E342B4A17E561980C631E83DA" /><script type="text/javascript" src="https://i2-msdn.sec.s-msft.com/Areas/Global/Content/Loader.js" class="mtps-injected"></script><script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function() {
+	window.mtpsAmd = true;
+	var amdCombinedUrl = "https://i2-msdn.sec.s-msft.com/Combined.js?resources=0:Utilities,0:AppInsightsPerf,1:SearchBox,1:Layout,2:Header,1:Rating,1:NewFooterSock,2:Footer;/Areas/Epx/Content/Scripts:0,/Areas/Epx/Themes/Base/Content:1,/Areas/Centers/Themes/StandardDevCenter/Content:2&amp;hashKey=C52133618899BEE0BBE4BEF3EE3FC4B7&amp;v=AA73E9AB025A5C03899445992AAB62F2";
+
+	require.config({ paths: { jquery: "https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.0.min.js", bootstrap: "https://nexus.ensighten.com/msdn/Bootstrap.js", utilities: amdCombinedUrl, appInsightsPerf: amdCombinedUrl, searchBox: amdCombinedUrl, searchBoxJss: "https://i1.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox&btnid=HeaderSearchButton&minimumTermLength=2&pgArea=header&brand=Msdn&loc=zh-cn&Refinement=118&focusOnInit=false&iroot=magazine&emptyWatermark=true", layout: amdCombinedUrl, header: amdCombinedUrl, rating: amdCombinedUrl, newFooterSock: amdCombinedUrl, footer: amdCombinedUrl }, ignoreDuplicateModules: ["jquery", "utilities", "layout"] });
+
+	require.config({ shim: { "bootstrap": { deps: ["jquery"], exports: "bootstrap" }, "searchBoxJss": { exports: "searchBoxJss" }} });
+
+	require(["bootstrap"], function() {});
+	require(["appInsightsPerf"], function() {});
+	require(["searchBox"], function() {});
+	require(["searchBoxJss"], function() {});
+	require(["header"], function() {});
+	require(["rating"], function() {});
+	require(["newFooterSock"], function() {});
+	require(["footer"], function() {});
+}());
+/*]]>*/
+</script></head>
+<body class="FF">
+    <div id="page">
+        
+    
+
+    
+    <link type="text/css" rel="stylesheet" />
+    
+        
+        
+    <input type="hidden" id="isHeaderBleeding" value="true" />
+    <div id="ux-header" dir="ltr" class="ltr magazine" ms.pgarea="header">
+        
+
+      <header>
+        <span id="singleCol"></span>
+        <span id="doubleCol"></span>
+        <span id="isMobile"></span>
+        <div>
+          <div class="row topRow" role="banner">
+            <div class="top">
+              <div class="left">
+                <a class="msdnLogoImg" href="https://msdn.microsoft.com/zh-cn" title="MSDN home" ms.cmpgrp="mslogo">
+                  <div class="clip70x15">
+                    <img alt="Microsoft Logo" id="msft-logo" class="msft-logo" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+                  </div>
+                </a>
+                <div class="GrayPipeDiv clip1x18">
+                  <img alt="Gray Pipe" class="GrayPipe" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+                </div>
+                  <div class="MegaBladeNavigation">
+                        <div class="megaBladeToc">
+      <nav>
+        <ul class="navL1">
+          <li class="toggle inactive">
+            <a href="javascript:void(0)" title="Developer Network" role="button" aria-expanded="false">Developer Network</a>
+            <ul class="navL2">
+                <li class="inactive toggle">
+                    <a href="javascript:void(0)" title="下载" role="button" aria-expanded="false">下载</a>
+                                      <ul class="navL3">
+                        <li class="inactive">
+                          <a href="https://www.visualstudio.com/downloads/download-visual-studio-vs" title="Visual Studio" role="link">Visual Studio</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/microsoft-sdks-msdn" title="SDK" role="link">SDK</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/evalcenter" title="试用软件" role="link">试用软件</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="inactive toggle">
+                    <a href="javascript:void(0)" title="计划" role="button" aria-expanded="false">计划</a>
+                                      <ul class="navL3">
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/msdn-subscriptions-overview" title="订阅" role="link">订阅</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/student-developer-program" title="学生" role="link">学生</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/applicationbuilder" title="ISV" role="link">ISV</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://www.microsoft.com/bizspark" title="新手" role="link">新手</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://events.microsoft.com/" title="Events（事件）" role="link">Events（事件）</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="inactive toggle">
+                    <a href="javascript:void(0)" title="社区" role="button" aria-expanded="false">社区</a>
+                                      <ul class="navL3">
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/magazine/dd767791" title="Magazine" role="link">Magazine</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://social.msdn.microsoft.com/forums/" title="论坛" role="link">论坛</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://blogs.msdn.microsoft.com/" title="博客" role="link">博客</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="http://channel9.msdn.com/" title="第 9 频道" role="link">第 9 频道</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="inactive toggle">
+                    <a href="javascript:void(0)" title="文档" role="button" aria-expanded="false">文档</a>
+                                      <ul class="navL3">
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/library" title="API 和参考" role="link">API 和参考</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/developer-centers-msdn" title="开发人员中心" role="link">开发人员中心</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://code.msdn.microsoft.com/" title="示例" role="link">示例</a>
+                        </li>
+                        <li class="inactive">
+                          <a href="https://msdn.microsoft.com/retiredcontent" title="停用的内容" role="link">停用的内容</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+                  </div>
+                <a class="DevCenterFullName" href="https://msdn.microsoft.com/zh-cn">Developer Network</a>
+                <a class="DevCenterShortName" href="https://msdn.microsoft.com/zh-cn">Developer</a>
+              </div>
+              <div class="right" ms.cmpgrp="aux nav">
+                <div id="signIn" aria-label="Profile button">
+
+  <div class="profileImage"></div>
+
+
+
+<a class="scarabLink" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=13&amp;ct=1503645878&amp;rver=6.7.6640.0&amp;wp=mcmbi&amp;wlcxt=msdn%24msdn%24msdn&amp;wreply=https%3a%2f%2fmsdn.microsoft.com%2fzh-cn%2fmagazine%2fdd942846.aspx&amp;lc=2052&amp;id=254354&amp;mkt=zh-cn">登录</a></div>
+
+
+
+
+                <div class="auxNav">
+                  <div>
+                    <div data-fragmentName="Subscriptions" id="Fragment_Subscriptions" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://msdn.microsoft.com/subscriptions/manage/hh442900" id="Subscriptions_2153_1" xmlns="http://www.w3.org/1999/xhtml">
+    <span style="line-height:18px;" xmlns="">MSDN 订阅</span>
+  </a>
+</div>
+                    <div data-fragmentName="GetTools" id="Fragment_GetTools" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://go.microsoft.com/fwlink/?LinkId=309297&amp;clcid=0x804&amp;slcid=0x804&amp;campaign=o~msft~msdn~gettools-header~dn308572" id="GetTools_2153_3" xmlns="http://www.w3.org/1999/xhtml">
+    <span style="line-height:18px;" xmlns="">获取工具</span>
+  </a>
+</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row middleRow">
+            <div class="expandTop">
+              <div class="left"></div>
+              <div class="right"></div>
+            </div>
+          </div>
+        </div>
+        <div id="buttomRowWrapper" class="bg_default">
+          <div class="row buttomRow bg_default">
+            <div class="bottom">
+              <div class="left" role="navigation" aria-label="header toc" ms.cmpgrp="main nav">
+                <a id="grip" class="menu-icon" href="javascript:void(0)" role="button" aria-label="navigation menu"></a>
+                <div data-fragmentName="SiteLogo" id="Fragment_SiteLogo" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="LinkWithImage topImage">
+    <a id="SiteLogo_15654_1" href="https://msdn.microsoft.com/zh-cn/magazine/" title="MSDN 杂志">
+      <span>magazine</span>
+    </a>
+  </div>
+</div>
+                <div id="drawer">
+                  <div class="toc">
+                    
+        <nav>
+            <ul class="navL1">
+                        <li class="inactive current toggle">
+                                <a href="javascript:void(0)" role="button" aria-expanded="false">问题和下载内容</a>
+                                <ul class="navL2">
+                                        <li class="inactive">
+
+                                                <a href="https://msdn.microsoft.com/magazine/ee310108" role="link" title="所有问题">所有问题</a>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2017" role="button" aria-expanded="false">2017</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt809110" title="六月 2017" role="link">六月 2017</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt808494" title="2017 年 5 月" role="link">2017 年 5 月</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt797643" title="四月 2017" role="link">四月 2017</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt795180" title="三月 2017" role="link">三月 2017</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt793263" title="二月 2017" role="link">二月 2017</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt745086" title="一月 2017" role="link">一月 2017</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2016" role="button" aria-expanded="false">2016</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt790192" title="十二月 2016" role="link">十二月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt790178" title="Connect(); 2016" role="link">Connect(); 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt788614" title="十一月 2016" role="link">十一月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt742863" title="十 月 2016" role="link">十 月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt763227" title="九月 2016" role="link">九月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt767689" title="八月 2016" role="link">八月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt736448" title="七月 2016" role="link">七月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt707521" title="六月 2016" role="link">六月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt703426" title="五月 2016" role="link">五月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt694071" title="四月 2016" role="link">四月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt683789" title="三月 2016" role="link">三月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt632264" title="二月 2016" role="link">二月 2016</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt614238" title="一月 2016" role="link">一月 2016</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2015" role="button" aria-expanded="false">2015</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt595745" title="十二月 2015" role="link">十二月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt619983" title="十一月 2015" role="link">十一月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt590962" title="WINDOWS 10 2015 年特别版" role="link">WINDOWS 10 2015 年特别版</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt573705" title="十 月 2015" role="link">十 月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt349016" title="九月 2015" role="link">九月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt185509" title="八月 2015" role="link">八月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt238393" title="七月 2015" role="link">七月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/mt147233" title="六月 2015" role="link">六月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn973005" title="五月 2015" role="link">五月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn948099" title="四月 2015" role="link">四月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn913157" title="三月 2015" role="link">三月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn904663" title="二月 2015" role="link">二月 2015</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn890362" title="一月 2015" role="link">一月 2015</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2014" role="button" aria-expanded="false">2014</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn879346" title="MSDN 杂志 特刊 2014" role="link">MSDN 杂志 特刊 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn857348" title="MSDN 杂志 十二月 2014" role="link">MSDN 杂志 十二月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn818485" title="MSDN 杂志 十一月 2014" role="link">MSDN 杂志 十一月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn800594" title="MSDN 杂志 十月 2014" role="link">MSDN 杂志 十月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn799056" title="MSDN 杂志 九月 2014" role="link">MSDN 杂志 九月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn759433" title="MSDN 杂志 八月 2014" role="link">MSDN 杂志 八月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn768436" title="MSDN 杂志 七月 2014" role="link">MSDN 杂志 七月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn745857" title="MSDN 杂志 六月 2014" role="link">MSDN 杂志 六月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn683788" title="MSDN 杂志 五月 2014" role="link">MSDN 杂志 五月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn630600" title="MSDN 杂志 四月 2014" role="link">MSDN 杂志 四月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn605869" title="MSDN 杂志 三月 2014" role="link">MSDN 杂志 三月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn574789" title="MSDN 杂志 二月 2014" role="link">MSDN 杂志 二月 2014</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn519916" title="MSDN 杂志 一月 2014" role="link">MSDN 杂志 一月 2014</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2013" role="button" aria-expanded="false">2013</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn532197" title="MSDN 杂志 十二月 2013" role="link">MSDN 杂志 十二月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn463766" title="MSDN 杂志 十一月 2013" role="link">MSDN 杂志 十一月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn451433" title="MSDN 杂志 十月 2013" role="link">MSDN 杂志 十月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn385701" title="MSDN 杂志 九月 2013" role="link">MSDN 杂志 九月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn342861" title="MSDN 杂志 八月 2013" role="link">MSDN 杂志 八月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn296502" title="MSDN 杂志 七月 2013" role="link">MSDN 杂志 七月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn201737" title="MSDN 杂志 六月 2013" role="link">MSDN 杂志 六月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn198231" title="MSDN 杂志 五月 2013" role="link">MSDN 杂志 五月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dn166920" title="MSDN 杂志 四月 2013" role="link">MSDN 杂志 四月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj991969" title="MSDN 杂志 三月 2013" role="link">MSDN 杂志 三月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj891014" title="MSDN 杂志 二月 2013" role="link">MSDN 杂志 二月 2013</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj883946" title="MSDN 杂志 一月 2013" role="link">MSDN 杂志 一月 2013</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2012" role="button" aria-expanded="false">2012</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj863125" title="MSDN 杂志 十二月 2012" role="link">MSDN 杂志 十二月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj721585" title="MSDN 杂志 十一月 2012" role="link">MSDN 杂志 十一月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj658963" title="MSDN 杂志 十月 2012" role="link">MSDN 杂志 十月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj660298" title="MSDN 杂志 Windows 8 特刊 2012" role="link">MSDN 杂志 Windows 8 特刊 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj599578" title="MSDN 杂志 九月 2012" role="link">MSDN 杂志 九月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj553500" title="MSDN 杂志 八月 2012" role="link">MSDN 杂志 八月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj190796" title="MSDN 杂志 七月 2012" role="link">MSDN 杂志 七月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/jj133811" title="MSDN 杂志 六月 2012" role="link">MSDN 杂志 六月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh975340" title="MSDN 杂志 五月 2012" role="link">MSDN 杂志 五月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh882439" title="MSDN 杂志 四月 2012" role="link">MSDN 杂志 四月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh852583" title="MSDN 杂志 三月 2012" role="link">MSDN 杂志 三月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh781007" title="MSDN 杂志 二月 2012" role="link">MSDN 杂志 二月 2012</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh708738" title="MSDN 杂志 一月 2012" role="link">MSDN 杂志 一月 2012</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2011" role="button" aria-expanded="false">2011</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh580726" title="MSDN 杂志 十二月 2011" role="link">MSDN 杂志 十二月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh547094" title="MSDN 杂志 十一月 2011" role="link">MSDN 杂志 十一月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh463583" title="MSDN 杂志 十月 2011" role="link">MSDN 杂志 十月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh416747" title="MSDN 杂志 九月 2011" role="link">MSDN 杂志 九月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh339634" title="MSDN 杂志 八月 2011" role="link">MSDN 杂志 八月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh315813" title="MSDN 杂志 七月 2011" role="link">MSDN 杂志 七月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh227291" title="MSDN 杂志 六月 2011" role="link">MSDN 杂志 六月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/hh126799" title="MSDN 杂志 五月 2011" role="link">MSDN 杂志 五月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg749836" title="MSDN 杂志 四月 2011" role="link">MSDN 杂志 四月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg674897" title="MSDN 杂志 三月 2011" role="link">MSDN 杂志 三月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg602477" title="MSDN 杂志 二月 2011" role="link">MSDN 杂志 二月 2011</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg547373" title="MSDN 杂志 一月 2011" role="link">MSDN 杂志 一月 2011</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="2010" role="button" aria-expanded="false">2010</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg491225" title="MSDN 杂志 十二月 2010" role="link">MSDN 杂志 十二月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg412507" title="MSDN 杂志 十一月 2010" role="link">MSDN 杂志 十一月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/gg232773" title="MSDN 杂志 十月 2010" role="link">MSDN 杂志 十月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff956213" title="MSDN 杂志 九月 2010" role="link">MSDN 杂志 九月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff899321" title="MSDN 杂志 八月 2010" role="link">MSDN 杂志 八月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff799214" title="MSDN 杂志 七月 2010" role="link">MSDN 杂志 七月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff727949" title="MSDN 杂志 六月 2010" role="link">MSDN 杂志 六月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff646986" title="MSDN 杂志 五月 2010" role="link">MSDN 杂志 五月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee336306" title="MSDN 杂志 四月 2010" role="link">MSDN 杂志 四月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee336121" title="MSDN 杂志 三月 2010" role="link">MSDN 杂志 三月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff394949" title="MSDN 杂志 二月 2010" role="link">MSDN 杂志 二月 2010</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ff358629" title="MSDN 杂志 一月 2010" role="link">MSDN 杂志 一月 2010</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive current toggle">
+
+                                                <a href="javascript:void(0)" title="2009" role="button" aria-expanded="false">2009</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee869324" title="MSDN 杂志 十二月 2009" role="link">MSDN 杂志 十二月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee840128" title="MSDN 杂志 十一月 2009" role="link">MSDN 杂志 十一月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee532478" title="MSDN 杂志 十月 2009" role="link">MSDN 杂志 十月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee663042" title="MSDN 杂志 九月 2009" role="link">MSDN 杂志 九月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/ee310078" title="MSDN 杂志 八月 2009" role="link">MSDN 杂志 八月 2009</a>
+                                                        </li>
+                                                        <li class="inactive current">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd980906" title="MSDN 杂志 七月 2009" role="link">MSDN 杂志 七月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd876628" title="MSDN 杂志 六月 2009" role="link">MSDN 杂志 六月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd727694" title="MSDN 杂志 五月 2009" role="link">MSDN 杂志 五月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd578512" title="MSDN 杂志 四月 2009" role="link">MSDN 杂志 四月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd535414" title="MSDN 杂志 三月 2009" role="link">MSDN 杂志 三月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd326789" title="MSDN 杂志 二月 2009" role="link">MSDN 杂志 二月 2009</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/magazine/dd365186" title="MSDN 杂志 一月 2009" role="link">MSDN 杂志 一月 2009</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                </ul>
+                        </li>
+                        <li class="inactive">
+                                    <a href="https://msdn.microsoft.com/magazine/ee358702" role="link" title="订阅">订阅</a>
+                        </li>
+                        <li class="inactive">
+                                    <a href="https://msdn.microsoft.com/magazine/ee291618" role="link" title="提交文章">提交文章</a>
+                        </li>
+            </ul>
+        </nav>
+
+                  </div>
+                </div>
+              </div>
+              <div class="right" ms.title="search" role="search">
+                <div data-fragmentName="SearchBox" id="Fragment_SearchBox" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="SearchBox">
+    <form id="HeaderSearchForm" name="HeaderSearchForm" method="get">
+      <button id="FakeHeaderSearchButton" value="Search" type="submit" class="header-search-button" role="button" aria-label="search finder">
+        <div id="search-finder-div" class="clip16x20">
+          <img alt="search finder" id="search-finder" class="search-finder" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+        </div>
+      </button>
+      <button id="HeaderSearchButton" style="display:none"></button>
+      <div id="searchSplitter"></div>
+      <div id="searchCloseIconDiv" class="clip16x20" tabindex="0">
+        <img alt="search clear" id="searchCloseIcon" class="search-clear-x" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+      </div>
+      <div id="searchTextContainer" style="width: 0;">
+        <input id="HeaderSearchTextBox" name="query" type="text" aria-label="search edit textbox" maxlength="200" onfocus="Epx.Controls.SearchBox.watermarkFocus(event, this.title)" onblur="Epx.Controls.SearchBox.watermarkBlur(event, this.title)" />
+      </div>
+    </form>
+    
+    
+  </div>
+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </header>
+
+    </div>
+
+    
+    
+    
+    <div id="jumpInfo" style="display: none">非常抱歉。你请求的内容已被删除。将在 1 秒内自动重定向。</div>
+
+
+
+
+
+
+
+
+  <div class="breadCrumb">
+        <span>问题和下载内容</span>
+        <span><a href="https://msdn.microsoft.com/zh-cn/magazine/ee358705.aspx" title="2009">2009</a></span>
+        <span><a href="https://msdn.microsoft.com/zh-cn/magazine/dd980906.aspx" title="MSDN 杂志 七月 2009">MSDN 杂志 七月 2009</a></span>
+
+    <span><a href="https://msdn.microsoft.com/zh-cn/magazine/dd942846.aspx" title="深入了解 Windows 7: 工具栏 API 简介">深入了解 Windows 7: 工具栏 API 简介</a></span>
+  </div>
+
+        <div id="content">
+            
+
+
+
+
+
+
+
+
+<div id="LeftContent">
+    <div class="navpage" xmlns="http://www.w3.org/1999/xhtml">
+  <div>
+    <div>
+      <div class="topic">
+        <div class="FeatureSmallHead">在 Windows 7</div>
+        <div class="FeatureHeadline">引入任务栏 API</div>
+        <div class="FeatureByLine">Yochay Kiriaty &amp; Sasha Goldshtein</div>
+        <div>
+          
+        </div>
+        <p>
+          <br />
+        </p>
+        <table summary="table">
+          <tr valign="top">
+            <td>
+              <p>
+                <span class="CodeDownloadText">
+                  <span id="mt1" class="sentence" data-guid="253b318f8829dd70f14f582613ebd2fe" data-source="" xml:space="preserve">
+                    <sentenceText xmlns="http://www.w3.org/1999/xhtml">鏈  枃璁 ㄨ ：</sentenceText>
+                  </span>
+                </span>
+              </p>
+              <ul>
+                <li class="ListingBullet">
+                  <span id="mt2" class="sentence" data-guid="e77a5a1e5b5de1a5a88cccd682490966" data-source="" xml:space="preserve">
+                    <sentenceText xmlns="http://www.w3.org/1999/xhtml">任务栏按钮</sentenceText>
+                  </span>
+                </li>
+                <li class="ListingBullet">
+                  <span id="mt3" class="sentence" data-guid="846fbbf27fc62a38cef7b5997891f27b" data-source="" xml:space="preserve">
+                    <sentenceText xmlns="http://www.w3.org/1999/xhtml">覆盖图标</sentenceText>
+                  </span>
+                </li>
+                <li class="ListingBullet">
+                  <span id="mt4" class="sentence" data-guid="0c41601ecf5d5621db3e8f95b388eaaa" data-source="" xml:space="preserve">
+                    <sentenceText xmlns="http://www.w3.org/1999/xhtml">进度栏</sentenceText>
+                  </span>
+                </li>
+                <li class="ListingBullet">
+                  <span id="mt5" class="sentence" data-guid="624b4237470a894de7f0dadcedf396a5" data-source="" xml:space="preserve">
+                    <sentenceText xmlns="http://www.w3.org/1999/xhtml">缩略图的工具栏</sentenceText>
+                  </span>
+                </li>
+              </ul>
+            </td>
+            <td>
+              <span class="CodeDownloadText">
+                <span id="mt6" class="sentence" data-guid="d922c6bb4cff3bd809f53fb9fa33e460" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">本文使用以下技术：</sentenceText>
+                </span>
+                <br />
+              </span>
+              <span id="mt7" class="sentence" data-guid="6b9f33029bfd2f1f3464cc0aef0268ef" data-source="" xml:space="preserve">
+                <sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7</sentenceText>
+              </span>
+              <br />
+            </td>
+          </tr>
+        </table>
+        <p>
+          <br />
+        </p>
+        <div class="ArticleNormalPara" id="id0430001">
+          <span id="mt8" class="sentence" data-guid="32f215752d675483f96a385f5d367af3" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">本文基于 Windows 7 的预发布版本。</sentenceText>
+          </span>
+          <span id="mt9" class="sentence" data-guid="99ab342f29b22cbc62113a33450a7947" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">详细信息会有所变动。</sentenceText>
+          </span>
+        </div>
+        <div>
+          <div Title="内容">
+            <p>
+              <b>内容</b>
+            </p>
+            <p>
+              <a href="#id0420008" xmlns:ms="urn:schemas-microsoft-com:xslt">
+                <span id="mt10" class="sentence" data-guid="2d95444502e83240423add744db4d1dd" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">任务栏按钮</sentenceText>
+                </span>
+                <br />
+              </a>
+              <a href="#id0420051" xmlns:ms="urn:schemas-microsoft-com:xslt">
+                <span id="mt11" class="sentence" data-guid="3014bc0db4fedb56a687a7f7312331e7" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">覆盖图标和进度栏</sentenceText>
+                </span>
+                <br />
+              </a>
+              <a href="#id0420081" xmlns:ms="urn:schemas-microsoft-com:xslt">
+                <span id="mt12" class="sentence" data-guid="6f258f462122f653aa8a36bd5e44aa22" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">缩略图的工具栏</sentenceText>
+                </span>
+                <br />
+              </a>
+              <a href="#id0420086" xmlns:ms="urn:schemas-microsoft-com:xslt">
+                <span id="mt13" class="sentence" data-guid="367a4531d15b111037209622e65b999b" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">跳转列表</sentenceText>
+                </span>
+                <br />
+              </a>
+              <a href="#id0420116" xmlns:ms="urn:schemas-microsoft-com:xslt">
+                <span id="mt14" class="sentence" data-guid="477dfd9aae88f1bedfcfec4c93186030" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">其他功能</sentenceText>
+                </span>
+                <br />
+              </a>
+              <a href="#id0420125" xmlns:ms="urn:schemas-microsoft-com:xslt">
+                <span id="mt15" class="sentence" data-guid="a80da1282f2c775bbc5f2c92c836968b" data-source="" xml:space="preserve">
+                  <sentenceText xmlns="http://www.w3.org/1999/xhtml">摘要</sentenceText>
+                </span>
+                <br />
+              </a>
+            </p>
+          </div>
+        </div>
+        <div class="ArticleNormalPara" id="id0420001">
+          <span id="mt16" class="sentence" data-guid="78f06b617836966f21c419ffa820305d" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">
+  <span class="ArticleInlineTitle" xmlns="http://www.w3.org/1999/xhtml">在 Windows 7 任务栏</span> 是最新的一系列的入门 Windows 1.0 进化任务栏设计。</sentenceText>
+          </span>
+          <span id="mt17" class="sentence" data-guid="bb7b93efe4a557a9f8079c4b81346b7f" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">它表示设计和体系结构与用户的体验有关的更改，并提供了在用户的工作效率的重大改进。</sentenceText>
+          </span>
+          <span id="mt18" class="sentence" data-guid="7486ae51757ea3c16208f9a87aea6f0a" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">
+  <strong xmlns="http://www.w3.org/1999/xhtml">图 1</strong> 显示了 Windows 1.0 任务栏。</sentenceText>
+          </span>
+          <span id="mt19" class="sentence" data-guid="d4ac720e8a083ecd235e5f0dba7f41fd" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">（请注意 1.0 任务栏与 Windows Vista 任务栏比 Windows 7 任务栏将多个 resemblance）。</sentenceText>
+          </span>
+        </div>
+        <div>
+          <p>
+            <img alt="fig01.gif" src="https://i-msdn.sec.s-msft.com/dynimg/IC305617.gif" width="600px" />
+          </p>
+          <div class="ArticleImageCaptionText">图 1 <strong>Windows 1.0 任务栏</strong></div>
+        </div>
+        <div class="ArticleNormalPara" id="id0420002">
+          <span id="mt20" class="sentence" data-guid="499a2353aab2edca9173b1ecc27ccc20" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">从多个用户会话期间最近几年的分析表明启动图面 （专用于启动程序的那些区域） 的一个富有不一定使用户的工作任何更容易。</sentenceText>
+          </span>
+          <span id="mt21" class="sentence" data-guid="d085da06ff382b2c414850c21b4cc39d" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">就是而言用户界面设计，以防止用户混淆最好通常将只有一种完成某项任务的方法。</sentenceText>
+          </span>
+        </div>
+        <div class="ArticleNormalPara" id="id0420003">
+          <span id="mt22" class="sentence" data-guid="32e05933610124e4bf2a20cde9a705c9" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏的设计目标是将控件返回用户并支持下列原则最小化混淆：</sentenceText>
+          </span>
+        </div>
+        <div class="ArticleNormalPara" id="id0420004">
+          <ul>
+            <li>
+              <span id="mt23" class="sentence" data-guid="7c58f8b20369176fa91e63ee820d270b" data-source="" xml:space="preserve">
+                <sentenceText xmlns="http://www.w3.org/1999/xhtml">频繁的程序和目标的单个启动图面。</sentenceText>
+              </span>
+              <span id="mt24" class="sentence" data-guid="528d83e3b5403c13566510dbf2ae21a0" data-source="" xml:space="preserve">
+                <sentenceText xmlns="http://www.w3.org/1999/xhtml">这有助于使这些应用程序和数据使用所有时间右侧伸手。</sentenceText>
+              </span>
+            </li>
+            <li>
+              <span id="mt25" class="sentence" data-guid="cfaa2a54433c164f5d44286a17e8114b" data-source="" xml:space="preserve">
+                <sentenceText xmlns="http://www.w3.org/1999/xhtml">轻松地控制在应用程序和窗口之间切换以及排列窗口进行简单且易于管理。</sentenceText>
+              </span>
+            </li>
+            <li>
+              <span id="mt26" class="sentence" data-guid="70d2940300ef3174da247deb21d420a8" data-source="" xml:space="preserve">
+                <sentenceText xmlns="http://www.w3.org/1999/xhtml">骞插噣自由噪音、 简单。</sentenceText>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div class="ArticleNormalPara" id="id0420007">
+          <span id="mt27" class="sentence" data-guid="c65f5132a30d17c53f3131ef2c8e5eba" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">较大的任务栏按钮、 视觉清晰度，和 sleekness 设计的制约用户体验，一旦登录到 Windows 7。</sentenceText>
+          </span>
+          <span id="mt28" class="sentence" data-guid="2f63bb21dc4889213ef4e21749016cff" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">但是，如何开发人员可以利用 Windows 7 任务栏所提供的新功能？</sentenceText>
+          </span>
+          <span id="mt29" class="sentence" data-guid="e786c788c3223087621c671e82249df6" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">如何基础机制协同工作以便获得最佳用户体验？</sentenceText>
+          </span>
+          <span id="mt30" class="sentence" data-guid="9c122e42b3c2ec15ebbcbbcb80106f5e" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">在本文中，我们将探讨新功能和支持本机代码和托管代码中的示例与 Windows 7 任务栏上的基本功能。</sentenceText>
+          </span>
+        </div>
+        <p>
+          <br />
+        </p>
+        <div class="ArticleTypeTitle" id="id0420008">任务栏按钮</div>
+        <div class="ArticleNormalPara" id="id0420009">
+          <span id="mt31" class="sentence" data-guid="043cdfaa8815aa1205361518185c1641" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">任务栏按钮提供了网关访问新的 Windows 7 任务栏的功能。</sentenceText>
+          </span>
+          <span id="mt32" class="sentence" data-guid="e0a8ebbe7855bd2289c10b26291d7a21" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">在最大，需要注意是任务栏也包含不当前正在运行的应用程序的图标。</sentenceText>
+          </span>
+          <span id="mt33" class="sentence" data-guid="f40bfba10c5dc2e6bdb6e072a2cbaf47" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">渚嬪的方式  用户可能会固定到任务栏结果是一个固定的图标在任务栏上的应用程序，但是重应用程序没有运行。</sentenceText>
+          </span>
+          <span id="mt34" class="sentence" data-guid="ddb7f3b1607ece1bb00411774104615f" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">单击该图标会导致应用程序启动。</sentenceText>
+          </span>
+          <span id="mt35" class="sentence" data-guid="6e2f3c63f52b9c7b1f2d56a67e445cc5" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">这是一个统一的快速启动概念和标准的 Windows 任务栏。</sentenceText>
+          </span>
+          <span id="mt36" class="sentence" data-guid="626110ec5f7b989a93b29f10581a512a" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">实际上，不需要在 Windows 7 快速启动区域不再 ； 快速启动文件夹仍然处于 Windows 7 唯一原因是为向后兼容性。</sentenceText>
+          </span>
+        </div>
+        <div class="ArticleNormalPara" id="id0420010">
+          <span id="mt37" class="sentence" data-guid="595aa378c8c70668ddff2e08ed504040" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">您可能已经听说过有关跳转列表、 缩略图的工具栏、 任务栏进度栏和其他功能。</sentenceText>
+          </span>
+          <span id="mt38" class="sentence" data-guid="ecd3bac0f818e835160ff6142f8c02a4" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">它们所有与该大型、 重新设计占用新任务栏的任务栏按钮。</sentenceText>
+          </span>
+          <span id="mt39" class="sentence" data-guid="6c657b39572c7891d372f37b039bb730" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">
+  <strong xmlns="http://www.w3.org/1999/xhtml">图 2</strong> 中, 所示的 Windows 7 任务栏按钮被标识具有多个视觉效果。</sentenceText>
+          </span>
+          <span id="mt40" class="sentence" data-guid="211db04b6c72a4cb8a17c00a9465318a" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">它们能够立即识别正在运行的应用程序，是否在相同应用程序的应用程序当前处于活动状态并且的任务栏按钮当前有鼠标悬停在其上有多个窗口。</sentenceText>
+          </span>
+        </div>
+        <div>
+          <p>
+            <img id="fig02_L" src="https://i-msdn.sec.s-msft.com/dynimg/IC305619.gif" xmlns="" />
+          </p>
+          <div class="ArticleImageCaptionText">图 2 <strong>不同 Windows 7 任务栏按钮状态</strong></div>
+        </div>
+        <div class="ArticleNormalPara" id="id0420011">
+          <span id="mt41" class="sentence" data-guid="c0257588cb4eb180b85f77314f94e739" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">所有 Windows 7 任务栏功能未锁定只有之后，都才为您的应用程序创建任务栏按钮。</sentenceText>
+          </span>
+          <span id="mt42" class="sentence" data-guid="912453bfcbb7f9a236e2c7d2b9b45dcf" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">这意义，因为如果不能更改任务栏覆盖图标渚嬪的方式  没有任务栏按钮还!</sentenceText>
+          </span>
+          <span id="mt43" class="sentence" data-guid="7ab1076ed450eba005f63a5bd50a95e0" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">在练习，这意味着应用程序托管和本机应用程序使用新的 Windows 7 任务栏 API 将不得不等待新的窗口消息可识别 TaskbarButtonCreated 字符串。</sentenceText>
+          </span>
+          <span id="mt44" class="sentence" data-guid="ea92839184f6a62e0c331c6bdda9f6a8" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">要获得此消息的标识符，必须调用 RegisterWindowMessage Win32 API 和将 TaskbarButtonCreated 字符串作为参数传递。</sentenceText>
+          </span>
+        </div>
+        <div class="ArticleNormalPara" id="id0420012">
+          <span id="mt45" class="sentence" data-guid="337783ac9750db13fcf9aee142c28815" data-source="" xml:space="preserve">
+            <sentenceText xmlns="http://www.w3.org/1999/xhtml">以下代码显示了 Win32 应用程序接收窗口消息，指示创建的任务栏按钮的方式：</sentenceText>
+          </span>
+        </div>
+      </div>
+    </div>
+<div id="code-snippet-1" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_e1001361-b4d8-4a62-80e2-e6542d577381');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_e1001361-b4d8-4a62-80e2-e6542d577381" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+DWORD g_wmTBC = (DWORD)-1;
+
+//In the window procedure:
+switch (msg) {
+case WM_CREATE:
+    g_wmTBC = RegisterWindowMessage(L"TaskbarButtonCreated");
+    //Proceed to create the window
+case g_wmTBC:
+    //The taskbar button has been created
+}
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div id="id0420023" class="ArticleNormalPara"><span id="mt46" class="sentence" data-guid="5a8de8ea636935a2abc226c471ad2a3b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">托管应用程序，例如使用 Windows 窗体的应用程序将不得不重写来处理窗口消息窗体的窗口过程 (WndProc 方法）。 </sentenceText></span><span id="mt47" class="sentence" data-guid="ed47bf8cceaca964535e78aa17e665b6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">下面的代码演示此： </sentenceText></span></div></div></div>
+<div id="code-snippet-2" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_3919fb53-7ece-4ede-a3dc-efd556f6db99');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_3919fb53-7ece-4ede-a3dc-efd556f6db99" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+uint wmTBC = (uint)-1;
+
+[DllImport("user32.dll")]
+static extern uint RegisterWindowMessage(string message);
+
+void Form_Load() {
+    wmTBC = RegisterWindowMessage(L"TaskbarButtonCreated");
+}
+protected override void WndProc(...) {
+    if (msg == wmTBC) {
+        //The taskbar button has been created
+    }
+}
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div class="ArticleNormalPara" id="id0420037"><span id="mt48" class="sentence" data-guid="e1bed17dacc69148de5e80da6df588bd" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">现在，您就可以知道如何确保您的应用程序不在任务栏按钮之前使用 Windows 7 任务栏。</sentenceText></span><span id="mt49" class="sentence" data-guid="75e5c6094cd60bd40875fc088b7db28b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">我们跳转到更有趣的功能之前，还有一个其他的条信息您需要完成填数游戏。</sentenceText></span><span id="mt50" class="sentence" data-guid="d3194cd567b299c902b0ca176862b642" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">如何任务栏按钮与相关联的窗口和应用程序？</sentenceText></span><span id="mt51" class="sentence" data-guid="28b49d673a057e72f9e414d2b6b043d8" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">系统不会如何确定应用程序是否需要为其不同的窗口的两个任务栏按钮或多个应用程序是否需要共享一个任务栏按钮？</sentenceText></span></div><div class="ArticleNormalPara" id="id0420038"><span id="mt52" class="sentence" data-guid="0d522bb862b76b882f0db31e4e23fb40" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">答案是应用程序 ID。</sentenceText></span><span id="mt53" class="sentence" data-guid="012beb7b6d8e43511892c8d0dba9cb2d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">这是新的属性的 Windows Shell，窗口、 进程和外壳程序的链接 （也称为快捷方式） 的属性。</sentenceText></span><span id="mt54" class="sentence" data-guid="6ad1a11be0ef8b3ee9e3b28f09aba644" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">通过控制各个窗口和进程的应用程序 ID，应用程序开发人员可以确保任务栏按钮相关联的窗口完全他们认为适合。</sentenceText></span><span id="mt55" class="sentence" data-guid="64dc101fc417308abfe52a8321a6935a" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">应用程序 ID 是一个字符串 — — 不是一个 GUID），可以采取最多 128 个字符的自由格式。</sentenceText></span><span id="mt56" class="sentence" data-guid="6d6388dc95992c65e9aabc7b78b8ed8e" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">要确保发生应用程序 ID 执行不会意外地冲突，建议是包含在应用程序 ID 公司名称、 产品的名称和应用程序的名称。</sentenceText></span><span id="mt57" class="sentence" data-guid="13b7454a30c3285c455ef1d99c273f58" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">默认为窗口应用程序 ID 取决于默认应用程序 ID 为属于窗口中的进程。</sentenceText></span><span id="mt58" class="sentence" data-guid="ba5f15b0f31752709d884188724b14fc" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">这是，反过来，默认应用程序标识生成的可执行文件的过程运行。</sentenceText></span><span id="mt59" class="sentence" data-guid="34fc7293778e8dde61c2b4589443835d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">尝试启动应用程序希望记事本几次在操作中看到。</sentenceText></span><span id="mt60" class="sentence" data-guid="62ad99f0848023a2681a088b40157463" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">没有创建，即使您在同一时间运行记事本的多个实例的只有一个任务栏按钮。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420039"><span id="mt61" class="sentence" data-guid="32c432c6caad6cd9f0c1cff575cd7b75" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">自定义这些默认 ID 涉及显式设置生成有趣的方案的应用程序 ID 为过程或一个单独的窗口。</sentenceText></span><span id="mt62" class="sentence" data-guid="ff6f11ddec989514ad75eadbbc852d18" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">渚嬪的方式  如果将两个不同的进程的应用程序 ID 设置为相同的值，由这些过程的两个窗口会进行分组相同任务栏按钮。</sentenceText></span><span id="mt63" class="sentence" data-guid="3c682317e62bef0ca87014335159f081" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">此外，如果将两个单独的窗口 （在同一进程中） 的应用程序 ID 设置为不同的值，两个任务栏按钮将会创建，另一个用于每个窗口。</sentenceText></span><span id="mt64" class="sentence" data-guid="b38ba03182c816734c88503dfa82d630" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">进程的应用程序 ID 和特定于窗口的应用程序 ID 的组合提供最大的灵活性。</sentenceText></span><span id="mt65" class="sentence" data-guid="13aedf12f1e7507af7ccf78f94ab5061" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">
+  <strong xmlns="http://www.w3.org/1999/xhtml">图 3</strong> ，在左的窗格显示从不同的进程窗口的所有分组在一个任务栏按钮。</sentenceText></span><span id="mt66" class="sentence" data-guid="44e4d9a2ce6a06d6b4b81da9a954eec8" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">右窗格显示在同一进程中的多个窗口有多个的任务栏按钮。</sentenceText></span></div><div><p><img alt="fig03.gif" src="https://i-msdn.sec.s-msft.com/dynimg/IC305621.gif" width="600px" /></p><div class="ArticleImageCaptionText">图 3 <strong>Windows、 进程，和任务栏按钮</strong></div></div><div class="ArticleNormalPara" id="id0420040"><span id="mt67" class="sentence" data-guid="5f9e1b238907e32cc08328dfbf1c4d57" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">设置进程的应用程序 ID 涉及从 shell32.dll 对 SetCurrentProcessExplicitAppUserModelID Win32 函数调用。</sentenceText></span><span id="mt68" class="sentence" data-guid="4a3daaea511af05c093b837a4d7e67c1" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">设置为窗口应用程序 ID 将需要调用 SHGetPropertyStoreForWindow 函数，然后操作返回的 IPropertyStore 对象。</sentenceText></span><span id="mt69" class="sentence" data-guid="6b7723db2fa4f4a5ef163dd6bb84d02b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">下面的示例演示如何执行此操作：</sentenceText></span></div></div></div>
+<div id="code-snippet-3" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_7bc622c2-6e8b-4f98-bf53-3e3ad1f1efa2');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_7bc622c2-6e8b-4f98-bf53-3e3ad1f1efa2" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+PROPVARIANT pv;
+InitPropVariantFromString(L"MyAppID", &amp;pv);
+
+IPropertyStore* pps;
+VERIFY(SHGetPropertyStoreForWindow(hwnd, IID_PPV_ARGS(&amp;pps)));
+VERIFY(pps-&gt;SetValue(PKEY_AppUserModel_ID, pv));
+VERIFY(pps-&gt;Commit());
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div id="id0420048" class="ArticleNormalPara"><span id="mt70" class="sentence" data-guid="a4dd4a15135b099b5a2c6bff872ad98f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">到目前为止，我们已转义需要从托管的代码中调用 API 的复杂的但现在我们有没有选项。 </sentenceText></span><span id="mt71" class="sentence" data-guid="2e10061cb23521a09c5d7dfa8fc98df3" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">幸运的是，Windows API 的代码包进入该挽救。 </sentenceText></span></div><div id="id0420049" class="ArticleNormalPara"><span id="mt72" class="sentence" data-guid="e3eb16afdbabab150c5da0ade825a14d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在  </sentenceText></span><a href="http://code.msdn.microsoft.com/windowsapicodepack"><span id="mt73" class="sentence" data-guid="9d5c9e35eddcee0cede604b68791e9f2" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows API 代码为 Microsoft.NET 框架的包 </sentenceText></span></a><span id="mt74" class="sentence" data-guid="35d6afe151ed019a011b80b5a7d40676" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">提供可用于从托管代码访问新的 Windows 7 和 Windows Vista 功能的库。 </sentenceText></span>  .  <span id="mt75" class="sentence" data-guid="ad98347d8b1750ac0b9528f676e2cade" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在撰写本文时该代码包包括已知文件夹、 Windows Vista 任务对话框、 Windows 7 跳转列表、 图标贴，进度栏和其他功能的 Windows 7 澶栧 3 绋嬪簭库支持。 </sentenceText></span><span id="mt76" class="sentence" data-guid="08af43c0fac55a89cfbdc0caeebf1749" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">虽然这不是一个正式支持的 Microsoft 产品，该代码包提供一个很好的 jump-start。 托管应用程序开发人员针对 Windows 7 </sentenceText></span><span id="mt77" class="sentence" data-guid="b278430639ead5fd31bad8d557e74cf4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">它 alleviates 需要实现复杂的 Windows 功能的托管的包装。 </sentenceText></span></div><div id="id0420050" class="ArticleNormalPara"><span id="mt78" class="sentence" data-guid="f9e8a037bf36fb32e26ffc32bb6214db" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows API 的代码包提供用于操作给定的进程的应用程序 ID 的静态 Taskbar.AppId 属性。 </sentenceText></span><span id="mt79" class="sentence" data-guid="e1042462ea949845c52bfa805f2fcc50" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">遗憾的是，没有等效项设置的特定窗口应用程序 ID。 </sentenceText></span><span id="mt80" class="sentence" data-guid="27b7db6edc0ac95a3e811f0ba3234055" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">而是，这可以通过手动编写所需的包装或使用 Windows API 的代码包的前置任务完成。 </sentenceText></span><span id="mt81" class="sentence" data-guid="7b59ebbfcf2b2183e912d2b9c09e2bc7" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">（Windows 7 任务栏的互操作性示例库可以从下载 </sentenceText></span><a href="http://code.msdn.microsoft.com/windows7taskbar"><span id="mt82" class="sentence" data-guid="3770e613b18fb8f1706fda5078560899" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏： 开发资源 </sentenceText></span></a>.  <span id="mt83" class="sentence" data-guid="f6891e2b96e356c75fe188c799682715" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">使用库为您提供 Windows7Taskbar.SetWindowAppId 静态方法不会在难看的互操作性的工作） </sentenceText></span></div><br /><div id="id0420051" class="ArticleTypeTitle">覆盖图标和进度栏</div><div id="id0420052" class="ArticleNormalPara"><span id="mt84" class="sentence" data-guid="85594756887d4dc29144642ce24e5bfa" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">大多数 Windows 7 任务栏功能路由是通过 ITaskbarList3 界面。 </sentenceText></span><span id="mt85" class="sentence" data-guid="b2212c283a264517636e85f7c7910b17" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">如果您使用托管的代码和托管的包装，您永远不可能要通过此接口提供。 </sentenceText></span><span id="mt86" class="sentence" data-guid="618c6899c4ad68d90fc5f84fb5b557e9" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">但是，如果要使用本机代码，非常重要您知道如何获得一个手。 </sentenceText></span><span id="mt87" class="sentence" data-guid="1fb63582f6d88ea40a95216bf68687c6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">很简单，如果您只需确保这样做后，您收到该消息，指示已创建任务栏按钮。 </sentenceText></span><span id="mt88" class="sentence" data-guid="52af0a3f25c78902812380c4ea72ff9b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">换而言必须等待任务栏按钮会初始化，并获取指向该 ITaskbarList3 接口的指针，然后像下面这样： </sentenceText></span></div></div></div>
+<div id="code-snippet-4" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_1add3e16-1367-4804-8643-6d048a62dd46');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_1add3e16-1367-4804-8643-6d048a62dd46" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+ITaskbarList3* ptl;
+VERIFY(CoCreateInstance(
+    CLSID_TaskbarList, NULL, CLSCTX_ALL,
+    IID_ITaskbarList3, (void**)&amp;ptl));
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div id="id0420057" class="ArticleNormalPara"><span id="mt89" class="sentence" data-guid="1baad63fb7cc894017a1f27acb298a1f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">设置覆盖图标，或提供 Windows 7 在任务栏中的一个进度栏是一项相当简单的任务。 </sentenceText></span><span id="mt90" class="sentence" data-guid="2f4e6df03307fc0e5dd9f8b4b9cd8772" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">幸运的是，托管开发人员，将托管等效项中没有 Windows API 的代码包。 </sentenceText></span><span id="mt91" class="sentence" data-guid="f0a7c932074a60ae3a1a242d9d91d561" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">若要设置覆盖图标，使用 ITaskbarList3::SetOverlayIcon 方法采用的图标句柄 （HICON） 和一个字符串，用作一个可访问的描述。 </sentenceText></span><span id="mt92" class="sentence" data-guid="845282c656ec8337328cd951229029c8" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">托管等同于 Taskbar.OverlayImage 属性同样易于使用。 </sentenceText></span></div><div id="id0420058" class="ArticleNormalPara"><span id="mt93" class="sentence" data-guid="7dc7ce62167f8ffe2076b9b21b86a6a9" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">下面的代码控制基于选定内容 （还显示了组合框中的应用程序的覆盖图标 </sentenceText></span><span id="mt94" class="sentence" data-guid="e0b8e48d69bf52601a0986b93b155479" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">图 4 </sentenceText></span><span id="mt95" class="sentence" data-guid="0f2d13b7866be71f7e0e08cc2ec885e1" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">): </sentenceText></span></div></div></div>
+<div id="code-snippet-5" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_ff3b73a4-6757-4b16-a6af-013059d38632');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_ff3b73a4-6757-4b16-a6af-013059d38632" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+void comboBox1_ValueChanged(...) {
+    if (comboBox1.SelectedItem == ...) {
+        Taskbar.OverlayImage = new OverlayImage(icon1, "Icon 1");
+    } else {
+        Taskbar.OverlayImage = new OverlayImage(icon2, "Icon 2");
+    }
+}
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div><p><img id="fig04" src="https://i-msdn.sec.s-msft.com/dynimg/IC305622.gif" xmlns="" /></p><div class="ArticleImageCaptionText">图 4 <strong>Windows Live 消息和其覆盖图标</strong></div></div><div class="ArticleNormalPara" id="id0420066"><span id="mt96" class="sentence" data-guid="cd7579c1e35bf9eb9e41d32b0267ac7e" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">同样，ITaskbarList3::SetProgressState 和 ITaskbarList3::SetProgressValue 方法修改任务栏进度栏的状态。</sentenceText></span><span id="mt97" class="sentence" data-guid="5b6eb1f468e49e17980f1dd205387ccb" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">没有可用的应用程序使用的几个状态： 不确定的、 已暂停，错误和正常。</sentenceText></span><span id="mt98" class="sentence" data-guid="55195d91064b4dd3582b56f5527d2a8c" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">
+  <strong xmlns="http://www.w3.org/1999/xhtml">图 5</strong> 中总结了在各种状态的外观。</sentenceText></span><span id="mt99" class="sentence" data-guid="17638d3d3def1a2932d2a6f548197ba3" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">托管等同于 Taskbar.ProgressBar.State 和 Taskbar.ProgressBar.CurrentValue 静态属性，以及 Taskbar.ProgressBar.MaxValue 属性。</sentenceText></span></div><div><p><img alt="fig05.gif" src="https://i-msdn.sec.s-msft.com/dynimg/IC305624.gif" width="600px" /></p><div class="ArticleImageCaptionText">图 5 <strong>的任务栏进度栏的不同状态</strong></div></div><div class="ArticleNormalPara" id="id0420067"><span id="mt100" class="sentence" data-guid="98249effb7b12deaf2fde5fb433081ff" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">下面的代码和</sentenceText></span><span id="mt101" class="sentence" data-guid="b971c8f391a2d64bda53462c51908ea4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">图 6</sentenceText></span><span id="mt102" class="sentence" data-guid="821833fe805f3b5a365b1aba5b3c1142" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">说明后台操作如何影响任务栏进度控件的状态 （假定在单独的的后台线程中运行 DoWork 函数）：</sentenceText></span></div></div></div>
+<div id="code-snippet-6" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_56ee47e1-8617-4a40-9fe7-fdaddc66b98b');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_56ee47e1-8617-4a40-9fe7-fdaddc66b98b" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+HWND hmainwnd;//Application main window
+ITaskbarList3* ptl;//Created earlier
+
+DWORD WINAPI DoWork(LPVOID) {
+    ptl-&gt;SetProgressState(hmainwnd, TBPF_NORMAL);
+    for (int i = 0; i &lt; WorkToDo; ++i) {
+        DoSomePartOfTheWork(i);
+        ptl-&gt;SetProgressValue(hmainwnd, i, WorkToDo);
+    }
+    ptl-&gt;SetProgressState(hmainwnd, TBPF_PAUSED);
+    return 0;
+}
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div><p><img id="fig06" src="https://i-msdn.sec.s-msft.com/dynimg/IC305625.gif" xmlns="" /></p><div class="ArticleImageCaptionText">图 6 <strong>Internet 资源管理器报告下载</strong> 进度。</div></div><div class="ArticleNormalPara" id="id0420080"><span id="mt103" class="sentence" data-guid="bfb901795957cb279fc06b9992ee8f83" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">自动应用程序利用内置的文件操作功能添加到 Windows Vista 中,，Windows Shell 免费获得任务栏进行支持。</sentenceText></span><span id="mt104" class="sentence" data-guid="dc98aea01cc3989baa94eeb53df57768" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">如果您使用的 Win32 SHFileOperation 函数 IFileOperation 接口，任务栏按钮将自动亮进度的信息，即使您从控制台应用程序 API 调用。</sentenceText></span><span id="mt105" class="sentence" data-guid="93b78651438befe9491ad648d4427339" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在托管的代码可以读取 Stephen Toub 的 <em xmlns="http://www.w3.org/1999/xhtml">MSDN Magazine</em> 文从 2007 年 12 月"</sentenceText></span><span id="mt106" class="sentence" data-guid="ba467df8227de923dc2ab63820fc19ab" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">.NET 非常重要： 在 Windows Vista 中的 IFileOperation</sentenceText></span><span id="mt107" class="sentence" data-guid="8159ce27b8e1d81b48bd3e627f00b473" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">." 他 FileOperation 类提供了一个极好的包装基础本机 API 的而且可以同样易于使用从托管代码。</sentenceText></span><span id="mt108" class="sentence" data-guid="a291c72efe37127771a5329ca27181de" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">尝试他示例 Windows 7 上, 并且可以立即看到任务栏进度栏的演示。</sentenceText></span></div><p><br /></p><div class="ArticleTypeTitle" id="id0420081">缩略图的工具栏</div><div class="ArticleNormalPara" id="id0420082"><span id="mt109" class="sentence" data-guid="adffb893cd15dfba95608b9f3ae63ea1" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">缩略图工具栏是一个很好 Windows 7 任务栏前景除了。</sentenceText></span><span id="mt110" class="sentence" data-guid="6d2736b65c405d2acb1c3c9aa08d767d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">缩略图和实时预览功能已被大大 enriched Windows 7 中 （遗憾的是，它不是在进行详细讨论这些本文的范围内）。</sentenceText></span><span id="mt111" class="sentence" data-guid="61632d497429face507894e449b70a54" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">缩略图的工具栏提供一个小的远程控制机会，从其缩略图窗口。</sentenceText></span><span id="mt112" class="sentence" data-guid="efca74a27241690f99e829bee18a844d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">渚嬪的方式  切换到下一个歌曲在 Windows 媒体播放器中不需要使用而言媒体播放机支持带区或切换到媒体播放器应用程序。</sentenceText></span><span id="mt113" class="sentence" data-guid="1721ddbb55fedd94455eb9d49fe0f43d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">您可以改用缩略图工具栏直接进行此项任务，无中断您的工作流的跳转到其他的应用程序，如 <strong xmlns="http://www.w3.org/1999/xhtml">图 7</strong> 所示。</sentenceText></span></div><div><p><img id="fig07" src="https://i-msdn.sec.s-msft.com/dynimg/IC305626.gif" xmlns="" /></p><div class="ArticleImageCaptionText">图 7 <strong>Windows 媒体播放器提供一个缩略图工具栏的</strong> 方便的导航。</div></div><div class="ArticleNormalPara" id="id0420083"><span id="mt114" class="sentence" data-guid="766645e2e4951c7f163226d36937e5c2" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">若要用于一个缩略图工具栏，必须等待成为初始化，任务栏按钮然后再获取指向该 ITaskbarList3 接口的指针，然后如上文所述。</sentenceText></span><span id="mt115" class="sentence" data-guid="97842994f8e4a479311d6aef9adcaae4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">下一步中，您初始化 THUMBBUTTON 结构描述个别的按钮显示在工具栏 （注意，仅限于最，七个按钮并有无法添加或删除按钮之后您初始化工具栏，只禁用或隐藏它们,） 中的一组。 最后，您调用 ITaskbarList3::ThumbBarAddButtons 和 ITaskbarList3::ThumbBarUpdateButtons 方法来控制缩略图工具栏。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420084"><span id="mt116" class="sentence" data-guid="0a064685a1aed479323129b28a6a98c2" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">单击一个缩略图按钮时, 应用程序收到 WM_COMMAND 消息的高的该 wParam 设置为 THBN_CLICKED 和低单词设置为按钮的 ID。</sentenceText></span><span id="mt117" class="sentence" data-guid="f2b3c3cdd7d641f718d52682f2c32322" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">此消息被调度到属于该缩略图窗口。</sentenceText></span><span id="mt118" class="sentence" data-guid="770033a3de260eb9ad0f22b946b1ebb7" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">
+  <strong xmlns="http://www.w3.org/1999/xhtml">图 8</strong> 演示如何创建，并且需要处理的消息。</sentenceText></span></div><div class="figmargin" id="id054"><div Title="图 8 创建和消息处理"><p><b>图 8 创建和消息处理</b></p></div></div></div></div>
+<div id="code-snippet-7" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_87659ce5-c7bb-48b1-b9f7-0c93d4d32793');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_87659ce5-c7bb-48b1-b9f7-0c93d4d32793" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+ITaskbarList3* ptl;//Created earlier
+
+//In your window procedure:
+switch (msg) {
+case g_wmTBC://TaskbarButtonCreated
+    THUMBBUTTON buttons[2];
+    buttons[0].dwMask = THB_ICON|THB_TOOLTIP|THB_FLAGS;
+    buttons[0].iId = 0;
+    buttons[0].hIcon = GetIconForButton(0);
+    wcscpy(buttons[0].szTip, L"Tooltip 1");
+    buttons[0].dwFlags = THBF_ENABLED;
+    buttons[1].dwMask = THB_ICON|THB_TOOLTIP|THB_FLAGS;
+    buttons[1].iId = 1;
+    buttons[1].hIcon = GetIconForButton(1);
+    wcscpy(buttons[0].szTip, L"Tooltip 2");
+    buttons[1].dwFlags = THBF_ENABLED;
+    VERIFY(ptl-&gt;ThumbBarAddButtons(hWnd, 2, buttons));
+    break;
+
+case WM_COMMAND:
+    if (HIWORD(wParam) == THBN_CLICKED) {
+        if (LOWORD(wParam) == 0)
+            MessageBox(L"Button 0 clicked", ...);
+        if (LOWORD(wParam) == 1)
+            MessageBox(L"Button 1 clicked", ...);
+    }
+    break;
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div class="figmargin" id="id054"></div><div class="ArticleNormalPara" id="id0420085"><span id="mt119" class="sentence" data-guid="631ed5298ac209129d33006f2bb7da96" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">托管等效项不会当前出现在 Windows API 的代码包，但计划在将来的版本中出现。</sentenceText></span><span id="mt120" class="sentence" data-guid="6b5735b9af23c6208fc296c61e561b7b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在此期间，您可以使用该</sentenceText></span><a href="http://code.msdn.microsoft.com/windows7taskbar"><span id="mt121" class="sentence" data-guid="033c1d888a70af4b6df281f9c658fdd4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏互操作的示例库</sentenceText></span></a>. <span id="mt122" class="sentence" data-guid="b8bf627ab67bfe4e9b025510a79dd6ad" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">它与相应 CreateThumbButton 和 AddThumbButtons 方法用于控制缩略图工具栏和用于修改缩略图的按钮在运行时的状态 ThumbButton 类包含 ThumbButtonManager 类。</sentenceText></span><span id="mt123" class="sentence" data-guid="65897f8a1e2feb5519306303887ed03f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">若要接收的通知，您可以为 ThumbButton.Clicked 事件注册并重写您的窗口过程调度到 ThumbButtonManager 类为您完成调度的神奇的邮件。</sentenceText></span><span id="mt124" class="sentence" data-guid="df4465ea033593228e90938efa242f5b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">（详细信息，请参阅博客文章"</sentenceText></span><a href="http://blogs.microsoft.co.il/blogs/sasha/archive/2009/02/26/windows-7-taskbar-thumbnail-toolbars.aspx"><span id="mt125" class="sentence" data-guid="b61b6282e97cdee73d6fe47661d3870f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏： 缩略图的工具栏</sentenceText></span></a><span id="mt126" class="sentence" data-guid="a6dc09719bb21e205369985db5f7f6cb" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">.")</sentenceText></span></div><p><br /></p><div class="ArticleTypeTitle" id="id0420086">跳转列表</div><div class="ArticleNormalPara" id="id0420087"><span id="mt127" class="sentence" data-guid="7a0e5b5b5b2ab8760223cefae540cb36" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">，我们在此详述讨论 Windows 7 任务栏在最终功能就是跳转列表的认为最重要的功能应用程序需要利用为了真正 shine Windows 7。</sentenceText></span><span id="mt128" class="sentence" data-guid="aa617c71a3bf46deb664ae9de8ce42b2" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在 Windows 7 任务栏中每个任务栏按钮都与跳转列表关联。</sentenceText></span><span id="mt129" class="sentence" data-guid="913cfe1b1a09e54edad6f1ff71483078" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">这是显示的项 （也称为目标） 的集合的 retractable 菜单和与给定的应用程序相关的任务。</sentenceText></span><span id="mt130" class="sentence" data-guid="0e6de2ce51140bd53a19d13ae1c1a05a" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">目标通常由外壳程序 （通过 IShellItem 接口） 的项目，您的应用程序使用的文件/文档。</sentenceText></span><span id="mt131" class="sentence" data-guid="c89cb5af2f24468e31c41a25f49c8d89" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">任务将由外壳程序的链接 （也称为快捷键，通过 IShellLink 界面），通常表示，并且可用于启动其他相关联的应用程序或甚至您自己的应用程序使用不同的命令行参数集。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420088"><span id="mt132" class="sentence" data-guid="661c1046a999bb09afe0b3be519d47bb" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">某些应用程序可能选择自定义的跳转列表任务区域。</sentenceText></span><span id="mt133" class="sentence" data-guid="c20f53c72d67c02c80242c24ca4cdfb3" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">渚嬪的方式  Windows Live Messenger 使用不同的任务和分隔符，使其易于使用的应用程序将跳转列表如 <strong xmlns="http://www.w3.org/1999/xhtml">图 9</strong> 所示。</sentenceText></span></div><div><p><img id="fig08" src="https://i-msdn.sec.s-msft.com/dynimg/IC305627.gif" xmlns="" /></p><div class="ArticleImageCaptionText">图 9 <strong>Windows Live 消息</strong></div></div><div class="ArticleNormalPara" id="id0420089"><span id="mt134" class="sentence" data-guid="04b14013053baeceffe71c8dc5a83fd6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">其他某些应用程序可能选择自定义该跳转列表项目 （或目标） 区域甚至进行分类以便更方便用户的工作项。</sentenceText></span><span id="mt135" class="sentence" data-guid="7b8ff2927bfedb8abd13af52cfa00954" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在很少在应用程序应提供的最新的集合或频繁项目相关的应用程序因为用户将增长需要此功能从每个 Windows 7 应用程序。</sentenceText></span><span id="mt136" class="sentence" data-guid="4ca422f49a105dd209d5d3ef7fc2c953" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">是的示例考虑 Microsoft Office Word 跳转列表，如 <strong xmlns="http://www.w3.org/1999/xhtml">图 10</strong> 所示。</sentenceText></span><span id="mt137" class="sentence" data-guid="017670215615d3c9671ebade9c27ec15" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">鍗充娇 Word 不专为 Windows 7，它使用内置 Windows 并在跳转列表默认情况下，新项目基础结构。</sentenceText></span></div><div><p><img id="fig09" src="https://i-msdn.sec.s-msft.com/dynimg/IC305628.gif" xmlns="" /></p><div class="ArticleImageCaptionText">图 10 <strong>跳出的最近的文档列表</strong></div></div><div class="ArticleNormalPara" id="id0420090"><span id="mt138" class="sentence" data-guid="d622c84f30609c35b4795e988b27cea3" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">应该是非常清楚很有可能获取工作的一个重要的工作不跳转列表。</sentenceText></span><span id="mt139" class="sentence" data-guid="3c2473bef33e8d7b0f5dda843fd14403" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在您的应用程序中显示的最近的跳转列表，请按照这些步骤操作：</sentenceText></span></div><div class="ArticleNormalPara" id="id0420091"><ol><li><span id="mt140" class="sentence" data-guid="3298e2e3bdbd3bf63bad0d43b74470ea" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">请确保您的应用程序的文件类型与在 Windows 注册表中应用程序 （如一个已注册的处理程序） 相关联。</sentenceText></span><span id="mt141" class="sentence" data-guid="0cc214c85851748ee61c34ac17f31c36" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">请注意您的应用程序不会有主或默认的文件类型处理程序。</sentenceText></span><span id="mt142" class="sentence" data-guid="6bb6140c2828d927cc618bc55363724e" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">（请参阅 msdn.microsoft.com/en-us/library/dd378402 (VS.85）.aspx 的详细信息。</sentenceText></span></li><li><span id="mt143" class="sentence" data-guid="18528a208e402414b3482458adee3db6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">确保您使用公共文件对话框用于加载和保存文件。</sentenceText></span><span id="mt144" class="sentence" data-guid="f2b3fb34072cbb5f37abaf78ce239279" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">如果您不使用公共文件对话框，让知道，在您通过调用 SHAddToRecentDocs Win32 函数使用一个用户的请求的文件时，Windows Shell。</sentenceText></span><span id="mt145" class="sentence" data-guid="aee8e0cb0d14b7a6798f1426bf592efe" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">（请参阅在"</sentenceText></span><a href="https://msdn.microsoft.com/en-us/library/ms645524(vs.85).aspx"><span id="mt146" class="sentence" data-guid="b58cb41b3783af0f340d844e4912cfb4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">公共对话框框库</sentenceText></span></a><span id="mt147" class="sentence" data-guid="a9253ed1873e9ff557b61d9420484b91" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">"文章在 MSDN 上有关通用对话框的详细信息）。</sentenceText></span></li></ol></div><div class="ArticleNormalPara" id="id0420093"><span id="mt148" class="sentence" data-guid="53b09ca93bd6279b0fcd3303f613b0e7" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">如果您跳转列表需要进一步自定义，您可以添加目标或自定义任务，以丰富的功能的自定义类别。</sentenceText></span><span id="mt149" class="sentence" data-guid="6322ec04b47550570164cdff52a610ea" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在 ICustomDestinationList 是随以下有用的方法的跳转列表功能的源： AddUserTasks，AppendCategory，和 AppendKnownCategory。</sentenceText></span><span id="mt150" class="sentence" data-guid="e68d0fd73abda498660f892f047a3b9f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">若要开始列表生成事务，您调用 BeginList，然后您可以选择之间 AbortList CommitList，很容易理解的。</sentenceText></span><span id="mt151" class="sentence" data-guid="1aa475f1a7dcfd2ff580ae224f5301f1" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">您还可以从列表中删除所有项目，通过调用 DeleteList。</sentenceText></span><span id="mt152" class="sentence" data-guid="e3d24706d4765118bed7e222c69d21c1" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">列表生成事务的一个示例是 Windows 7 SDK 中可用的。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420094"><span id="mt153" class="sentence" data-guid="158923a97f3c1aceeb322f4e89de5353" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">托管等同得更容易使用。</sentenceText></span><span id="mt154" class="sentence" data-guid="05652a36616e03d8c07853a7c695729d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">所有开头 Taskbar.JumpList 属性解除锁定的操作将跳转列表的目标和任务的方法： 并 AddToRecent 方法相当于 SHAddToRecentDocs KnownCategoryToDisplay 属性确定是否显示最新或频繁默认依据，UserTasks 属性返回用户的任务的集合，可修改然后 CustomCategories 属性返回自定义类别 （每个自定义类别有一个名称和跳转列表项的集合） 的集合。</sentenceText></span><span id="mt155" class="sentence" data-guid="35eb2e50dcaea053b74568c00c3c3467" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">下面的示例演示用于向应用程序的跳转列表中添加项目和任务列表生成交易记录：</sentenceText></span></div></div></div>
+<div id="code-snippet-8" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_6028c801-39fd-4d98-be7a-dcd84808e783');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_6028c801-39fd-4d98-be7a-dcd84808e783" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+JumpListLink notepad = new JumpListLink {
+    Title = "Launch Notepad", Path = @"C:\Windows\notepad.exe" };
+
+JumpListItem doc1 = new JumpListItem(@"doc1.txt");
+JumpListItem doc2 = new JumpListItem(@"doc2.txt");
+CustomCategory category = new CustomCategory("Special Items");
+category.JumpListItems.Add(doc1);
+category.JumpListItems.Add(doc2);
+
+Taskbar.JumpList.UserTasks.Add(notepad);
+Taskbar.JumpList.CustomCategories.Add(category);
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div class="ArticleNormalPara" id="id0420106"><span id="mt156" class="sentence" data-guid="c7a550e920f82a49641e915280dfc0c4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">要注意的一个重要的是用户可以从任务栏删除项目，通过右键单击它们并选择"在此列表中删除。 应用程序必须知道此功能。</sentenceText></span><span id="mt157" class="sentence" data-guid="e95b708a7407d544305d2d2bf5a6ca23" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">濡傛它们灏濊瘯添加一个用户已删除的项目，它将导致整个列表生成事务失败。</sentenceText></span><span id="mt158" class="sentence" data-guid="f383505895752ffd7d9da8a1297399f6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在 Win32 代码中，调用 ICustomDestinationList::BeginList 方法时，您收到应该小心额外，您不再次添加这些项目的已删除项的集合：</sentenceText></span></div></div></div>
+<div id="code-snippet-9" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="复制到剪贴板。" href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_37ff0936-098a-4740-bb75-3d5a60a1a0f2');" ms.cmptyp="CodeSnippet">复制</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_37ff0936-098a-4740-bb75-3d5a60a1a0f2" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+ICustomDestinationList* cdl;
+VERIFY(CoCreateInstance(CLSID_DestinationList, ..., IID_ICustomDestinationList, (void**)cdl));
+
+IObjectArray* removedItems;
+cdl-&gt;BeginList(&amp;maxSlots, IID_IObjectArray, (void**)removedItems);
+//…Iterate removedItems and make decisions
+removedItems-&gt;Release();
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+<div><div class="topic"><div class="ArticleNormalPara" id="id0420114"><span id="mt159" class="sentence" data-guid="bc3c56c46bbdf3d4a622f259085f911d" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">或者，您可以主动调用 ICustomDestinationList::GetRemovedDestinations 方法启动列表生成交易记录之前检索已删除的项目。</sentenceText></span><span id="mt160" class="sentence" data-guid="0f60e645291d0f6ae08cbfb2faffcbe8" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">托管应用程序可以利用内置 Windows API 的代码包功能并且依赖于 JumpList 该类自动不会添加以前已由用户删除的项目。</sentenceText></span><span id="mt161" class="sentence" data-guid="e229d466c59a264416ef8ae844499e0b" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">或者，托管应用程序可以注册到 Taskbar.JumpList.JumpListItemsRemoved 基础结构列表生成事务） 中检测到的项目已从跳转列表中删除时发生的事件。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420115"><span id="mt162" class="sentence" data-guid="70328bf632a085e310ccb239ac324a28" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">跳转列表中的备用方案的各种可能相当时, 记住的大多数用户将希望您的应用程序至少提供最简单的界面如新的或频繁已在整个应用程序使用的项目列表。</sentenceText></span><span id="mt163" class="sentence" data-guid="02f3ed7167335956c63ddfa578f73e58" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">如果您遵守此基本要求，在几乎保证以满足您的用户 ； 如果将自定义功能添加到您的跳转列表通过自定义任务和目标，了您差异商机上 Windows 7。</sentenceText></span></div><p><br /></p><div class="ArticleTypeTitle" id="id0420116">其他功能</div><div class="ArticleNormalPara" id="id0420117"><span id="mt164" class="sentence" data-guid="1ddc931cec7d30693ea9319b5237a7b6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏包含各种不我们在本文中的其他功能。</sentenceText></span><span id="mt165" class="sentence" data-guid="e3600d513b862ea08f7ad79056f94914" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">它们包括： 实时预览 （也称为 Aero 查看），缩略图预览的应用程序时 （可以提高用户的工作效率） 的自定义缩略图支持选项卡式文档界面 (TDI） 和多文档界面 (MDI) 的应用程序和其他几个。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420118"><span id="mt166" class="sentence" data-guid="32b2324d71f7d0e0b71cb8a5b70cca94" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">概述了这些的功能以及相关的本机 API 和其托管等效项的讨论，请参阅以下资源：</sentenceText></span></div><div class="ArticleNormalPara" id="id0420119"><ul><li><a href="http://blogs.msdn.com/e7/archive/2008/11/20/happy-anniversary-windows-on-the-evolution-of-the-taskbar.aspx"><span id="mt167" class="sentence" data-guid="70fe1e5496c4479ed30887b3aadafb95" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">工程 Windows 7： Windows 7 任务栏</sentenceText></span></a></li><li><a href="http://blogs.technet.com/b/technet_flash_feed/archive/2009/04/06/the-win7-taskbar-net-sample-library-a-must-for-app-developers.aspx"><span id="mt168" class="sentence" data-guid="5061bb1b4bfdab0bebd2eebfcd84b97f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏示例库： 概述</sentenceText></span></a></li><li><a href="http://blogs.microsoft.co.il/blogs/sasha/archive/2009/02/12/windows-7-taskbar-apis.aspx"><span id="mt169" class="sentence" data-guid="dad071c88d79859c597b03350945e48f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏： API</sentenceText></span></a></li><li><a href="http://blogs.microsoft.co.il/blogs/sasha/archive/2009/03/06/windows-7-taskbar-thumbnail-clip-and-custom-previews.aspx"><span id="mt170" class="sentence" data-guid="699621090f86340235cf51d9dcbb9bfe" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏： 剪辑的缩略图和自定义预览</sentenceText></span></a></li><li><a href="http://blogs.microsoft.co.il/blogs/sasha/archive/2009/03/20/windows-7-taskbar-window-switchers-and-previews-in-depth.aspx"><span id="mt171" class="sentence" data-guid="29e85c9bac8436114f5d91b7cd6b2eaf" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏： 窗口 Switchers 和深度的预览</sentenceText></span></a></li><li><a href="http://channel9.msdn.com/tags/taskbar/"><span id="mt172" class="sentence" data-guid="cc6282e758f3edde4416f5f86b300d63" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">MSDN 频道 9 任务栏视频</sentenceText></span></a></li></ul></div><p><br /></p><div class="ArticleTypeTitle" id="id0420125">摘要</div><div class="ArticleNormalPara" id="id0420126"><span id="mt173" class="sentence" data-guid="f5fdbc1f0f7e5367de6f5f33d7088fbf" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在本文中，我们研究过在 Windows 7 任务栏中的某些功能如应用程序 ID，缩略图的工具栏覆盖进度栏的图标，并跳转列表。</sentenceText></span><span id="mt174" class="sentence" data-guid="707b3cc610b91828b0c41ba9bf68c6b4" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 7 任务栏提供一个干净、 sleek 启动图面，强受益的用户的。</sentenceText></span><span id="mt175" class="sentence" data-guid="08f82df85058c82e7cc05087466961de" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">将集成到此面将 Windows 7 中的任何应用程序开发人员的一个主要目标。</sentenceText></span></div><div class="ArticleNormalPara" id="id0420127"><span id="mt176" class="sentence" data-guid="1fdddb75ef9bd9b175f9a66ccfd63114" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">使用本机的 Win32 API 或托管的 Windows API 代码包提供了一区分亮 Windows 7 应用程序的机会。</sentenceText></span><span id="mt177" class="sentence" data-guid="c1339e6c197b77c213c9f50464cc0568" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">请记住第一个是用户看到登录到 Windows，后，并希望将应用程序的任务栏将固定的任务栏。</sentenceText></span></div><p><br /></p><div class="AuthorBio"><span id="mt178" class="sentence" data-guid="6b6fee4b8d8c283d7bc882699cfa838e" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在 Microsoft，侧重于 Windows 7 一个技术 Evangelist <strong xmlns="http://www.w3.org/1999/xhtml">Yochay Kiriaty</strong> 。</sentenceText></span><span id="mt179" class="sentence" data-guid="203fa0f2c8e7ed721d946c4169ca246a" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在软件开发过程中，他有不止一个十年的经验。</sentenceText></span><span id="mt180" class="sentence" data-guid="da45323f6455bb2e9ed6181f4109709f" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">他已编写和 taught 学术计算机科学课程是将一个活动讨论参与者</sentenceText></span><span id="mt181" class="sentence" data-guid="575982ec5f9c0a2ea7bd6ab47ce94313" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Windows 日志</sentenceText></span> .</div><p><br /></p><div class="AuthorBio"><span id="mt182" class="sentence" data-guid="8cda561027c1bf83fa57e8669d6903a6" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">高级顾问在 Sela 组、 国际培训、 咨询和开发公司 <strong xmlns="http://www.w3.org/1999/xhtml">Sasha Goldshtein</strong> 。</sentenceText></span><span id="mt183" class="sentence" data-guid="5edb95bd504c69edc6e98b1edb2c075e" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">Sasha Sela 在导致性能和调试小组，专门在托管和本机 Windows，包括高性能应用程序、 互操作性方案和高可用性的服务器应用程序上的解决方案中。</sentenceText></span><span id="mt184" class="sentence" data-guid="fc19eefcd25e48473cb9b43418801cbb" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">他是已传递全球和提交给 Microsoft 课件库 Windows 内核和 Windows Vista 课程的作者。</sentenceText></span><span id="mt185" class="sentence" data-guid="c9da3d4fa85117c9cfd89a0b94039ccb" data-source="" xml:space="preserve"><sentenceText xmlns="http://www.w3.org/1999/xhtml">在各种 Microsoft 会议演讲者 Sasha。</sentenceText></span></div><p><br /></p><div class="solidLine"></div></div></div></div>
+</div>
+</div>
+<div id="RightContent">
+    <p:primary pcat:primaryFormat="Mtps.Xhtml" xmlns="http://www.w3.org/1999/xhtml" xmlns:mtps="http://msdn2.microsoft.com/mtps" xmlns:asp="http://msdn2.microsoft.com/aspnet" xmlns:pcat="urn:mtpg-com:mtps/2004/1/primary/category" xmlns:p="urn:mtpg-com:mtps/2004/1/primary">
+  <div class="navpage">
+    <div>
+      <div>
+        <div style="margin-bottom:10px;">
+          <iframe frameBorder="0" frameSpacing="0" height="250" id="4f2320cbb2378" name="4f2320cbb2378" scrolling="no" src="https://ox-d.101m3.com/w/1.0/afr?auid=139281&amp;cb=INSERT_RANDOM_NUMBER_HERE" width="300">
+            <a href="http://ox-d.101m3.com/w/1.0/rc?cs=4f2320cbb2378&amp;cb=INSERT_RANDOM_NUMBER_HERE">
+              <img alt="" border="0" src="https://ox-d.101m3.com/w/1.0/ai?auid=139281&amp;cs=4f2320cbb2378&amp;cb=INSERT_RANDOM_NUMBER_HERE" xmlns="http://www.w3.org/1999/xhtml" />
+            </a>
+          </iframe>
+        </div>
+        <div style="margin-bottom:10px;">
+          <iframe frameBorder="0" frameSpacing="0" height="250" id="4f2320971b57d" name="4f2320971b57d" scrolling="no" src="https://ox-d.101m3.com/w/1.0/afr?auid=139280&amp;cb=INSERT_RANDOM_NUMBER_HERE" width="300">
+            <a href="http://ox-d.101m3.com/w/1.0/rc?cs=4f2320971b57d&amp;cb=INSERT_RANDOM_NUMBER_HERE">
+              <img alt="" border="0" src="http://ox-d.101m3.com/w/1.0/ai?auid=139280&amp;cs=4f2320971b57d&amp;cb=INSERT_RANDOM_NUMBER_HERE" xmlns="http://www.w3.org/1999/xhtml" />
+            </a>
+          </iframe>
+        </div>
+        <div style="margin-bottom:10px;">
+          <iframe frameBorder="0" frameSpacing="0" height="250" id="d364f7da2e" name="d364f7da2e" scrolling="no" src="https://ox-d.101m3.com/w/1.0/afr?auid=538012782&amp;cb=INSERT_RANDOM_NUMBER_HERE" width="300">
+            <a href="http://ox-d.101m3.com/w/1.0/rc?cs=d364f7da2e&amp;cb=INSERT_RANDOM_NUMBER_HERE">
+              <img alt="" border="0" src="https://ox-d.101m3.com/w/1.0/ai?auid=538012782&amp;cs=d364f7da2e&amp;cb=INSERT_RANDOM_NUMBER_HERE" xmlns="http://www.w3.org/1999/xhtml" />
+            </a>
+          </iframe>
+        </div>
+        <div id="sidebarBox" style="border-width:5px;border-color:black;border-style:solid;">
+          <div style="margin-left:5px; margin-right:5px;">
+            <h3>
+              <a href="http://blogs.msdn.com/msdnmagazine/">MSDN Magazine Blog</a>
+            </h3>
+            <p>
+              <div class="FVB_Basic">
+                <div class="FVB_link">
+                  <a href="https://blogs.msdn.microsoft.com/msdnmagazine/2015/01/07/14-top-features-of-visual-basic-14-the-qa/">14 Top Features of Visual Basic 14: The Q&amp;A</a>
+                </div>
+                <div class="FVB_date">Wednesday, 1月 7</div>
+                <div class="FVB_link">
+                  <a href="https://blogs.msdn.microsoft.com/msdnmagazine/2015/01/02/big-start-to-the-new-year-at-msdn-magazine/">Big Start to the New Year at MSDN Magazine</a>
+                </div>
+                <div class="FVB_date">Friday, 1月 2</div>
+              </div>
+            </p>
+            <p>
+              <a href="http://blogs.msdn.com/msdnmagazine/">More MSDN Magazine Blog entries &gt;</a>
+            </p>
+          </div>
+          <div class="sidebarLine" style="margin-left:5px; margin-right:5px; background-color:#5b6871;height:12px">
+            
+          </div>
+          <div style="margin-left:5px; margin-right:5px;">
+            <p>
+              <br />
+            </p>
+            <div style="text-align:left;font-family:Segoe UI;font-size:12pt;">Current Issue</div>
+            <div style="text-align:center;display:block;height:260px">
+              <p>
+                <br />
+                <a href="https://msdn.microsoft.com/zh-cn/magazine/mt809110">
+                  <img align="Middle" alt="2017 年 6 月" height="239" src="https://i-msdn.sec.s-msft.com/mt809110.cover_lrg(zh-cn,MSDN.10).jpg" title="2017 年 6 月" width="179" xmlns="http://www.w3.org/1999/xhtml" />
+                </a>
+              </p>
+            </div>
+            <div style="text-align:right;">
+              <p>
+                <a href="https://msdn.microsoft.com/zh-cn/magazine/ee310108.aspx">Browse All MSDN Magazines</a>
+                <br />
+              </p>
+            </div>
+            <div class="sidebarLine" style="background-color:#5b6871;height:12px">
+              
+            </div>
+          </div>
+          <div style="margin-left:5px; margin-right:5px;">
+            <div style="text-align:Right;font-family:Segoe UI;font-size:12pt;">
+              <p>
+                <br />
+                <a href="https://msdn.microsoft.com/en-us/aa570311.aspx?ocid=msdn_magazine">
+                  <img align="Left" alt="Subscribe to the MSDN Flash newsletter" src="https://i-msdn.sec.s-msft.com/dd799403.Question_opt(en-us,MSDN.10).png" title="Subscribe to the MSDN Flash newsletter" xmlns="http://www.w3.org/1999/xhtml" /> Subscribe to MSDN Flash newsletter</a>
+              </p>
+            </div>
+            <div style="text-align:left;">
+              <p>
+                <br />Receive the MSDN Flash e-mail newsletter every other week, with news and information personalized to your interests and areas of focus.</p>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;">
+          <iframe frameBorder="0" frameSpacing="0" height="250" id="e4360aeffd" name="e4360aeffd" scrolling="no" src="https://ox-d.101m3.com/w/1.0/afr?auid=538012781&amp;cb=INSERT_RANDOM_NUMBER_HERE" width="300">
+            <a href="http://ox-d.101m3.com/w/1.0/rc?cs=e4360aeffd&amp;cb=INSERT_RANDOM_NUMBER_HERE">
+              <img alt="" border="0" src="https://ox-d.101m3.com/w/1.0/ai?auid=538012781&amp;cs=e4360aeffd&amp;cb=INSERT_RANDOM_NUMBER_HERE" xmlns="http://www.w3.org/1999/xhtml" />
+            </a>
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</p:primary>
+</div>
+
+        </div>
+        
+
+<input name="__RequestVerificationToken" type="hidden" value="sqvnu_JhGuIqk8b82O9Q5W55FhrM87thRiRbPXgsCe7B-y15qwZZrh0Ft926AFKE8Hijw99V2A7Eo1VExhGm1f1NeEs1" />
+<input id="ratingSubmitUrl" type="hidden" value="https://msdn.microsoft.com/zh-cn/library/feedback/add/dd942846.aspx" />
+<input id="isTopicRated" type="hidden" value="false" />
+
+    
+<input name="__RequestVerificationToken" type="hidden" value="8UTFuMGMSUcPhTnsUKO7dZFJ3_VpxWPB5WCb2yQOec-kTp1w7ESsyyUjWDnxyUImKMYNuhcl14h4q-hCkvCXVa9S55Y1" />
+<input id="ratingSubmitUrl" type="hidden" value="https://msdn.microsoft.com/zh-cn/library/feedback/add/dd942846.aspx" />
+<input id="isTopicRated" type="hidden" value="false" />
+
+
+    
+
+    
+    <link type="text/css" rel="stylesheet" />
+    
+        
+    <div id="ux-footer" class="" style="" dir="ltr" ms.pgarea="footer">
+            
+                
+            <div id="footerSock" class="">
+                <div id="footerSockInner">
+
+                        <div class="footerSockLeft"><div data-fragmentName="SocialLinks" id="Fragment_SocialLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <div class="linkListTitle">关注我们</div>
+    <ul class="links">
+      <li>
+        <a href="https://www.weibo.com/cnmsdn" target="_blank" id="SocialLinks_15653_18" class="weiboShare" xmlns="http://www.w3.org/1999/xhtml">https://www.weibo.com/cnmsdn</a>
+      </li>
+      <li>
+        <a href="https://aka.ms/msdnwechat" target="_blank" id="SocialLinks_15653_19" class="wechatShare" xmlns="http://www.w3.org/1999/xhtml">https://aka.ms/msdnwechat</a>
+      </li>
+      <li>
+        <a href="https://aka.ms/contactmsdn" target="_blank" id="SocialLinks_15653_20" class="cnContactShare" xmlns="http://www.w3.org/1999/xhtml">https://aka.ms/contactmsdn</a>
+      </li>
+    </ul>
+  </div>
+</div></div>
+
+                        <div class="footerSockRight"><div data-fragmentName="Newsletter" id="Fragment_Newsletter" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://msdn.microsoft.com/zh-cn/newsletter" title="注册 MSDN 时事通讯" id="Newsletter_2148_16" xmlns="http://www.w3.org/1999/xhtml">注册 MSDN 时事通讯</a>
+</div></div>
+                    <div class="footerSockCenter">
+                            <a name="feedback"></a>
+
+<div class="rating">
+    <div id="ratingSection1">
+        <div class="title">
+            此页面有帮助吗？
+        </div>
+        <div class="description">
+            您对此内容的反馈非常重要。<br />请告诉我们您的想法。
+        </div>
+        <div class="buttons">
+            <button class="button" id="ratingYes" aria-label="是，此页面很有帮助">是</button>
+            <button class="button" id="ratingNo" aria-label="不，此页面没有任何帮助">否</button>
+        </div>
+        <input id="ratingValue" type="hidden" value="" />
+    </div>
+    <div id="ratingSection2">
+        <div class="title left">
+            更多反馈？
+        </div>
+        <textarea id="ratingText" rows="6" cols="" maxlength="1500"></textarea>
+        <div class="right">
+            <div class="counter">
+                <span id="feedbackTextCounter">1500</span> 个剩余字符
+            </div>
+            <div class="buttons">
+                <button class="button" id="ratingSubmit" aria-label="提交我的其他反馈">提交</button>
+                <button class="button" id="ratingSkipThis" aria-label="跳过其他反馈">跳过此步</button>
+            </div>
+        </div>
+    </div>
+    <div id="ratingSection3">
+        <div class="title">
+            谢谢！
+        </div>
+        <div class="description">
+            我们非常感谢您的反馈。
+        </div>
+    </div>
+    
+    
+    <div id="contentFeedbackQAContainer" style="display: none;"></div>
+</div>
+    
+                                            </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            
+
+        <footer class="top" role="navigation" aria-label="footer">
+            <div data-fragmentName="LeftLinks" id="Fragment_LeftLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">开发人员中心</h4>
+    <ul class="links">
+      <li>
+        <a href="https://dev.windows.com" id="LeftLinks_2148_1" class="windowsBlue" xmlns="http://www.w3.org/1999/xhtml">Windows</a>
+      </li>
+      <li>
+        <a href="https://dev.office.com" id="LeftLinks_2148_3" class="office" xmlns="http://www.w3.org/1999/xhtml">Office</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/vstudio" id="LeftLinks_2148_4" class="visualStudio" xmlns="http://www.w3.org/1999/xhtml">Visual Studio</a>
+      </li>
+      <li>
+        <a href="https://azure.microsoft.com/zh-cn/documentation/" target="_blank" id="LeftLinks_2148_12" xmlns="http://www.w3.org/1999/xhtml">Microsoft Azure</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/developer-centers-msdn" id="LeftLinks_2148_5" xmlns="http://www.w3.org/1999/xhtml">更多...</a>
+      </li>
+    </ul>
+  </div>
+</div>
+            <div id="rightLinks">
+                <div data-fragmentName="CenterLinks1" id="Fragment_CenterLinks1" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">学习资源</h4>
+    <ul class="links">
+      <li>
+        <a href="https://www.microsoftvirtualacademy.com/" id="CenterLinks1_15653_4" xmlns="http://www.w3.org/1999/xhtml">Microsoft 虚拟学院</a>
+      </li>
+      <li>
+        <a href="https://channel9.msdn.com/" id="CenterLinks1_15653_5" xmlns="http://www.w3.org/1999/xhtml">第 9 频道</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/magazine/" id="CenterLinks1_15653_7" xmlns="http://www.w3.org/1999/xhtml">MSDN 杂志</a>
+      </li>
+    </ul>
+  </div>
+</div>
+                <div data-fragmentName="CenterLinks2" id="Fragment_CenterLinks2" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">社区</h4>
+    <ul class="links">
+      <li>
+        <a href="https://social.msdn.microsoft.com/forums/zh-cn/home" id="CenterLinks2_15653_8" xmlns="http://www.w3.org/1999/xhtml">论坛</a>
+      </li>
+      <li>
+        <a href="https://blogs.msdn.com/b/developer-tools/" id="CenterLinks2_15653_9" xmlns="http://www.w3.org/1999/xhtml">博客</a>
+      </li>
+      <li>
+        <a href="https://www.codeplex.com" id="CenterLinks2_15653_10" xmlns="http://www.w3.org/1999/xhtml">Codeplex</a>
+      </li>
+    </ul>
+  </div>
+</div>
+                <div data-fragmentName="CenterLinks3" id="Fragment_CenterLinks3" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">支持</h4>
+    <ul class="links">
+      <li>
+        <a href="https://msdn.microsoft.com/hh361695" id="CenterLinks3_15653_11" xmlns="http://www.w3.org/1999/xhtml">自助支持</a>
+      </li>
+    </ul>
+  </div>
+</div>
+                <div data-fragmentName="CenterLinks4" id="Fragment_CenterLinks4" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">计划</h4>
+    <ul class="links">
+      <li>
+        <a href="https://www.microsoft.com/bizspark/" id="CenterLinks4_15653_13" xmlns="http://www.w3.org/1999/xhtml">BizSpark（针对新创企业）</a>
+      </li>
+      <li>
+        <a href="https://www.imaginecup.com" id="CenterLinks4_15653_15" xmlns="http://www.w3.org/1999/xhtml">创新杯</a>
+      </li>
+    </ul>
+  </div>
+</div>
+            </div>
+        </footer>
+
+        <footer class="bottom" role="contentinfo">
+            <span class="localeContainer">
+                
+    <form class="selectLocale" id="selectLocaleForm" action="https://msdn.microsoft.com/zh-cn/selectlocale-dmc">
+        <input type="hidden" name="fromPage" value="https%3a%2f%2fmsdn.microsoft.com%2fzh-cn%2fmagazine%2fdd942846.aspx" />
+        <a href="#" onclick="$('#selectLocaleForm').submit();return false;" title="更改您的语言">中国 (简体中文)</a>
+    </form>
+
+
+            </span>
+
+            <div data-fragmentName="BottomLinks" id="Fragment_BottomLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <ul class="links horizontal">
+      <li>
+        <a href="https://msdn.microsoft.com/newsletter.aspx" id="BottomLinks_2148_7" xmlns="http://www.w3.org/1999/xhtml">新闻稿</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/dn529288" id="BottomLinks_2148_8" xmlns="http://www.w3.org/1999/xhtml">隐私&amp; Cookie</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/cc300389" id="BottomLinks_2148_9" xmlns="http://www.w3.org/1999/xhtml">使用条款</a>
+      </li>
+      <li>
+        <a href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/" id="BottomLinks_2148_10" xmlns="http://www.w3.org/1999/xhtml">商标</a>
+      </li>
+    </ul>
+  </div>
+</div>
+            <span class="logoLegal">
+                <span class="logoSpan clip67x13" role="img" tabindex="0" aria-label="microsoft logo">
+                    <img alt="logo" class="logo" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+                </span>
+                <span class="copyright">© 2017 Microsoft</span>
+            </span>
+        </footer>
+    </div>
+    
+
+
+
+    </div>
+
+    
+
+
+<![CDATA[ Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx. ]]>
+<![CDATA[ WebTrends view model not available or IncludeLegacyWebTrendsScriptInGlobal feature flag is off]]>
+
+
+
+
+
+    
+    
+
+<script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"https://i-msdn.sec.s-msft.com\", \r\n\t\"js\": \"https://i2-msdn.sec.s-msft.com\", \r\n\t\"css\": \"https://i-msdn.sec.s-msft.com\", \r\n\t\"ttf\": \"https://i-msdn.sec.s-msft.com\"\r\n});\r\n/**/" },
+	{ url: "https://i2-msdn.sec.s-msft.com/Combined.js?resources=0:Magazine,1:JumpRedirect,2:WEDCS,3:SurveyBroker,3:CodeSnippet,3:CollapsibleArea;/Areas/Magazine/Content/Scripts:0,/Areas/Epx/Themes/Base/Content:1,/Areas/Library/Themes/Base/Content:2,/Areas/Epx/Content/Scripts:3\u0026amp;hashKey=435C8198E7D5B46DF343C247B0DBDCDD\u0026amp;v=5948D8EFF694C50163CE92826C3070E6" }
+]);
+
+/*]]>*/
+</script></body>
+</html>

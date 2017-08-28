@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+
+
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head><link rel="canonical" href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd378460(v=vs.85).aspx" />
+    <title>Taskbar Extensions (Windows)</title>
+
+
+
+
+
+
+
+<meta name="DCS.dcsuri" content="/en-us/library/dd378460(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="NormalizedUrl" content="https://msdn.microsoft.com/en-us/library/dd378460(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="ms.normalizedurl" content="https://msdn.microsoft.com/en-us/library/dd378460(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="AmbientContext" content="{&quot;layout.limit_max_width&quot;:true,&quot;AmbientContextId&quot;:&quot;CA598178-8244-4ADD-A61C-E80FCD1F73BB&quot;,&quot;display.use_large_font&quot;:false,&quot;insight.perf_timing&quot;:true,&quot;AmbientContextDownstream&quot;:{&quot;LogTrace&quot;:false},&quot;display.high_contrast&quot;:false,&quot;insight.use_wedcs_vnext&quot;:true}" />
+
+<meta name="VotingContextUrl" content="https://msdn.microsoft.com/en-us/library/dd378460(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="MN" content="61C41DD5-12:02:56 AM" />
+
+<meta name="Search.ShortId" content="dd378460" />
+
+<meta name="ms.shortidmsdn" content="dd378460" />
+
+<meta name="ms.locale" content="en-us" />
+
+<meta name="ms.prodver" content="VS.85" />
+
+<meta name="ms.contentlang" content="EN" />
+
+<meta name="ms.lang" content="EN" />
+
+<meta name="ms.loc" content="US" />
+
+<meta name="ms.sitever" content="2017.08.13.1" />
+
+<meta name="ms.assetid" content="cbf2b07d-d67c-4755-888c-d40692d13cae" />
+
+<meta name="ms.auth" content="0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    
+        
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" data-do-not-move="true">
+        //<![CDATA[
+        var AmbientContext = null;
+
+        (function(){
+            var root = (function(){return this;}).call(null);
+
+            var GetCookie = function(name){
+                var cookies = root.document.cookie ? root.document.cookie.split('; ') : [];
+                for (var i = 0; i < cookies.length; i++) {
+                    var pos = cookies[i].indexOf('=');
+                    if (name === root.decodeURIComponent(cookies[i].slice(0, pos)))
+                    {
+                        var cookie = cookies[i].slice(pos + 1).replace(/\+/g, ' ');
+                        cookie = root.decodeURIComponent(cookie);
+                        return cookie;
+                    }
+                }
+            };
+
+            var JsonDeserialize = function(content) {
+                return root.JSON && root.JSON.parse ? root.JSON.parse(content) : (new Function('return (' + content + ')'))();
+            };
+
+            try {
+                AmbientContext = GetCookie('AmbientContext');
+                AmbientContext = AmbientContext && JsonDeserialize(AmbientContext);
+            } catch(ex) {
+            } finally {
+                AmbientContext = AmbientContext || null;
+            }
+        })();
+        //]]>
+    </script>
+
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js" data-do-not-move="true" data-provides="jQuery"></script>
+    
+<link rel="stylesheet" type="text/css" href="https://i-msdn.sec.s-msft.com/Combined.css?resources=0:ImageSprite,0:TopicResponsive,0:TopicResponsive.MediaQueries,1:CodeSnippet,1:ProgrammingSelector,1:ExpandableCollapsibleArea,0:CommunityContent,1:TopicNotInScope,1:FeedViewerBasic,1:ImageSprite,2:Header,2:HeaderFooterSprite,2:Header.MediaQueries,3:Banner.MediaQueries,0:Breadcrumbs,0:Breadcrumbs.MediaQueries,0:ResponsiveToc,0:ResponsiveToc.MediaQueries,0:LibraryMemberFilter,2:Footer,2:Footer.MediaQueries,4:StandardRating,5:LinkList,0:BaseResponsive,6:MsdnResponsive,0:Tables.MediaQueries;/Areas/Library/Content:0,/Areas/Epx/Content/Css:1,/Areas/Centers/Themes/StandardDevCenter/Content:2,/Areas/Epx/Shared/Content:3,/Areas/Global/Content:4,/Areas/Epx/Themes/Base/Content:5,/Areas/Library/Themes/Msdn/Content:6&amp;amp;v=0B2661FB2595ABE95CC879699921411E" /></head>
+<body class="library FF">
+    <div id="page">
+
+        
+
+        
+    
+
+    
+    <link type="text/css" rel="stylesheet" />
+    
+        
+        
+    <input type="hidden" id="isHeaderBleeding" value="true" />
+    <div id="ux-header" dir="ltr" class="ltr msdn" ms.pgarea="header">
+        
+
+      <header>
+        <span id="singleCol"></span>
+        <span id="doubleCol"></span>
+        <span id="isMobile"></span>
+        <div>
+          <div class="row topRow" role="banner">
+            <div class="top">
+              <div class="left">
+                <a class="msdnLogoImg" href="https://msdn.microsoft.com/en-us" title="MSDN home" ms.cmpgrp="mslogo">
+                  <div class="clip70x15">
+                    <img alt="Microsoft Logo" id="msft-logo" class="msft-logo" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+                  </div>
+                </a>
+                <div class="GrayPipeDiv clip1x18">
+                  <img alt="Gray Pipe" class="GrayPipe" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+                </div>
+                  <a class="DevCenterFullNameNonMegaBlade" href="https://msdn.microsoft.com/en-us">Developer Network</a>
+                <a class="DevCenterFullName" href="https://msdn.microsoft.com/en-us">Developer Network</a>
+                <a class="DevCenterShortName" href="https://msdn.microsoft.com/en-us">Developer</a>
+              </div>
+              <div class="right" ms.cmpgrp="aux nav">
+                <div id="signIn" aria-label="Profile button">
+
+  <div class="profileImage"></div>
+
+
+
+<a class="scarabLink" href="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=13&amp;ct=1503644576&amp;rver=6.7.6640.0&amp;wp=mcmbi&amp;wlcxt=msdn%24msdn%24msdn&amp;wreply=https%3a%2f%2fmsdn.microsoft.com%2fen-us%2flibrary%2fdd378460%2528v%3dvs.85%2529.aspx&amp;lc=1033&amp;id=254354&amp;mkt=en-us">Sign in</a></div>
+
+
+
+
+                <div class="auxNav">
+                  <div>
+                    <div data-fragmentName="Subscriptions" id="Fragment_Subscriptions" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://my.visualstudio.com/?wt.mc_id=o~msft~msdn~nav~subscriber&amp;campaign=o~msft~msdn~nav~subscriber" id="Subscriptions_2153_1" xmlns="http://www.w3.org/1999/xhtml">
+    <p xmlns="">Subscriber portal</p>
+  </a>
+</div>
+                    <div data-fragmentName="GetTools" id="Fragment_GetTools" xmlns="http://www.w3.org/1999/xhtml">
+  <a href="https://www.visualstudio.com/free-developer-offers/" id="GetTools_2153_3" xmlns="http://www.w3.org/1999/xhtml">Get tools</a>
+</div>
+                  </div>
+                        <div>
+                            
+                        </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row middleRow">
+            <div class="expandTop">
+              <div class="left"></div>
+              <div class="right"></div>
+            </div>
+          </div>
+        </div>
+        <div id="buttomRowWrapper" class="bg_default">
+          <div class="row buttomRow bg_default">
+            <div class="bottom">
+              <div class="left" role="navigation" aria-label="header toc" ms.cmpgrp="main nav">
+                <a id="grip" class="menu-icon" href="javascript:void(0)" role="button" aria-label="navigation menu"></a>
+                
+                <div id="drawer">
+                  <div class="toc">
+                    
+        <nav>
+            <ul class="navL1">
+                        <li class="inactive toggle">
+                                <a href="javascript:void(0)" role="button" aria-expanded="false">Downloads</a>
+                                <ul class="navL2">
+                                        <li class="inactive">
+
+                                                <a href="https://www.visualstudio.com/downloads/download-visual-studio-vs" role="link" title="Visual Studio">Visual Studio</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://msdn.microsoft.com/microsoft-sdks-msdn" role="link" title="SDKs">SDKs</a>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="Trial software" role="button" aria-expanded="false">Trial software</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/evalcenter" title="Free downloads" role="link">Free downloads</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/officeevaluationresources" title="Office resources" role="link">Office resources</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/sharepoint2013resources" title="SharePoint Server 2013 resources" role="link">SharePoint Server 2013 resources</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/sqlserver2014expressresources" title="SQL Server 2014 Express resources" role="link">SQL Server 2014 Express resources</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/windowsserver2012r2resources" title="Windows Server 2012 resources" role="link">Windows Server 2012 resources</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                </ul>
+                        </li>
+                        <li class="inactive toggle">
+                                <a href="javascript:void(0)" role="button" aria-expanded="false">Programs</a>
+                                <ul class="navL2">
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="Subscriptions" role="button" aria-expanded="false">Subscriptions</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/msdn-subscriptions-overview" title="Overview" role="link">Overview</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/msdn-subscriptions-administration" title="Administrators" role="link">Administrators</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive toggle">
+
+                                                <a href="javascript:void(0)" title="Students" role="button" aria-expanded="false">Students</a>
+                                                <ul class="navL3">
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/imagine/imagine-home" title="Microsoft Imagine" role="link">Microsoft Imagine</a>
+                                                        </li>
+                                                        <li class="inactive">
+                                                            <a href="https://msdn.microsoft.com/microsoftstudentpartners" title="Microsoft Student Partners" role="link">Microsoft Student Partners</a>
+                                                        </li>
+                                                </ul>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://msdn.microsoft.com/applicationbuilder" role="link" title="ISV">ISV</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://www.microsoft.com/bizspark" role="link" title="Startups">Startups</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://events.microsoft.com/" role="link" title="Events">Events</a>
+                                        </li>
+                                </ul>
+                        </li>
+                        <li class="inactive toggle">
+                                <a href="javascript:void(0)" role="button" aria-expanded="false">Community</a>
+                                <ul class="navL2">
+                                        <li class="inactive">
+
+                                                <a href="https://msdn.microsoft.com/magazine/dd767791" role="link" title="Magazine">Magazine</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://social.msdn.microsoft.com/forums/" role="link" title="Forums">Forums</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://blogs.msdn.microsoft.com/" role="link" title="Blogs">Blogs</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://channel9.msdn.com/" role="link" title="Channel 9">Channel 9</a>
+                                        </li>
+                                </ul>
+                        </li>
+                        <li class="inactive current toggle">
+                                <a href="javascript:void(0)" role="button" aria-expanded="false">Documentation</a>
+                                <ul class="navL2">
+                                        <li class="inactive current">
+
+                                                <a href="https://msdn.microsoft.com/library" role="link" title="APIs and reference">APIs and reference</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://msdn.microsoft.com/developer-centers-msdn" role="link" title="Dev centers">Dev centers</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://code.msdn.microsoft.com/" role="link" title="Samples">Samples</a>
+                                        </li>
+                                        <li class="inactive">
+
+                                                <a href="https://msdn.microsoft.com/retiredcontent" role="link" title="Retired content">Retired content</a>
+                                        </li>
+                                </ul>
+                        </li>
+            </ul>
+        </nav>
+
+                  </div>
+                </div>
+              </div>
+              <div class="right" ms.title="search" role="search">
+                <div data-fragmentName="SearchBox" id="Fragment_SearchBox" xmlns="http://www.w3.org/1999/xhtml">
+  <div class="SearchBox">
+    <form id="HeaderSearchForm" name="HeaderSearchForm" method="get">
+      <button id="FakeHeaderSearchButton" value="Search" type="submit" class="header-search-button" role="button" aria-label="search finder">
+        <div id="search-finder-div" class="clip16x20">
+          <img alt="search finder" id="search-finder" class="search-finder" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+        </div>
+      </button>
+      <button id="HeaderSearchButton" style="display:none"></button>
+      <div id="searchSplitter"></div>
+      <div id="searchCloseIconDiv" class="clip16x20" tabindex="0">
+        <img alt="search clear" id="searchCloseIcon" class="search-clear-x" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+      </div>
+      <div id="searchTextContainer" style="width: 0;">
+        <input id="HeaderSearchTextBox" name="query" type="text" aria-label="search edit textbox" maxlength="200" onfocus="Epx.Controls.SearchBox.watermarkFocus(event, this.title)" onblur="Epx.Controls.SearchBox.watermarkBlur(event, this.title)" />
+      </div>
+    </form>
+    
+    
+  </div>
+</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </header>
+
+    </div>
+
+    
+    
+    
+    <div id="jumpInfo" style="display: none">We’re sorry. The content you requested has been removed. You’ll be auto redirected in 1 second.</div>
+
+
+
+
+
+<link type="text/css" rel="stylesheet" />
+<link type="text/css" rel="stylesheet" />
+
+
+    <div id="breadcrumbs" ms.pgarea="body" ms.cmpgrp="breadcrumbs">
+        <div id="breadcrumbDesktop" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://msdn.microsoft.com/en-us/library/bb773177(v=vs.85).aspx" title="The Windows Shell"></a></span>
+                        <span><a href="https://msdn.microsoft.com/en-us/library/bb776778(v=vs.85).aspx" title="Shell Developer's Guide"><span>Shell Developer's Guide</span></a></span>
+                        <span><a href="https://msdn.microsoft.com/en-us/library/ff521728(v=vs.85).aspx" title="Shell Extensibility (Creating a Data Source)"><span>Shell Extensibility (Creating a Data Source)</span></a></span>
+                        <span class="breadcrumbDropSmall">
+                            <a id="breadcrumbDropDownButton" href="#" targethref="https://msdn.microsoft.com/en-us/library/ff521728(v=vs.85).aspx" title="Extending the Desktop"><span>Extending the Desktop</span></a>
+                        </span>
+        </div>
+        <div id="breadcrumbDropDownMenu"></div>
+
+        <div id="breadcrumbTablet" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://msdn.microsoft.com/en-us/library/ff521728(v=vs.85).aspx" title="Shell Extensibility (Creating a Data Source)"></a></span>
+                    <span><a href="https://msdn.microsoft.com/en-us/library/ff521672(v=vs.85).aspx" title="Extending the Desktop"><span>Extending the Desktop</span></a></span>
+                <span class="breadcrumbDropSmall"><a id="tocDropDownButton" href="#" title="Extending the Taskbar"><span>Extending the Taskbar</span></a></span>
+        </div>
+        <div id="tocDropDownMenu"></div>
+        <div id="breadcrumbMobile" class="breadCrumb">
+                <span class="breadcrumbEllipsis"><a href="https://msdn.microsoft.com/en-us/library/ff521672(v=vs.85).aspx" title="Extending the Desktop"></a></span>
+            <span class="breadcrumbDropSmall"><a id="tocPopupButton" href="#" title="Extending the Taskbar"><span>Extending the Taskbar</span></a></span>
+        </div>
+    </div>
+    <div id="tocPopupMenu">
+        <div id="tocPopMenuClose" class="tocCloseLarge"></div>
+        <div id="tocTitle">Extending the Taskbar</div>        
+    </div>
+
+    
+
+
+        <div id="body" ms.pgarea="body" class="">
+            <span id="tabletView_large"></span>
+            <span id="tabletView_small"></span>
+            <span id="mobileView"></span>
+            
+
+
+
+
+
+
+
+
+
+    <div id="leftNav" ms.cmpgrp="left toc" role="navigation" aria-label="left toc">
+
+    
+
+
+<div id="tocnav" class="ArchiveV2">
+    <div class="tocunselected">
+        <div id="tocExpandArea">
+            <span class="toc_empty"></span>
+            <span id="tocExpandButton"><a href="javascript:void(0)" aria-label="expand sibling toc" role="button"></a></span>
+        </div>
+        <div id="tocExpand"></div>
+    </div>
+    <div class="tocselected"></div>
+    <div class="tocunselected">
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/jj673981(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Desktop App Tiles on the Start Screen">Desktop App Tiles on the Start Screen</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/cc144179(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Understanding the Taskbar">Understanding the Taskbar</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/hh127425(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="How to Add Shortcuts to the Start Menu">How to Add Shortcuts to the Start Menu</a>                </div>
+                <div class="toclevel current" data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/dd378460(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Extending the Taskbar">Extending the Taskbar</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/dd378459(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Working with Application User Model IDs (AppUserModelIDs)">Working with Application User Model IDs (AppUserModelIDs)</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/hh127439(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="How to Exclude Items from Taskbar Pinning and Recent/Frequent Lists">How to Exclude Items from Taskbar Pinning and Recent/Frequent Lists</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/ee330740(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Managing Notifications and the Taskbar Notification Area">Managing Notifications and the Taskbar Notification Area</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/hh802768(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Quickstart: Sending a toast notification from the desktop">Quickstart: Sending a toast notification from the desktop</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/hh802762(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="How to enable desktop toast notifications through an AppUserModelID">How to enable desktop toast notifications through an AppUserModelID</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/cc144177(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Using Application Desktop Toolbars">Using Application Desktop Toolbars</a>                </div>
+    </div>
+    <a id="tocMenuToggler" href="javascript:void(0)" role="button">
+        <span id="tocMenuTogglerIcon" class="tocMenuCollapse" role="button" aria-expanded="true" aria-label="Table of contents menu"></span>
+        <div id="tocMenuTogglerLabel">TOC</div>
+    </a>
+</div>            <div style="display:none">
+                <div id="CollapseLocalizeString">Collapse the table of content</div>
+                <div id="ExpandLocalizeString">Expand the table of content</div>
+            </div>
+        <div>
+            <a id="isd_archiveControlResponsive" style="display:none;" href="javascript:void(0)" role="button" aria-label="Hide Archived Versions" data-include-archive="Show Archived Versions" data-exclude-archive="Hide Archived Versions">
+            </a>
+            <div id="isd_archiveInstrument" style="display:none">This documentation is archived and is not being maintained.</div>
+        </div>
+    </div>
+     <div id="content" class="content" ms.cmpgrp="content body" role="main">
+
+
+
+
+
+
+
+
+    <div id="archiveDisclaimerText" style="display:none">This documentation is archived and is not being maintained.</div>
+
+
+
+
+<div class="topic" xmlns="http://www.w3.org/1999/xhtml">
+  <h1 class="title">Taskbar Extensions</h1>
+  
+  <div id="mainSection">
+<div class="clsServerSDKContent">
+
+</div>
+<p>As of Windows 7, the taskbar has been extended significantly under the guiding principle of getting users where they're going as quickly and efficiently as possible. To that end, the application windows, files, and commands that the user needs to accomplish that are now centralized into a single taskbar button that consolidates previously scattered information sources and controls. A user can now find common tasks, recent and frequent files, alerts, progress notifications, and thumbnails for individual documents or tabs all in one place.</p>
+<p>
+</p><ul>
+<li><a href="#unified">Unified Launching and Switching</a></li>
+<li><a href="#jump_lists">Jump Lists</a></li>
+<li><a href="#dests">Destinations</a>
+</li>
+<li><a href="#tasks">Tasks</a>
+</li>
+<li><a href="#custom_jump_lists">Customizing Jump Lists</a>
+</li>
+<li><a href="#thumbbars">Thumbnail Toolbars</a>
+</li>
+<li><a href="#overlays">Icon Overlays</a>
+</li>
+<li><a href="#progress">Progress Bars</a>
+</li>
+<li><a href="#deskbands">Deskbands</a>
+</li>
+<li><a href="#notification">Notification Area</a></li>
+<li><a href="#thumbnails">Thumbnails</a>
+</li>
+<li><a href="#related_topics">Related topics</a></li>
+</ul>
+
+<h2><a id="unified"></a><a id="UNIFIED"></a>Unified Launching and Switching</h2>
+<p>As of the Windows 7 taskbar, Quick Launch is no longer a separate toolbar. The launcher shortcuts that Quick Launch typically contained are now pinned to the taskbar itself, mingled with buttons for currently running applications. When a user starts an application from a pinned launcher shortcut, the icon transforms into the application's taskbar button for as long as the application is running. When the user closes the application, the button reverts to the icon. However, both the launcher shortcut and the button for the running application are just different forms of the Windows 7 taskbar button.</p>
+<p><img id="Taskbar" alt="Windows 7 taskbar" src="https://i-msdn.sec.s-msft.com/dynimg/IC420537.png" title="Windows 7 taskbar" xmlns="" /></p>
+<p>A small set of applications are pinned by default for new installations. Other than these, only the user can pin further applications; programmatic pinning by an application is not permitted.</p>
+<p>The Show Desktop feature from Quick Launch is now located at the taskbar's far right. Hovering over this area causes all active windows to become transparent, showing the desktop. Clicking the area executes the familiar action of minimizing all windows and switching to the desktop.</p>
+<p>While the application is running, its taskbar button becomes the single place to access all of the following features, each discussed in detail below.</p>
+<ul>
+<li><a href="#tasks">Tasks</a>: common application commands, present even when the application is not running.</li>
+<li><a href="#dests">Destinations</a>: recently and frequently accessed files specific to the application.</li>
+<li><a href="#thumbnails">Thumbnails</a>: window switching, including switch targets for individual tabs and documents.</li>
+<li><a href="#thumbbars">Thumbnail Toolbars</a>: basic application control from the thumbnail itself.</li>
+<li><a href="#progress">Progress Bars</a> and <a href="#overlays">Icon Overlays</a>: status notifications.</li>
+</ul>
+<p>The taskbar button can represent a launcher, a single application window, or a group. An identifier known as an Application User Model ID (AppUserModelID) is assigned to each group. An AppUserModelID can be specified to override standard taskbar grouping, which allows windows to become members of the same group when they might not otherwise be seen as such. Each member of a group is given a separate preview in the thumbnail flyout that is shown when the mouse hovers over the group's taskbar button. Note that grouping itself remains optional.</p>
+<p>As of Windows 7, taskbar buttons can now be rearranged by the user through drag-and-drop operations.</p>
+<div class="alert"><strong>Note</strong>  The Quick Launch folder (<a href="https://msdn.microsoft.com/en-us/library/dd378457(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml"><strong>FOLDERID_QuickLaunch</strong></strong></a>) is still available for backward compatibility although there is no longer a Quick Launch UI. However, new applications should not ask to add an icon to Quick Launch during installation.</div>
+<div> </div>
+<p>For more information, see <a href="https://msdn.microsoft.com/en-us/library/dd378459(v=vs.85).aspx">Application User Model IDs (AppUserModelIDs)</a>.</p>
+<h2><a id="jump_lists"></a><a id="JUMP_LISTS"></a>Jump Lists</h2>
+<p>A user typically launches a program with the intention of accessing a document or performing tasks within the program. The user of a game program might want to get to a saved game or launch as a specific character rather than restart a game from the beginning. To get users more efficiently to their final goal, a list of <a href="#dests">destinations</a> and common <a href="#tasks">tasks</a> associated with an application is attached to that application's taskbar button (as well as to the equivalent <strong>Start</strong> menu entry). This is the application's Jump List. The Jump List is available whether the taskbar button is in a launcher state (the application isn't running) or whether it represents one or more windows. Right-clicking the taskbar button shows the application's Jump List, as shown in the following illustration.</p>
+<p><img id="JumpList" alt="Jump List with Pinned, Frequent, and Tasks categories" src="https://i-msdn.sec.s-msft.com/dynimg/IC420538.png" title="Jump List with Pinned, Frequent, and Tasks categories" xmlns="" /></p>
+<p>By default, a standard Jump List contains two categories: recent items and pinned items, although because only categories with content are shown in the UI, neither of these categories are shown on first launch. Always present are an application launch icon (to launch more instances of the application), an option to pin or unpin the application from the taskbar, and a <strong>Close</strong> command for any open windows.</p>
+<h2><a id="dests"></a><a id="DESTS"></a>Destinations</h2>
+<p>The <strong>Recent</strong> and <strong>Frequent</strong> categories are considered to contain destinations. A destination, usually a file, document, or URL, is something that can be edited, browsed, viewed, and so on. Think of a destination as a thing rather than an action. Typically, a destination is an item in the Shell namespace, represented by an <a href="https://msdn.microsoft.com/en-us/library/bb761144(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IShellItem</strong></a> or <a href="https://msdn.microsoft.com/en-us/library/bb774950(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IShellLink</strong></a>. These portions of the destination list are analogous to the <strong>Start</strong> menu's recently used documents list (no longer shown by default) and frequently used application list, but they are specific to an application and therefore more accurate and useful to the user. The results used in the destination list are calculated through calls to <a href="https://msdn.microsoft.com/en-us/library/bb762105(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SHAddToRecentDocs</strong></a>. Note that when the user opens a file from Windows Explorer or uses the common file dialog to open, save, or create a file, <strong>SHAddToRecentDocs</strong> is called for you automatically, which results in many applications getting their recent items shown in the destination list without any action on their part.</p>
+<p>Launching a destination is much like launching an item using the <strong>Open With</strong> command. The application launches with that destination loaded and ready to use. Items in the destination list can also be dragged from the list to a drop destination such as an email message. By having these items centralized in a destination list, it gets users where they want to go that much faster, which is the goal.</p>
+<p>As items appear in a destination list's <strong>Recent</strong> category (or the <strong>Frequent</strong> category or a <a href="#custom_jump_lists">custom category</a> as discussed in a later section), a user might want to ensure that the item is always in the list for quick access. To accomplish this, he or she can pin that item to the list, which adds the item to the <strong>Pinned</strong> category. When a user is actively working with a destination, he or she wants it easily at hand and so would pin it to the application's destination list. After the user's work there is done, he or she simply unpins the item. This user control keeps the list uncluttered and relevant.</p>
+<p>A destination list can be regarded as an application-specific version of the <strong>Start</strong> menu. A destination list is not a shortcut menu. Each item in a destination list can be right-clicked for its own shortcut menu.</p>
+<h3><a id="APIs"></a><a id="apis"></a><a id="APIS"></a>APIs</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378415(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IApplicationDestinations::RemoveDestination</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378414(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IApplicationDestinations::RemoveAllDestinations</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378410(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IApplicationDocumentLists::GetList</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/bb762105(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SHAddToRecentDocs</strong></a>
+</li>
+</ul>
+<h2><a id="tasks"></a><a id="TASKS"></a>Tasks</h2>
+<p>Another built-in portion of a Jump List is the <strong>Tasks</strong> category. While a destination is a thing, a task is an action, and in this case it is an application-specific action. Put another way, a destination is a noun and a task is a verb. Typically, tasks are <a href="https://msdn.microsoft.com/en-us/library/bb774950(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IShellLink</strong></a> items with command-line arguments that indicate particular functionality that can be triggered by an application. Again, the idea is to centralize as much information related to an application as is practical.</p>
+<p>Applications define tasks based on both the program's features and the key things a user is expected to do with them. Tasks should be context-free, in that the application does not need to be running for them to work. They should also be the statistically most common actions that a normal user would perform in an application, such as compose an email message or open the calendar in a mail program, create a new document in a word processor, launch an application in a certain mode, or launch one of its subcommands. An application should not clutter the menu with advanced features that standard users won't need or one-time actions such as registration. Do not use tasks for promotional items such as upgrades or special offers.</p>
+<p>It is strongly recommended that the task list be static. It should remain the same regardless of the state or status of the application. While it is possible to vary the list dynamically, you should consider that this could confuse the user who does not expect that portion of the destination list to change.</p>
+<h3><a id="APIs"></a><a id="apis"></a><a id="APIS"></a>APIs</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378395(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ICustomDestinationList::AddUserTasks</strong></a>
+</li>
+</ul>
+<h2><a id="custom_jump_lists"></a><a id="CUSTOM_JUMP_LISTS"></a>Customizing Jump Lists</h2>
+<p>An application can define its own categories and add them in addition to or in place of the standard <strong>Recent</strong> and <strong>Frequent</strong> categories in a Jump List. The application can control its own destinations in those custom categories based on the application's architecture and intended use. The following screen shot shows a Custom Jump List with a History category.</p>
+<p><img id="CustomJumpList" alt="Custom Jump List" src="https://i-msdn.sec.s-msft.com/dynimg/IC420539.png" title="Custom Jump List" xmlns="" /></p>
+<p>If an application decides to provide a custom category, that application assumes responsibility for populating it. The category contents should still be user-specific and based on user history, actions, or both, but through a custom category an application can determine what it wants to track and what it wants to ignore, perhaps based on an application option. For example, an audio program might elect to include only recently played albums and ignore recently played individual tracks.</p>
+<p>If a user has removed an item from the list, which is always a user option, the application must honor that. The application must also ensure that items in the list are valid or that they fail gracefully if they have been deleted. Individual items or the entire contents of the list can be programmatically removed.</p>
+<p>The maximum number of items in a destination list is determined by the system based on various factors such as display resolution and font size. If there isn't space enough for all items in all categories, they are truncated from the bottom up.</p>
+<h3><a id="APIs"></a><a id="apis"></a><a id="APIS"></a>APIs</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378402(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ICustomDestinationList</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378413(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IApplicationDestinations</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd378411(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IApplicationDocumentLists</strong></a>
+</li>
+</ul>
+<h2><a id="thumbbars"></a><a id="THUMBBARS"></a>Thumbnail Toolbars</h2>
+<p>To provide access to a particular window's key commands without making the user restore or activate the application's window, an active toolbar control can be embedded in that window's thumbnail preview. For example, Windows Media Player might offer standard media transport controls such as play, pause, mute, and stop. The UI displays this toolbar directly below the thumbnail as shown in the following illustration—it does not cover any part of it.</p>
+<p><img id="ThumbBar" alt="Thumbnail taskbar for Windows Media Player, with three buttons: back, play, and forward" src="https://i-msdn.sec.s-msft.com/dynimg/IC420540.png" title="Thumbnail taskbar for Windows Media Player, with three buttons: back, play, and forward" xmlns="" /></p>
+<p>This toolbar is simply the familiar standard toolbar common control. It has a maximum of seven buttons. Each button's ID, image, tooltip, and state are defined in a structure, which is then passed to the taskbar. The application can show, enable, disable, or hide buttons from the thumbnail toolbar as required by its current state.</p>
+<p>Because there is limited room to display thumbnails and a variable number of thumbnails to display, applications are not guaranteed a given toolbar size. If space is restricted, buttons in the toolbar are truncated from right to left. Therefore, when you design your toolbar, you should prioritize the commands associated with your buttons and ensure that the most important come first and are least likely to be dropped because of space issues.</p>
+<div class="alert"><strong>Note</strong>  When an application displays a window, its taskbar button is created by the system. When the button is in place, the taskbar sends a <strong>TaskbarButtonCreated</strong> message to the window. Its value is computed by calling <a href="https://msdn.microsoft.com/en-us/library/ms644947(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">RegisterWindowMessage</strong></a>(L("TaskbarButtonCreated")). That message must be received by your application before it calls any <a href="https://msdn.microsoft.com/en-us/library/dd391692(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3</strong></a> method.</div>
+<div> </div>
+<h3><a id="API"></a><a id="api"></a>API</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391703(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::ThumbBarAddButtons</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391704(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::ThumbBarSetImageList</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391705(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::ThumbBarUpdateButtons</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391559(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">THUMBBUTTON</strong></a>
+</li>
+</ul>
+<h2><a id="overlays"></a><a id="OVERLAYS"></a>Icon Overlays</h2>
+<p>An application can communicate certain notifications and status to the user through its taskbar button by the display of small overlays on the button. These overlays are similar to the type of existing overlay used for shortcuts or security notifications, displayed at the lower-right corner of the button. To display an overlay icon, the taskbar must be in the default large icon mode, as shown in the following screen shot.</p>
+<p><img id="TaskbarOverlay" alt="Windows Messenger taskbar button with an overlay to indicate an Available status" src="https://i-msdn.sec.s-msft.com/dynimg/IC420441.png" title="Windows Messenger taskbar button with an overlay to indicate an Available status" xmlns="" /></p>
+<p>Icon overlays serve as a contextual notification of status, and are intended to negate the need for a separate notification area status icon to communicate that information to the user. For instance, the new mail status in Microsoft Outlook, currently shown in the notification area, can now be indicated through an overlay on the taskbar button. Again, you must decide during your development cycle which method is best for your application. Overlay icons are intended to supply important, long-standing status or notifications such as network status, messenger status, or new mail. The user should not be presented with constantly changing overlays or animations.</p>
+<p>Because a single overlay is overlaid on the taskbar button and not on the individual window thumbnails, this is a per-group feature rather than per-window. Requests for overlay icons can be received from individual windows in a taskbar group, but they do not queue. The last overlay received is the overlay shown.</p>
+<h3><a id="APIs"></a><a id="apis"></a><a id="APIS"></a>APIs</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391696(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::SetOverlayIcon</strong></a>
+</li>
+</ul>
+<h2><a id="progress"></a><a id="PROGRESS"></a>Progress Bars</h2>
+<p>A taskbar button can be used to display a progress bar. This enables a window to provide progress information to the user without that user having to switch to the window itself. The user can stay productive in another application while seeing at a glance the progress of one or more operations occurring in other windows. It is intended that a progress bar in a taskbar button reflects a more detailed progress indicator in the window itself. This feature can be used to track file copies, downloads, installations, media burning, or any operation that's going to take a period of time. This feature is not intended for use with normally peripheral actions such as the loading of a webpage or the printing of a document. That type of progress should continue to be shown in a window's status bar.</p>
+<p>The taskbar button progress bar is a similar experience to the familiar Progress Bar control. It can display either determinate progress based on a completed percentage of the operation or an indeterminate marquee-style progress to indicate that the operation is in progress without any prediction of time remaining. It can also show that the operation is paused or has encountered an error and requires user intervention.</p>
+<h3><a id="APIs"></a><a id="apis"></a><a id="APIS"></a>APIs</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391697(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::SetProgressState</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391698(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::SetProgressValue</strong></a>
+</li>
+</ul>
+<h2><a id="deskbands"></a><a id="DESKBANDS"></a>Deskbands</h2>
+<p>In versions of Windows prior to Windows 7, something similar to thumbnail toolbar functionality could be achieved through a deskband—a toolbar hosted in the taskbar. For instance, Windows Media Player could minimize to the taskbar as a set of transport controls rather than a standard button. In Windows 7, deskbands can still be implemented and thumbnail toolbars are not intended to replace them all. Not all applications will lend themselves to a thumbnail toolbar, and another solution such as a deskband or a task in a destination list might be the right answer for your application; you must decide which solution works best for your application as part of your development cycle. However, be aware that deskbands must support Windows Aero with translucency ("glass") enabled and the <a href="https://msdn.microsoft.com/en-us/library/bb762064(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IDeskBand2</strong></a> interface.</p>
+<h3><a id="APIs"></a><a id="apis"></a><a id="APIS"></a>APIs</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/bb762064(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IDeskBand2</strong></a>
+</li>
+</ul>
+<h2><a id="notification"></a><a id="NOTIFICATION"></a>Notification Area</h2>
+<p>There have been changes to the notification area that give the user much more control over what icons appear on the taskbar. All notification icons are now hidden by default and that visibility cannot be programmatically controlled. Only the user is allowed to choose which notification icons appear on the taskbar. When a notification balloon is displayed, the icon becomes temporarily visible, but even then a user can choose to silence them. An icon overlay on a taskbar button therefore becomes an attractive choice when you want your application to communicate that information to your users.</p>
+<h2><a id="thumbnails"></a><a id="THUMBNAILS"></a>Thumbnails</h2>
+<p>In Windows Vista, hovering over an application's taskbar button displays a thumbnail that represents the running window. If the taskbar has collapsed the application's windows, the thumbnail represents this by appearing as a stack, but only the active window is shown in the thumbnail itself.</p>
+<p>In Windows 7, each member of a group is shown as a separate thumbnail and is now also a switch target. An application can define its children (such as true child windows, individual documents, or tabs) and provide corresponding thumbnails for each of those windows even when they would not normally appear in the taskbar. This enables users to switch directly into the view of the application that they want rather than switching into the application and then switching to their destination. For example, multiple-document interface (MDI)/tabbed-document interface (TDI)applications can have each document or tab displayed as a separate thumbnail and switch target when the mouse hovers over a group's taskbar button.</p>
+<p><img id="TaskbarThumbnails" alt="Three taskbar thumbnails that represent individual tabs in Windows Internet Explorer" src="https://i-msdn.sec.s-msft.com/dynimg/IC420541.png" title="Three taskbar thumbnails that represent individual tabs in Windows Internet Explorer" xmlns="" /></p>
+<div class="alert"><strong>Note</strong>  As in Windows Vista, Aero must be active to view thumbnails.</div>
+<div> </div>
+<h3><a id="API"></a><a id="api"></a>API</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391694(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::RegisterTab</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391699(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::SetTabActive</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391700(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::SetTabOrder</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391706(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::UnregisterTab</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd562049(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList4::SetTabProperties</strong></a>
+</li>
+</ul>
+<p>Thumbnail representations for windows are normally automatic, but in cases where the result isn't optimal, the thumbnail can be explicitly specified. By default, only top-level windows have a thumbnail automatically generated for them, and the thumbnails for child windows appear as a generic representation. This can result in a less than ideal (and even confusing) experience for the end user. A specific switch target thumbnail for each child window, for instance, provides a much better user experience.</p>
+<h3><a id="API"></a><a id="api"></a>API</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/aa969524(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DwmSetWindowAttribute</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd389411(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DwmSetIconicThumbnail</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd389410(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DwmSetIconicLivePreviewBitmap</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd389409(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DwmInvalidateIconicBitmaps</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd938875(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_DWMSENDICONICTHUMBNAIL</strong></a>
+</li>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd938874(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_DWMSENDICONICLIVEPREVIEWBITMAP</strong></a>
+</li>
+</ul>
+<p>You can select a particular area of the window to use as the thumbnail. This can be useful when an application knows that its documents or tabs will appear similar when viewed at thumbnail size. The application can then choose to show just the part of its client area that the user can use to distinguish between thumbnails. However, hovering over any thumbnail brings up a view of the full window behind it so the user can quickly glance through them as well.</p>
+<p>If there are more thumbnails than can be displayed, the preview reverts to the legacy thumbnail or a standard icon.</p>
+<h3><a id="API"></a><a id="api"></a>API</h3>
+<ul>
+<li>
+<a href="https://msdn.microsoft.com/en-us/library/dd391701(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ITaskbarList3::SetThumbnailClip</strong></a>
+</li>
+</ul>
+<p>To add <strong>Pin to Taskbar</strong> to an item's shortcut menu, which is normally required only for file types that include the <a href="https://msdn.microsoft.com/en-us/library/bb776891(v=vs.85).aspx">IsShortCut</a> entry, is done by registering the appropriate context menu handler. This also applies to <strong>Pin to Start Menu</strong>. See <a href="https://msdn.microsoft.com/en-us/library/cc144110(v=vs.85).aspx">Registering Shell Extension Handlers</a> for more information.</p>
+<h2><a id="related_topics"></a>Related topics</h2>
+<dl>
+<dt>
+<a href="https://msdn.microsoft.com/en-us/library/cc144179(v=vs.85).aspx">The Taskbar</a>
+</dt>
+<dt>
+<a href="https://msdn.microsoft.com/en-us/library/dd378459(v=vs.85).aspx">Application User Model IDs (AppUserModelIDs)</a>
+</dt>
+<dt>
+<a href="https://msdn.microsoft.com/en-us/library/ee330740(v=vs.85).aspx">Notifications and the Notification Area</a>
+</dt>
+</dl>
+<p> </p>
+<p> </p>
+</div>
+</div>
+
+
+
+
+
+
+<div class="libraryMemberFilter">
+    <div class="filterContainer">
+        <span>Show:</span>
+        <label>
+            <input type="checkbox" class="libraryFilterInherited" checked="checked" value="Inherit" />Inherited
+        </label>
+        <label>
+            <input type="checkbox" class="libraryFilterProtected" checked="checked" value="Protected" />Protected
+        </label>
+    </div>
+</div>
+    
+<input type="hidden" id="libraryMemberFilterEmptyWarning" value="There are no members available with your current filter settings." />
+
+
+
+    </div>
+<div id="rightNavigationMenu" ms.cmpgrp="right nav">
+    <div id="mobileButtons">
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://msdn.microsoft.com/en-us/library/dd378460(d=printer,v=vs.85).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isd_printABook" href="/en-us/library/export/help/?returnurl=%2fen-us%2flibrary%2fdd378460(v%3dvs.85).aspx">
+                <ins class="export"></ins>Export (<span class="count">0</span>)
+            </a>
+        </div>
+    </div>
+    <div id="navMain">
+        <div id="closeNavigation">
+            <a class="tocCloseSmall" id="closeButton"></a>
+        </div>
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://msdn.microsoft.com/en-us/library/dd378460(d=printer,v=vs.85).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isdShare" href="#" role="button" aria-expanded="false">
+                <ins class="share"></ins>Share
+            </a>
+            <div id="socials" style="display: none">
+                <a class="isdFacebook" href="#" aria-label="Share on Facebook">
+                    <ins class="facebook"></ins>
+                </a>
+                <a class="isdTwitter" href="#" aria-label="Share on Twitter">
+                    <ins class="twitter"></ins>
+                </a>
+                <a class="isdGooglePlus" href="#" aria-label="Share on Google+">
+                    <ins class="googlePlus"></ins>
+                </a>
+            </div>
+        </div>
+        <div id="indoc_toc" style="display: none" ms.cmpgrp="indoc toc">
+            <div id="indoc_title">IN THIS ARTICLE</div>
+            <ul id="indoc_toclist"></ul>
+        </div>
+    </div>
+</div>
+<div id="rightNavigationMenuThumbnail" class="rightNavigationMenuThumbnail">
+</div>
+
+
+
+
+
+        </div>
+        <div class="clear"></div>
+
+        
+
+<input name="__RequestVerificationToken" type="hidden" value="mdZ9eejbS2SQ2iJkDkE-uho_JvHoQJlXWQP0SUE2yXXvvpmtJfMsNE-wmCBKwhifJDjinTEljfWjVueQhjBItiDdPK81" />
+<input id="ratingValueSubmitUrl" type="hidden" value="https://msdn.microsoft.com/en-us/library/feedback/rate/dd378460(v=vs.85).aspx" />
+<input id="ratingAdditionalSubmitUrl" type="hidden" value="https://msdn.microsoft.com/en-us/library/feedback/additional/dd378460(v=vs.85).aspx" />
+<input id="isTopicRated" type="hidden" value="false" />
+
+
+
+
+    <div id="lib-footer">
+        
+
+    
+    <link type="text/css" rel="stylesheet" />
+    
+        
+    <div id="ux-footer" class="" style="" dir="ltr" ms.pgarea="footer">
+
+
+    <div id="standardRatingBefore" class="clear stdr-container-before"></div>
+    <div id="standardRating" class="stdr-container" ms.pgarea="body">
+        <div class="stdr-close"></div>
+        <div class="stdr-vote stdr-content">
+            <div class="stdr-content">
+                <span class="stdr-votetitle">Is this page helpful?</span>
+                <button class="stdr-yes" aria-label="Yes, this page was helpful">Yes</button>
+                <button class="stdr-no" aria-label="No, this page was not helpful">No</button>
+                <input id="s_ratingValue" type="hidden" value="" />
+            </div>
+        </div>
+        <div class="stdr-feedback" style="display: none">
+            <div class="stdr-form">
+                <div class="stdr-fieldtitle">Additional feedback?</div>
+                <textarea class="stdr-detail" rows="6" maxlength="1500"></textarea>
+                <div>
+                    <span class="stdr-count"><span class="stdr-charcnt">1500</span> characters remaining</span>
+                    <div class="stdr-buttons">
+                        <button class="stdr-provide" aria-label="Submit my additional feedback">Submit</button>
+                        <button class="stdr-skip" aria-label="Skip additional feedback">Skip this</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="stdr-thanks" style="display: none">
+            <div class="stdr-content">
+                <span class="stdr-thankyou">Thank you!</span>
+                <span class="stdr-appreciate">We appreciate your feedback.</span>
+            </div>
+        </div>
+
+        
+        <div id="contentFeedbackQAContainer" style="display: none;"></div>
+    </div>
+    <div id="standardRatingPlaceholder" style="display: none"></div>
+    
+
+        <footer class="top" role="navigation" aria-label="footer">
+            <div data-fragmentName="LeftLinks" id="Fragment_LeftLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">Dev centers</h4>
+    <ul class="links">
+      <li>
+        <a href="https://developer.microsoft.com/en-us/windows" id="LeftLinks_2148_1" class="windowsBlue" xmlns="http://www.w3.org/1999/xhtml">Windows</a>
+      </li>
+      <li>
+        <a href="https://dev.office.com/" id="LeftLinks_2148_3" class="office" xmlns="http://www.w3.org/1999/xhtml">Office</a>
+      </li>
+      <li>
+        <a href="https://www.visualstudio.com/" id="LeftLinks_2148_4" class="visualStudio" xmlns="http://www.w3.org/1999/xhtml">Visual Studio</a>
+      </li>
+      <li>
+        <a href="https://docs.microsoft.com/en-us/azure/" target="_blank" id="LeftLinks_2148_12" xmlns="http://www.w3.org/1999/xhtml">Microsoft Azure</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/developer-centers-msdn" id="LeftLinks_2148_5" xmlns="http://www.w3.org/1999/xhtml">More...</a>
+      </li>
+    </ul>
+  </div>
+</div>
+            <div id="rightLinks">
+                <div data-fragmentName="CenterLinks1" id="Fragment_CenterLinks1" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">Learning resources</h4>
+    <ul class="links">
+      <li>
+        <a href="https://mva.microsoft.com/" id="CenterLinks1_2151_4" xmlns="http://www.w3.org/1999/xhtml">Microsoft Virtual Academy</a>
+      </li>
+      <li>
+        <a href="https://channel9.msdn.com/" id="CenterLinks1_2151_5" xmlns="http://www.w3.org/1999/xhtml">Channel 9</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/magazine/" id="CenterLinks1_2151_7" xmlns="http://www.w3.org/1999/xhtml">MSDN Magazine</a>
+      </li>
+    </ul>
+  </div>
+</div>
+                <div data-fragmentName="CenterLinks2" id="Fragment_CenterLinks2" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">Community</h4>
+    <ul class="links">
+      <li>
+        <a href="https://social.msdn.microsoft.com/forums/en-us/home" id="CenterLinks2_2151_8" xmlns="http://www.w3.org/1999/xhtml">Forums</a>
+      </li>
+      <li>
+        <a href="https://blogs.msdn.microsoft.com/developer-tools/" id="CenterLinks2_2151_9" xmlns="http://www.w3.org/1999/xhtml">Blogs</a>
+      </li>
+      <li>
+        <a href="https://www.codeplex.com/" id="CenterLinks2_2151_10" xmlns="http://www.w3.org/1999/xhtml">Codeplex</a>
+      </li>
+    </ul>
+  </div>
+</div>
+                <div data-fragmentName="CenterLinks3" id="Fragment_CenterLinks3" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">Support</h4>
+    <ul class="links">
+      <li>
+        <a href="https://msdn.microsoft.com/hh361695" id="CenterLinks3_2151_11" xmlns="http://www.w3.org/1999/xhtml">Self support</a>
+      </li>
+    </ul>
+  </div>
+</div>
+                <div data-fragmentName="CenterLinks4" id="Fragment_CenterLinks4" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <h4 class="linkListTitle">Programs</h4>
+    <ul class="links">
+      <li>
+        <a href="https://bizspark.microsoft.com/Startups/Index" id="CenterLinks4_2151_13" xmlns="http://www.w3.org/1999/xhtml">BizSpark (for startups)</a>
+      </li>
+      <li>
+        <a href="https://imagine.microsoft.com/en-us" id="CenterLinks4_2151_22" xmlns="http://www.w3.org/1999/xhtml">Microsoft Imagine (for students)</a>
+      </li>
+    </ul>
+  </div>
+</div>
+            </div>
+        </footer>
+
+        <footer class="bottom" role="contentinfo">
+            <span class="localeContainer">
+                
+    <form class="selectLocale" id="selectLocaleForm" action="https://msdn.microsoft.com/en-us/selectlocale-dmc">
+        <input type="hidden" name="fromPage" value="https%3a%2f%2fmsdn.microsoft.com%2fen-us%2flibrary%2fdd378460(v%3dvs.85).aspx" />
+        <a href="#" onclick="$('#selectLocaleForm').submit();return false;" title="Change your language">United States (English)</a>
+    </form>
+
+
+            </span>
+
+            <div data-fragmentName="BottomLinks" id="Fragment_BottomLinks" xmlns="http://www.w3.org/1999/xhtml">
+  
+  <div class="linkList">
+    <ul class="links horizontal">
+      <li>
+        <a href="https://msdn.microsoft.com/en-us/flashnewsletter" id="BottomLinks_2148_7" xmlns="http://www.w3.org/1999/xhtml">Newsletter</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/en-us/dn529288" id="BottomLinks_2148_8" xmlns="http://www.w3.org/1999/xhtml">Privacy &amp; cookies</a>
+      </li>
+      <li>
+        <a href="https://msdn.microsoft.com/en-us/cc300389" id="BottomLinks_2148_9" xmlns="http://www.w3.org/1999/xhtml">Terms of use</a>
+      </li>
+      <li>
+        <a href="https://www.microsoft.com/en-us/legal/intellectualproperty/Trademarks/" id="BottomLinks_2148_10" xmlns="http://www.w3.org/1999/xhtml">Trademarks</a>
+      </li>
+    </ul>
+  </div>
+</div>
+            <span class="logoLegal">
+                <span class="logoSpan clip67x13" role="img" tabindex="0" aria-label="microsoft logo">
+                    <img alt="logo" class="logo" src="https://i-msdn.sec.s-msft.com/Areas/Centers/Themes/StandardDevCenter/Content/HeaderFooterSprite.png?v=636382651724723869" />
+                </span>
+                <span class="copyright">© 2017 Microsoft</span>
+            </span>
+        </footer>
+    </div>
+    
+
+    </div>
+
+
+        <div class="footerPrintView">
+            <div class="footerCopyrightPrintView">© 2017 Microsoft</div>
+        </div>
+
+        
+        
+
+        
+        
+        
+
+    <input id="tocPaddingPerLevel" type="hidden" value="17" />
+
+
+
+        <input id="MtpsDevice" type="hidden" value="Default" />
+
+
+<![CDATA[ Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx. ]]>
+
+        
+        
+        
+            
+        
+
+<![CDATA[ WebTrends view model not available or IncludeLegacyWebTrendsScriptInGlobal feature flag is off]]>
+
+
+
+
+<div id="globalRequestVerification">
+    <input name="__RequestVerificationToken" type="hidden" value="ymIpBi3HD5LlpCT1YGrIx23lHwsMdKq2p0hKB4WrT1s904WS9FHfHhlucuzAFY6XtdjzP7iZtE7vX8QaG54BkSIhc_E1" />
+</div>
+
+
+    </div>
+
+    
+    
+
+    
+
+    
+<script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"https://i-msdn.sec.s-msft.com\", \r\n\t\"js\": \"https://i2-msdn.sec.s-msft.com\", \r\n\t\"css\": \"https://i-msdn.sec.s-msft.com\", \r\n\t\"ttf\": \"https://i-msdn.sec.s-msft.com\"\r\n});\r\n/**/" },
+	{ txt: "//\n\n        window.appInsightsId = \u00275eb1b2eb-c47a-497a-a7ac-a1c230b2882f\u0027;\n        //" },
+	{ url: "https://i2-msdn.sec.s-msft.com/Combined.js?resources=0:Utilities,1:Layout,2:Header,3:Breadcrumbs,4:LibraryRightNavigationMenu,4:PrintExportButton,5:StandardRating,2:Footer,0:Topic,3:ResponsiveSupport,0:AppInsightsPerf,3:ResponsiveToc,0:ABTestControl,4:WEDCS,3:CmpgrpForHeader,1:SearchBox;/Areas/Epx/Content/Scripts:0,/Areas/Epx/Themes/Base/Content:1,/Areas/Centers/Themes/StandardDevCenter/Content:2,/Areas/Library/Content:3,/Areas/Library/Themes/Base/Content:4,/Areas/Global/Content:5\u0026amp;hashKey=9B821351554FB172FE572BBD060FF016\u0026amp;v=7276313B2B6B5436633DA7F705037892" },
+	{ url: "https://i1.services.social.microsoft.com/search/Widgets/SearchBox.jss?boxid=HeaderSearchTextBox\u0026btnid=HeaderSearchButton\u0026minimumTermLength=2\u0026pgArea=header\u0026brand=Msdn\u0026loc=en-us\u0026focusOnInit=false\u0026emptyWatermark=true\u0026searchButtonTooltip=Search MSDN" },
+	{ url: "https://i2-msdn.sec.s-msft.com/Combined.js?resources=0:JumpRedirect,1:LibraryMemberFilter,2:Toc_Fixed,2:CodeSnippet,2:TopicNotInScope,2:VersionSelector,2:SurveyBroker;/Areas/Epx/Themes/Base/Content:0,/Areas/Library/Content:1,/Areas/Epx/Content/Scripts:2\u0026amp;hashKey=537DC9171018D829655EEAAB087DE60B\u0026amp;v=7276313B2B6B5436633DA7F705037892" },
+	{ txt: "$(document).ready(function() {\n        try {\n            var token = $(\"#globalRequestVerification input[name=\u0027__RequestVerificationToken\u0027]\").clone();\n            $(\"#siteFeedbackForm\").append(token);\n        } catch(err) {\n            \n        }\n    });" }
+]);
+
+/*]]>*/
+</script></body>
+</html>
