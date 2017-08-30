@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HTTP Live Streaming直播（iOS直播）技术分析与实现 - haibindev - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=-wBWg2jMfLNV0-ScpDNxGkoH_gCbdW1yTVJLHzPL7HE1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/nature/bundle-nature.css?v=SMSmqROZamyrz003uRLsZZQqisVE_ymEDyPy07GKHPw1"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/nature/bundle-nature-mobile.css?v=sNHXQZeAM5FmNRRG1A4pua43iZn_4AM3iLmzHhUzfnI1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/haibindev/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/haibindev/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/haibindev/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'haibindev', cb_enable_mathjax=false;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=wUUQbLTt-LocHM-6RVSAUwAYdrfA1Lt3ool1ZdiICfI1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="banner"><div id="bnr_pic">
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/haibindev/">HBStream流媒体网络科技</a><br>
+	</div><br>
+	<div class="headerDis"></div>
+</div>
+</div></div>
+<div id="main">
+	<!-- left starts -->
+	<div id="left">
+		<DIV id="mystats">
+			<br/>
+				<div id="blog_stats">
+<!--done-->
+<div class="blogStats">
+随笔 - 26&nbsp;
+文章 - 0&nbsp;
+评论 - 454&nbsp;
+
+</div></div>
+			
+		</DIV>
+		<div id="mylinks">
+<!--done-->
+<a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a>&nbsp;&nbsp;<a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/haibindev/">首页</a>&nbsp;&nbsp;<a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a>&nbsp;&nbsp;<a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/haibindev">联系</a>&nbsp;&nbsp;<a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a>&nbsp;&nbsp;<a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/haibindev/rss">订阅</a>&nbsp;<a id="blog_nav_rss_image" href="http://www.cnblogs.com/haibindev/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a></div>
+		<div id="topics">
+			
+<div id="post_detail">
+<div class="post">
+	<div class="postTitle">
+		<h1><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/haibindev/archive/2013/01/30/2880764.html">HTTP Live Streaming直播（iOS直播）技术分析与实现</a></h1>
+	</div>
+	<div id="cnblogs_post_body"><h1 style="text-align: center;">HTTP Live Streaming直播(iOS直播)技术分析与实现</h1>
+<p>&nbsp;　　不经意间发现，大半年没写博客了，自觉汗颜。实则2012后半年，家中的事一样接着一样发生，实在是没有时间。快过年了，总算忙里偷闲，把最近的一些技术成果，总结成了文章，与大家分享。</p>
+<p>　　前些日子，也是项目需要，花了一些时间研究了<span style="color: #0000ff;"><strong>HTTP Live Streaming</strong></span>（<span style="color: #000000;"><strong>HLS</strong></span>）技术，并实现了一个HLS编码器<span style="color: #ff0000;"><strong>HLS<strong>Live</strong>Encoder</strong></span>，当然，C++写的。其功能是采集摄像头与麦克风，实时进行<span style="color: #000000;">H.264</span>视频编码和<span style="color: #000000;">AAC</span>音频编码，并按照HLS的协议规范，生成分段的标准TS文件以及m3u8索引文件。通过我的<span style="color: #ff0000;"><strong>HLS<strong>Live</strong>Encoder</strong></span>和第三方Http服务器（例如：Nginx），成功实现了<span style="color: #0000ff;"><strong>HTTP Live Streaming</strong></span>直播，并在iphone上测试通过。我就把这当中的一些收获写在这里。</p>
+<h1><span style="color: white; background-color: #800080; padding: 5px; padding-right: 220px; font-size: 32px;">HLS技术要点分析</span></h1>
+<p>　　<span style="color: #0000ff;"><strong>HTTP Live Streaming</strong>（</span><span style="color: #000000;"><strong>HLS</strong>）</span>是苹果公司(Apple Inc.)实现的基于HTTP的流媒体传输协议，可实现流媒体的直播和点播，主要应用在<span style="color: #000000;"><strong>iOS</strong></span>系统，为<strong>iOS</strong>设备（如iPhone、iPad）提供音视频直播和点播方案。<span style="color: #000000;"><strong>HLS</strong></span>点播，基本上就是常见的分段HTTP点播，不同在于，它的分段非常小。要实现<span style="color: #000000;"><strong>HLS</strong></span>点播，重点在于对媒体文件分段，目前有不少开源工具可以使用，这里我就不再讨论，只谈HLS直播技术。</p>
+<p>　　相对于常见的流媒体直播协议，例如<span style="color: #000000;"><a href="http://www.cnblogs.com/haibindev/archive/2011/12/29/2305712.html"><span style="color: #000000;">RTMP协议</span></a></span>、<span style="color: #000000;">RTSP协议、MMS协议</span>等，HLS直播最大的不同在于，直播客户端获取到的，并不是一个完整的数据流。HLS协议在服务器端将直播数据流存储为连续的、很短时长的媒体文件（<span style="color: #0000ff;"><strong>MPEG-TS</strong></span>格式），而客户端则不断的下载并播放这些小文件，因为服务器端总是会将最新的直播数据生成新的小文件，这样客户端只要不停的按顺序播放从服务器获取到的文件，就实现了直播。由此可见，基本上可以认为，HLS是以点播的技术方式来实现直播。由于数据通过HTTP协议传输，所以完全不用考虑防火墙或者代理的问题，而且分段文件的时长很短，客户端可以很快的选择和切换码率，以适应不同带宽条件下的播放。不过HLS的这种技术特点，决定了它的延迟一般总是会高于普通的流媒体直播协议。</p>
+<p>　　根据以上的了解要实现<span style="color: #0000ff;"><strong>HTTP Live Streaming</strong></span>直播，需要研究并实现以下技术关键点</p>
+<ol>
+<li>采集视频源和音频源的数据</li>
+<li><span>对原始数据进行H264编码和AAC编码</span></li>
+<li><span><span>视频和音频数据封装为MPEG-TS包</span></span></li>
+<li><span><span>HLS分段生成策略及m3u8索引文件</span></span></li>
+<li><span><span>HTTP传输协议</span></span></li>
+</ol>
+<p><span><span>　　其中第1点和第2点，我之前的文章中已经提到过了，而最后一点，我们可以借助现有的HTTP服务器，所以，实现第3点和第4点是关键所在。</span></span></p>
+<h1><span style="color: white; background-color: #800080; padding: 5px; padding-right: 150px; font-size: 32px;">程序框架与实现 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></h1>
+<p>　　通过以上分析，实现<span style="color: #ff0000;"><strong>HLS LiveEncoder</strong></span>直播编码器，其逻辑和流程基本上很清楚了：分别开启音频与视频编码线程，通过<span><span style="color: #0000ff;"><strong>DirectShow</strong></span>（或其他）技术来实现音视频采集，随后分别调用libx264和libfaac进行视频和音频编码。两个编码线程实时编码音视频数据后，根据自定义的分片策略，存储在某个<span style="color: #0000ff;"><strong>MPEG-TS</strong></span>格式分段文件中，当完成一个分段文件的存储后，更新m3u8索引文件。如下图所示：</span></p>
+<p>&nbsp;&nbsp;<img src="http://images.cnitblog.com/blog/254714/201301/30110132-4fe008d47f58460fa1a01e6c15214d76.jpg" alt="" /></p>
+<p>　　上图中<span style="color: #ff0000;"><strong>HLSLiveEncoder</strong></span>当收到视频和音频数据后，需要首先判断，当前分片是否应该结束，并创建新分片，以延续TS分片的不断生成。需要注意的是，新的分片，应当从关键帧开始，防止播放器解码失败。核心代码如下所示：</p>
+<p>&nbsp;&nbsp;<img src="http://images.cnitblog.com/blog/254714/201301/30112144-91ad47b9c754422a9c9659b464270af5.jpg" alt="" /></p>
+<p>　　TsMuxer的接口也是比较简单的。</p>
+<p>&nbsp; &nbsp;&nbsp;<img src="http://images.cnitblog.com/blog/254714/201301/30112246-b640d5a669cb4b86925e202a01ca89ac.jpg" alt="" /></p>
+<h1><span style="color: white; background-color: #800080; padding: 5px; padding-right: 60px; font-size: 32px;">HLS分段生成策略和m3u8 &nbsp;&nbsp;</span></h1>
+<h2>1. 分段策略</h2>
+<ul>
+<li>HLS的分段策略，基本上推荐是10秒一个分片，当然，具体时间还要根据分好后的分片的实际时长做标注</li>
+<li>通常来说，为了缓存等方面的原因，在索引文件中会保留最新的三个分片地址，以类似&ldquo;滑动窗口&rdquo;的形式，进行更新。</li>
+</ul>
+<h2>2. m3u8文件简介</h2>
+<p>　　m3u8，是<span style="color: #0000ff;"><strong>HTTP Live Streaming</strong></span>直播的索引文件。m3u8基本上可以认为就是.m3u格式文件，区别在于，m3u8文件使用<span style="color: #0000ff;"><strong>UTF-8</strong></span>字符编码。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #000000;">#EXTM3U                     m3u文件头，必须放在第一行
+#EXT</span>-X-MEDIA-<span style="color: #000000;">SEQUENCE       第一个TS分片的序列号
+#EXT</span>-X-<span style="color: #000000;">TARGETDURATION       每个分片TS的最大的时长
+#EXT</span>-X-ALLOW-<span style="color: #000000;">CACHE          是否允许cache
+#EXT</span>-X-<span style="color: #000000;">ENDLIST              m3u8文件结束符
+#EXTINF                     extra info，分片TS的信息，如时长，带宽等</span></pre>
+</div>
+<p>　　一个简单的m3u8索引文件</p>
+<p>&nbsp; &nbsp;&nbsp;<img src="http://images.cnitblog.com/blog/254714/201301/30114000-38a91bb6ccb64fa3b03c0fb85eb40296.jpg" alt="" /></p>
+<h1><span style="color: white; background-color: #800080; padding: 5px; padding-right: 250px; font-size: 32px;">运行效果 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></h1>
+<p>　　在Nginx工作目录下启动<span style="color: #ff0000;"><strong>HLSLiveEncoder</strong></span>，并用VLC播放器连接播放</p>
+<p>&nbsp; &nbsp; &nbsp;<img src="http://images.cnitblog.com/blog/254714/201302/03110650-83a2a3155a6b45f199c49dea58601044.jpg" alt="" /></p>
+<p>　　通过iPhone播放的效果</p>
+<p>&nbsp; &nbsp; &nbsp;<img src="http://images.cnitblog.com/blog/254714/201302/03110715-b7ac0078a1d24a28880c5a6ce28cebcf.jpg" alt="" /></p>
+<p>&nbsp;</p>
+<p>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</p>
+<p>&nbsp;&nbsp;<img src="http://images.cnitblog.com/blog/254714/201311/20133655-bcaa799b72a742698c79471475e62d95.png" alt="" /><strong><strong>haibindev.cnblogs.com</strong>，合作请联系QQ。（转载请注明作者和出处）</strong></p>
+<p>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+	<div class="postDesc">posted on <span id="post-date">2013-01-30 11:57</span> <a href='http://www.cnblogs.com/haibindev/'>haibindev</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=2880764" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(2880764);return false;">收藏</a></div>
+</div>
+<script type="text/javascript">var allowComments=true,cb_blogId=81654,cb_entryId=2880764,cb_blogApp=currentBlogApp,cb_blogUserGuid='137a0a2c-6711-e011-ac81-842b2b196315',cb_entryCreatedDate='2013/1/30 11:57:00';loadViewCount(cb_entryId);</script>
+
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='cnblogs_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='cnblogs_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+		</div>
+	</div>
+	<!-- left ends -->
+	<!-- right starts -->
+	<div id="right">
+		<!-- 右侧工具部分 -->
+		<div id="right_content">
+	
+			
+<!--done-->
+<h2 class="listtitle">公告</h2>
+<div class="newsItem">
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+	
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+				<DIV id="leftcontentcontainer">
+					<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+				</DIV>
+			
+		</div>
+		<!-- //右侧工具部分 -->
+		<div id="footer">
+			
+<!--done-->
+Copyright &copy;2017 haibindev
+		</div>
+	</div>
+	<!-- right ends -->
+	<div class="clear"></div>
+	
+</div>
+
+</body>
+</html>
