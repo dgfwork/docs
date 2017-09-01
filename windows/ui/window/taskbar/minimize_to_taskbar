@@ -1,0 +1,10 @@
+' --------------------------------------------------------------------
+' New Code API Call that lets RapidQ programs minimize to the task bar
+DECLARE FUNCTION SetWindowLong LIB "user32" ALIAS "SetWindowLongA" (hWnd AS LONG, _
+                                               nIndex AS LONG, dwNewLong AS LONG) AS LONG
+'      ----- API Constants and Functions
+CONST GWL_HWNDPARENT = (-8)                   'Minimize to task bar
+CONST HWND_DESKTOP = 0
+setwindowlong(frmMyForm.handle, GWL_HWNDPARENT, HWND_DESKTOP)
+setwindowlong(application.handle, GWL_HWNDPARENT, frmMyForm.handle)
+' --------------------------------------------------------------------
