@@ -1,0 +1,58 @@
+1.Popup窗口：SetWindowLong GWL_HWNDPARENT 到底改变了什么？
+ 如果父窗口是Desktop（难道不是一直是吗？ 似乎还会是其他popup窗口），改变了Owner
+ 
+2.Popup窗口：先设置Parent（似乎是改了owner？ 但是owner可以改变吗？），再改为child窗口，然后再改为Popup，这时候窗口的owner parent都有哪些变化？
+ 如果可以，以这个窗口为owner的窗口会怎么样？ （own窗口不是不能为child吗）
+ 
+3.播放器：加一层窗口，以主框架为owner，然后依次设置owner，新增窗口可以解决层级问题吗？
+
+4.Popup窗口：父窗口应该可以是其他窗口吧，只是最终为desktop
+
+5.子窗口：无owner只有parent
+
+6.Popup窗口：parent为GetParent或者GetWindowLong，owner为GetWindow（GW_OWNER），初始时候parent应该也是owner才对
+  desktop不一定为NULL，获取到的是Desktop吗？
+
+7.overlap窗口：owner为GetWindow(GW_OWNER)，getparent应该为空或者说桌面desktop，getwindowlongr可以去到owner吗
+
+8.GetParent或者GetWindowLong：是否值一直相等呢？ 什么时候不等，不等会是什么情况？
+
+9.msdn说不能改变owner，那到底是可以不可以呢？子窗口改变父窗口；popup改变child再改为popup会怎么样呢？
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(v=vs.85).aspx#owned_windows
+
+10.mit.edu里有不少内容，有空看下，也许就是永远不会看吧
+https://stuff.mit.edu/afs/sipb/project/wine/src/wine-0.9.37/dlls/sane.ds/
+
+11.Wine20031016.tar.gz--win.c有队窗口的测试
+https://github.com/wine-mirror/wine.git这个是在线的git库
+
+12.查看wine源码：按理说是可以改owner的，需要parent为desktop
+
+13.测试播放器耳朵：
+
+void CheckWindow(HWND window, HWND parent) {
+    auto ancestor_parent = GetAncestor(hwnd, GA_PARENT);
+    auto gwl_parent = (HWND)GetWindowLongPtrA(hwnd, GWLP_HWNDPARENT);
+    auto cc_parent = GetParent(hwnd);
+    auto owner = GetWindow(hwnd, GW_OWNER);
+    auto ancestor_root = GetAncestor(hwnd, GA_ROOT);
+    auto ancestor_root_owner = GetAncestor(hwnd, GA_ROOTOWNER);
+}
+
+void SetParent(HWND window, HWND parent) {
+    if (FALSE == ::IsWindow(window)) { return false; }
+    auto last_parent = reinterpret_cast<HWND>(::GetWindowLong(window, GWL_HWNDPARENT));
+    if (parent != last_parent) {
+        bool visible = (TRUE == ::IsWindowVisible(window));
+        ::ShowWindow(window, SW_HIDE);
+        ::SetWindowLong(window, GWL_HWNDPARENT, reinterpret_cast<LONG>(parent));
+        static auto flags = SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_FRAMECHANGED | SWP_NOZORDER;
+        // TODO: flags should include SWP_NOZORDER or not? 
+        // __debugbreak();
+        ::SetWindowPos(window, parent, 0, 0, 0, 0, flags | (visible ? SWP_SHOWWINDOW : SWP_HIDEWINDOW));
+        ::InvalidateRect(window, NULL, TRUE);
+    }
+    CheckWindow(window, parent);
+}
+
+
