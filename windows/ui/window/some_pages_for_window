@@ -1,0 +1,1750 @@
+1.Window Features:
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(v=vs.85).aspx#owned_windows
+http://referencesource.microsoft.com
+
+2.用API改变拥有者窗口，可以做到么？
+http://bbs.csdn.net/topics/350229217
+
+API方面好像没有提供这样的函数，好像只提供了GetWindow可以获取窗口的所有者。 
+
+win32 API提供了函数GetWindow函数（GW_OWNER 标志）来获取一个窗口的所有者窗口句柄。
+    GetWindow(hWnd, GW_OWNER)永远返回窗口的所有者(owner)。对于子窗口，函数返回 NULL，因为它们的父窗口就相当于所有者（注意，是“相当于”）。因为Windows系统没有维护子窗口的所有者信息。
+
+    MFC中则是通过如下函数得到所有者窗口指针：
+    _AFXWIN_INLINE CWnd* CWnd::GetOwner() const
+      { return m_hWndOwner != NULL ? CWnd::FromHandle(m_hWndOwner) : GetParent(); }
+    从上述代码我们可以看出，它返回的值和GetWindow返回的有所区别，如果当前窗口没有owner，那么将返回它的父窗口指针。
+
+    但是Windows没有提供改变窗口所有者的方法。MFC中则提供了改变所有者的方法：
+    _AFXWIN_INLINE void CWnd::SetOwner(CWnd* pOwnerWnd)
+      { m_hWndOwner = pOwnerWnd != NULL ? pOwnerWnd->m_hWnd : NULL; }
+
+    另外，mfc还提供了CWnd::GetSafeOwner( CWnd* pParent, HWND* pWndTop );函数，可以用来得到参数pParent的第一个非child属性的父窗口指针。如果这个参数是NULL，则返回当前线程的主窗口(通过AfxGetMainWnd得到)。框架经常使用这个函数查找对话框或者属性页的所有者窗口。
+
+
+不过微软不推介Owner窗口动态改变，因为这样会使窗口层次乱掉。
+You must not call SetWindowLong with the GWL_HWNDPARENT index to change the parent of a child window. Instead, use the SetParent function. 
+
+如果窗口已经创建， 可以通过::SetWindowLong(hWnd, GWL_HWNDPARENT,(LONG)hWndNewOwner)来改变 
+
+
+3.窗口句柄能不能跨进程使用！？
+http://bbs.csdn.net/topics/40213409
+
+句柄是系统资源在句柄所对应的对象生存期内该句柄是唯一的。也就是不用进程在不同时刻使用同一个句柄时，不能保证该句柄的对象是否是同一个。 
+
+我表示怀疑，不过没有细考虑。凭我现在大脑里的印象，我认为不可以的根据是：每个进程创建的时候，系统都给创建一个句柄表，其实每个进程所获得的句柄都是对系统资源的参考的索引，应该是indirect的，就是不是直接引用的。所以两个进程对同一个系统资源的句柄是未必相同的。所以对同一个进程A所创建的窗口，A使用此窗口的句柄是A进程的句柄索引表中的一个索引，B通过一个api函数调用，获得的同一个窗口资源的句柄是和A中的不一样的,虽然有可能两个索引都一样，同理，进程C必须自己调用api函数获得此窗口句柄才行，不能用B进程传过来的那个，虽然会因为巧合而可以使用。我的猜想是，当B进程调用api函数获得那个窗口资源时，所做的工作就是在进程B的句柄索引表中增加一项，真正的资源引用指针被作为值插入，对应此指针的有一个索引，此索引就被当作句柄返回给了用户进程使用。可以看windows核心编程，我的记忆力不太好，再加上工作后没有搞过windows的东西，所以可能记忆有误。反正我现在的回答是：不可以。 
+
+一个简单明了的怀疑就是，系统创建进程时，都相应给每个进程创建一个句柄索引表，既然句柄索引表是process-dependent的，那么肯定不能如楼主所述的那样使用。 
+
+假如行的话，我能用这个句柄进行操作吗？
+
+假如我能用他，就意味着我可以对任意的窗口进行操作？
+
+有些GDI句柄是全局的(好像是画刷吧，用得比较多的那玩意儿)
+
+句柄结构表一般是放在系统区的一个地方(不同的进程这个表的虚拟内存地址可能还不一样，不过有个未公开的API可以得到他)
+
+很遗憾，句柄表是一个很长的数据(好像是64位的)，有数据的真实地址，另外还有进程号，还有我记不清了，因此每个API调用句柄可能都会先查一下这个句柄是不是属于你这个进程的，假如不是的，根本不可能调用成功。 
+
+
+我只知道句柄在系统的某一时刻是唯一的,你这样能不能用我不知道,UP
+
+1需要复制
+DuplicateHandle
+2利用继承性
+前提进程间有关系.如A 创建B....
+3命名
+像CREATEEVENT()有个参数是名字 
+
+窗口的句柄是在被销毁之前是唯一的，可以跨进程，跨线程, 放心用吧. 
+
+句柄可以用，但只有部分消息可以用
+
+同一个桌面上窗口句柄的可以跨进程使用
+Command what is yours
+Conquer what is not
+
+
+5. 跨进程设置模式窗口的父窗体:(关于IWin32Window)
+http://blog.chinaunix.net/uid-23614217-id-2394483.html
+
+6.将两个不同进程的窗口设置为父子关系
+http://www.cnblogs.com/TianFang/p/4957488.html
+
+今天用WPF程序给一个第三方程序做插件，该程序支持通过菜单扩展的方式集成第三方程序，看起来像是弹出一个对话框。
+
+但是，由于新写的WPF程序和原程序是没有任何关系的，一旦原程序重新获取焦点时，新弹出的WPF程序窗口就会切换到后台，看起来就不像子窗口了。看了一下之前的人们的做法，大多是将新蹦出来的窗口设置为TopMost，但这样就又引入了改窗口不能切换到后台隐藏的问题。
+
+在网上搜了一下，找到了如下解决方法：http://stackoverflow.com/questions/2599053/how-to-set-win32-window-as-owner-of-wpf-window。具体就是通过WindowInteropHelper将外部窗口设置为Owner。
+
+    var helper = new WindowInteropHelper(myWpfChildWindow);
+    helper->Owner = mainWindowHWND;
+
+这样做确实解决问题了，但反过来一想，如果要让外部窗口作为WPF的子窗口，就无法用这个方法了。由于WPF程序本身就是调用的WindowsAPI，肯定WindowsAPI是支持两个不相干的窗口的父子关系设置的，便在referencesource上看了一下其源码，用的是如下代码：
+
+UnsafeNativeMethods.SetWindowLong(new HandleRef(null, CriticalHandle),
+                NativeMethods.GWL_HWNDPARENT,    
+                _ownerHandle);
+
+也就是说，它调用的是API SetWindowLong：
+
+    LONG WINAPI SetWindowLong(
+     _In_ HWND hWnd,
+     _In_ int nIndex,
+     _In_ LONG dwNewLong
+    );
+
+它有三个参数，第一个参数传入子窗口Handle， 第二个参数传入GWL_HWNDPARENT，第三个传入父窗口Handle。不过，MSDN上同时写着不建议使用这种方式设置父子关系，而需要用SetParent。我试了一下，用这种方式可以，反而用SetParent不行，既然微软自己都在用，暂且先用着，后续发现有问题再补充说明。 
+
+
+
+7.MFC子窗口和父窗口（SetParent,SetOwner）http://www.cnblogs.com/BeyondTechnology/archive/2011/03/25/1995934.html
+
+一、概念和区别
+
+在windows系统中，每个窗口对象都对应有一个数据结构，形成一个list链表。系统的窗口管理器通过这个list来获取窗口信息和管理每个窗口。这个数据结构中有四个数据用来构建list，即child、sibling、parent、owner四个域。
+所以我们可以看到，窗口之间的关系有两种：owner-owned 关系和 parent-child关系。前者称之为拥有/被拥有关系，后者称之为父/子关系。在这篇文字中，我把owner窗口称之所有者窗口。换句话说，一个窗口在有一个父窗口（parent)的同时，还可能被不同的窗口拥有（owner)，也可以有自己的子窗口(child)。在MFC 的CWnd类中，所有者窗口保存在m_hWndOwner成员变量中，父窗口则保存在m_hParent中，但是这两个值并不一定和窗口对象数据结构中的值相对应。
+
+窗口之间的关系，决定了窗口的外在表现。比如显示、销毁等。
+
+如果一个窗口数据的owner域非NULL，则它和该窗口建立了owner-owned 关系，拥有关系决定了：
+（1）被拥有的窗口永远显示在拥有它的那个窗口的前面；
+（2）当所有者窗口最小化的时候，它所拥有的窗口都会被隐藏；
+（3）当所有者窗口被销毁的时候，它所拥有的窗口都会被销毁。
+需要注意的是，隐藏所有者窗口并不会影响它所拥有的窗口的可见状态。比如：如果窗口 A 拥有窗口B,窗口B拥有窗口C,则当窗口A最小化的时候，窗口B被隐藏，但是窗口 C还是可见。
+
+
+如果一个窗口的parent域非NULL，则它和该窗口之间就建立了parent-child关系。父子决定了：
+（1）窗口在屏幕上面的显示位置。父窗口提供了用来定位子窗口的坐标系统，一个子窗口只能显示在它的父窗口的客户区中，之外的部分将被裁减。这个裁减法则决定了如果父窗口不可见，则子窗口肯定不可见。如果父窗口移动到了屏幕之外，子窗口也一样。
+（2）当父窗口被隐藏时，它的所有子窗口也被隐藏。
+（3）父窗口被销毁的时候，它所拥有的子窗口都会被销毁。
+注意！最小化父窗口不会影响子窗口的可见状态，子窗口会随着父窗口被最小化，但是它的WS_VISIBLE属性不会变。
+
+Windows系统为什么要使用两种关系呢？这是为了更加灵活的管理窗口。举个例子：组合框（combobox)的下拉列表框（list box）可以超出组合框的父窗口的客户区，这样有利于显示，因此系统创建该list box的时候，是作为控制台窗口（desktop window）的子窗口，它的父窗口hWndParent是NULL，这样，list box的显示区域是限制在整个屏幕内，但是该list box的所有者却是组合框的第一个非子窗口祖先（比如对话框），当它的所有者窗口销毁后，该 list box自动销毁。
+
+另外，窗口之间消息的传递也和窗口关系有关，通常，一个窗口会把自己的通知消息发送给它的父窗口，但不全是这样，比如，CToolBar发送通知消息给它的所有者窗口而不是父窗口。这样以来，就可以允许工具条作为一个窗口（比如一个 OLE 容器程序窗口）的子窗口的同时，能够给另一个窗口（比如in-place框架窗口）发送消息。至于某类窗口到底是把消息发送给谁，是父窗口还是所有者窗口，microsoft并没有明示。还有，在现场（in-place）编辑的情况下，当一个 server 窗口激活或者失效的时候，框架窗口所拥有的子窗口自动隐藏或者显示，这也是通过直接调用SetOwner函数实现的。
+
+
+二、窗口类型的说明和限制
+
+（1）控制台窗口（desktop window）。这是系统最早创建的窗口。可以认为它是所有 WS_OVERLAPPED 类型窗口的所有者和父窗口。Kyle Marsh在他的文章“Win32 Window Hierarchy and Styles”中指出，当系统初始化的时候，它首先创建控制台窗口，大小覆盖整个屏幕。所有其它窗口都在这个控制台窗口上面显示。窗口管理器所用的窗口list中第一个就是这个控制台。它的下一层窗口叫做顶级窗口（top-level），顶级窗口是指所有非child、没有父窗口，或者父窗口是desktop的窗口，它们没有WS_CHILD属性。
+
+（2）WS_OVERLAPPED类型的窗口可以显示在屏幕的任何地方。它们的所有者窗口是控制台。
+
+Overlapped 类型的窗口属于顶级窗口，一般作为应用程序的主窗口。不论是否给出了WS_CAPTION、WS_BORDER属性，这类窗口创建后都有标题栏和边框。Overlapped窗口可以拥有其它顶级窗口或者被其它顶级窗口所拥有。所有overlapped窗口都有WS_CLIPSIBLINGS属性。系统可以自动设置 overlapped窗口的大小和初始位置。
+
+当系统 shuts down的时候，它将销毁所有overlapped类型的窗口。
+
+（3）WS_POPUP类型的窗口可以显示在屏幕任何地方，它们一般没有父窗口，但是如果明确调用SetParent，这类窗口也可以有父窗口。
+
+WS_POPUP类型的窗口的所有者是在CreateWindow函数中通过设置hWndParent参数给定的，如果hWndParent不是子窗口，则该窗口就成为这个新的弹出式窗口的owner，否则，系统从hWndParent的父窗口向上找，直到找到第一个非子窗口，把它作为该弹出窗口的owner。当owner窗口销毁的时候，系统自动销毁这个弹出窗口。
+
+Pop-up类型的窗口也属于顶级窗口，它和 overlapped 窗口的主要区别是弹出式窗口不需要有标题栏，也不必有边框。弹出式可以拥有其它顶级窗口或者被拥有。所有弹出式窗口也都有 WS_CLIPSIBLINGS属性。
+
+（4）所有者窗口（owner)只能是 overlapped 或者 pop-up 类型的窗口，子窗口不能是所有者窗口，也就是说子窗口不能拥有其它窗口。
+
+overlapped 或者 pop-up 类型的窗口在拥有其它窗口的同时，也可以被拥有。
+
+在使用CreateWindowEx创建 WS_OVERLAPPED 或者 WS_POPUP类型的窗口时，可以在 hwndParent 参数中给出它的所有者窗口的句柄。如果 hwndParent 给出的是一个child 类型的窗口句柄，则系统自动将新创建窗口的所有权交给该子窗口的顶级父窗口。在这种情况下，参数hwndParent被保存在新建窗口的parent域中，而它的所有者窗口句柄则保存在owner域中。
+
+（5）缺省情况下，对话框和消息框属于 owned 窗口，除非在创建它们的时候明确给出了WS_CHILD属性，（比如对话框中嵌入对话框的情形）
+否则由系统负责给它们指定owner窗口。需要注意的是，一旦创建了owned类型的窗口，就无法再改变其所有关系，因为WIN32没有没有提供改变窗口所有者的方法。
+
+而且在Win32中，由于有多线程的存在，所以要注意保证父子窗口或者owner/owned 窗口要同属于一个线程。
+
+（6）对于 WS_CHILD类型的窗口，它的父窗口就是它的所有者窗口。一个子窗口的父窗口也是在CreateWindow函数中用hWndParent参数指定的。子窗口只能在父窗口的客户区中显示，并随父窗口一起销毁。
+子窗口必须有一个父窗口，这是它和overlapped 以及 pop-up 窗口之间的主要区别。父窗口可以是顶级窗口，也可以是其它子窗口。
+
+
+三、几个相关函数的说明
+
+（1）获取/设置所有者窗口
+
+win32 API提供了函数GetWindow函数（GW_OWNER 标志）来获取一个窗口的所有者窗口句柄。
+GetWindow(hWnd, GW_OWNER)永远返回窗口的所有者(owner)。对于子窗口，函数返回 NULL，因为它们的父窗口就相当于所有者（注意，是“相当于”）。因为Windows系统没有维护子窗口的所有者信息。
+
+MFC中则是通过如下函数得到所有者窗口指针：
+_AFXWIN_INLINE CWnd* CWnd::GetOwner() const
+{ return m_hWndOwner != NULL ? CWnd::FromHandle(m_hWndOwner) : GetParent(); }
+从上述代码我们可以看出，它返回的值和GetWindow返回的有所区别，如果当前窗口没有owner，那么将返回它的父窗口指针。
+
+但是Windows没有提供改变窗口所有者的方法。MFC中则提供了改变所有者的方法：
+_AFXWIN_INLINE void CWnd::SetOwner(CWnd* pOwnerWnd)
+{ m_hWndOwner = pOwnerWnd != NULL ? pOwnerWnd->m_hWnd : NULL; }
+
+另外，mfc还提供了CWnd::GetSafeOwner( CWnd* pParent, HWND* pWndTop );函数，可以用来得到参数pParent的第一个非child属性的父窗口指针。如果这个参数是NULL，则返回当前线程的主窗口(通过AfxGetMainWnd得到)。框架经常使用这个函数查找对话框或者属性页的所有者窗口。
+
+（2）获取/设置父窗口
+
+WIN32 API给出了函数GetParent和SetParent。而mfc也是完全封装了这两个函数：
+
+_AFXWIN_INLINE CWnd* CWnd::SetParent(CWnd* pWndNewParent)
+{ ASSERT(::IsWindow(m_hWnd)); return CWnd::FromHandle(::SetParent(m_hWnd,
+pWndNewParent->GetSafeHwnd())); }
+
+_AFXWIN_INLINE CWnd* CWnd::GetParent() const
+{ ASSERT(::IsWindow(m_hWnd)); return CWnd::FromHandle(::GetParent(m_hWnd)); }
+
+对于SetParent，msdn里面说明了父子窗口必须是同一个进程的。但是由于窗口句柄是系统全局唯一的，不属于同一个进程的情况下，也可以成功调用，但是后果未知。
+GetParent的返回值比较复杂，对于overlapped类型的窗口，它返回0，对于WS_CHILD类型，它返回其父窗口，对于WS_POPUP类型，它返回其所有者窗口，如果想得到创建它时所传递进去的那个hwndParent参数，应该用GetWindowWord(GWW_HWNDPARENT)函数。
+
+（3）GetWindowWord(hWnd, GWW_HWNDPARENT)返回一个窗口的父窗口，如果没有，则返回其所有者。
+
+（4）上面谈到，当一个owner窗口被最小化后，系统自动隐藏它所拥有的窗口。当owner窗口被恢复的时候，系统自动显示它所拥有的窗口。在这两种情况下，系统都会发送（send）WM_SHOWWINDOW消息给被拥有的窗口。某些时候，我们可能需要隐藏 owned窗口，但并不想最小化其所有者窗口，这时候，可以通过ShowOwnedPopups函数来实现，该函数设置或者删除当前窗口所拥有的窗口的WS_VISIBLE属性，然后发送WM_SHOWWINDOW消息更新窗口显示。
+
+
+8.WM_CHANGEUISTATE message
+A window should send this message to itself or its parent when it must change the UI state elements of all windows in the same hierarchy. 
+https://technet.microsoft.com/zh-cn/library/ms646342.aspx/
+
+
+9.SetParent function
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms633541(v=vs.85).aspx
+
+10.SetWindowLong function
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx
+
+11.SetWindowLong和SetWindowPos函数详解
+http://www.cnblogs.com/xiaogelove/archive/2013/01/06/2847405.html
+
+
+
+SetWindowPos
+
+函数功能：该函数改变一个子窗口，弹出式窗口式顶层窗口的尺寸，位置和Z序。子窗口，弹出式窗口，及顶层窗口根据它们在屏幕上出现的顺序排序、顶层窗口设置的级别最高，并且被设置为Z序的第一个窗口。
+ 
+　　函数原型：BOOL SetWindowPos（HWN hWnd，HWND hWndlnsertAfter,int X，int Y,int cx，int cy,UNIT．Flags）；
+ 
+　　参数：
+ 
+　　hWnd:窗口句柄。
+ 
+　　hWndlnsertAfter:在z序中的位于被置位的窗口前的窗口句柄。该参数必须为一个窗口句柄，或下列值之一：
+ 
+　　HWND_BOTTOM：将窗口置于Z序的底部。如果参数hWnd标识了一个顶层窗口，则窗口失去顶级位置，并且被置在其他窗口的底部。
+ 
+　　HWND_NOTOPMOST：将窗口置于所有非顶层窗口之上（即在所有顶层窗口之后）。如果窗口已经是非顶层窗口则该标志不起作用。
+ 
+　　HWND_TOP:将窗口置于Z序的顶部。
+ 
+　　HWND_TOPMOST:将窗口置于所有非顶层窗口之上。即使窗口未被激活窗口也将保持顶级位置。
+ 
+　　查看该参数的使用方法，请看说明部分。
+ 
+　　x：以客户坐标指定窗口新位置的左边界。
+ 
+　　Y：以客户坐标指定窗口新位置的顶边界。
+ 
+　　cx:以像素指定窗口的新的宽度。
+ 
+　　cy：以像素指定窗口的新的高度。
+ 
+　　uFlags:窗口尺寸和定位的标志。该参数可以是下列值的组合：
+ 
+　　SWP_ASNCWINDOWPOS：如果调用进程不拥有窗口，系统会向拥有窗口的线程发出需求。这就防止调用线程在其他线程处理需求的时候发生死锁。
+ 
+　　SWP_DEFERERASE：防止产生WM_SYNCPAINT消息。
+ 
+　　SWP_DRAWFRAME：在窗口周围画一个边框（定义在窗口类描述中）。
+ 
+　　SWP_FRAMECHANGED：给窗口发送WM_NCCALCSIZE消息，即使窗口尺寸没有改变也会发送该消息。如果未指定这个标志，只有在改变了窗口尺寸时才发送WM_NCCALCSIZE。
+ 
+　　SWP_HIDEWINDOW;隐藏窗口。
+ 
+　　SWP_NOACTIVATE：不激活窗口。如果未设置标志，则窗口被激活，并被设置到其他最高级窗口或非最高级组的顶部（根据参数hWndlnsertAfter设置）。
+ 
+　　SWP_NOCOPYBITS：清除客户区的所有内容。如果未设置该标志，客户区的有效内容被保存并且在窗口尺寸更新和重定位后拷贝回客户区。
+ 
+　　SWP_NOMOVE：维持当前位置（忽略X和Y参数）。
+ 
+　　SWP_NOOWNERZORDER：不改变z序中的所有者窗口的位置。
+ 
+　　SWP_NOREDRAW:不重画改变的内容。如果设置了这个标志，则不发生任何重画动作。适用于客户区和非客户区（包括标题栏和滚动条）和任何由于窗回移动而露出的父窗口的所有部分。如果设置了这个标志，应用程序必须明确地使窗口无效并区重画窗口的任何部分和父窗口需要重画的部分。
+ 
+　　SWP_NOREPOSITION；与SWP_NOOWNERZORDER标志相同。
+ 
+　　SWP_NOSENDCHANGING：防止窗口接收WM_WINDOWPOSCHANGING消息。
+ 
+　　SWP_NOSIZE：维持当前尺寸（忽略cx和Cy参数）。
+ 
+　　SWP_NOZORDER：维持当前Z序（忽略hWndlnsertAfter参数）。
+ 
+　　SWP_SHOWWINDOW：显示窗口。
+ 
+　　返回值：如果函数成功，返回值为非零；如果函数失败，返回值为零。若想获得更多错误消息，请调用GetLastError函数。
+ 
+　　备注：如果设置了SWP_SHOWWINDOW和SWP_HIDEWINDOW标志，则窗口不能被移动和改变大小。如果使用SetWindowLoog改变了窗口的某些数据，则必须调用函数SetWindowPos来作真正的改变。使用下列的组合标志：SWP_NOMOVEISWP_NOSIZEISWP_FRAMECHANGED。
+ 
+　　有两种方法将窗口设为最顶层窗口：一种是将参数hWndlnsertAfter设置为HWND_TOPMOST并确保没有设置SWP_NOZORDER标志；另一种是设置窗口在Z序中的位置以使其在其他存在的窗口之上。当一个窗口被置为最顶层窗口时，属于它的所有窗口均为最顶层窗口，而它的所有者的z序并不改变。
+ 
+　　如果HWND_TOPMOST和HWND_NOTOPMOST标志均未指定，即应用程序要求窗口在激活的同时改变其在Z序中的位置时，在参数hWndinsertAfter中指定的值只有在下列条件中才使用：
+ 
+　　在hWndlnsertAfter参数中没有设定HWND_NOTOPMOST和HWND_TOPMOST标志。
+ 
+　　由hWnd参数标识的窗口不是激活窗口。
+ 
+　　如果未将一个非激活窗口设定到z序的顶端，应用程序不能激活该窗口。应用程序可以无任何限制地改变被激活窗口在Z序中的位置，或激活一个窗口并将其移到最高级窗口的顶部或非最高级窗口的顶部。
+ 
+　　如果一个顶层窗口被重定位到z序的底部（HWND_BOTTOM）或在任何非最高序的窗口之后，该窗口就不再是最顶层窗口。当一个最顶层窗口被置为非最顶级，则它的所有者窗口和所属者窗口均为非最顶层窗口。
+ 
+　　一个非最顶端窗口可以拥有一个最顶端窗口，但反之则不可以。任何属于顶层窗口的窗口（例如一个对话框）本身就被置为顶层窗口，以确保所有被属窗口都在它们的所有者之上。
+ 
+　　如果应用程序不在前台，但应该位于前台，就应调用SetForegroundWindow函数来设置。
+ 
+　　Windows CE：如果这是一个可见的顶层窗口，并且未指定SWP_NOACTIVATE标志，则这个函数将激活窗口、如果这是当前的激活窗口，并且指定了SWP_NOACTIVATE或SWP_HIDEWINDOW标志，则激活另外一个可见的顶层窗口。
+ 
+　　当在这个函数中的nFlags参数里指定了SWP_FRAMECHANGED标志时，WindowsCE重画窗口的整个非客户区，这可能会改变客户区的大小。这也是重新计算客户区的唯一途径，也是通过调用SetwindowLong函数改变窗口风格后通常使用的方法。
+ 
+　　SetWindowPos将使WM_WINDOWPOSCHANGED消息向窗口发送，在这个消息中传递的标志与传递给函数的相同。这个函数不传递其他消息。
+ 
+　　Windows CE 1.0不支持在hWndlnsertAber参数中的HWND_TOPMOST和HWND_NOTOPMOST常量。
+ 
+
+　　Windows CE1.0不支持在fuFags参数中的SWP_DRAWFRAME和SWP_NOCOPYBITS标志。
+
+ 
+ 
+
+　SetWindowLong
+ 
+　　函数功能：该函数改变指定窗口的属性．函数也将指定的一个32位值设置在窗口的额外存储空间的指定偏移位置。
+ 
+　　函数原型：LONG SetWindowLong（HWND hWnd，int nlndex，LONG dwNewLong）；
+ 
+　　参数：
+ 
+　　hWnd：窗口句柄及间接给出的窗口所属的类。
+ 
+　　nlndex：指定将设定的大于等于0的偏移值。有效值的范围从0到额外类的存储空间的字节数-4：例如若指定了12位或多于12位的额外类存储空间，则应设为第三个32位整数的索引位8。要设置其他任何值，可以指定下面值之一：
+ 
+　　GWL_EXSTYLE：设定一个新的扩展风格。GWL_STYLE：设定一个新的窗口风格。
+ 
+　　GWL_WNDPROC：为窗口过程设定一个新的地址。GWL_ID：设置一个新的窗口标识符。
+ 
+　　GWL_HINSTANCE：设置一个新的应用程序事例句柄。
+ 
+　　GWL_USERDATA：设置与窗口有关的32位值。每一个窗口均有一个由创建该窗口的应用程序使用的32位值。
+ 
+　　当hWnd参数标识了一个对话框时，也可使用下列值：
+ 
+　　DWL_DLGPROC：设置对话框过程的新地址。
+ 
+　　DWL_MSGRESULT：设置在对话框过程中处理的消息的返回值。
+ 
+　　DWL_USER：设置的应用程序私有的新的额外信息，例如一个句柄或指针。
+ 
+　　dwNewLong：指定的替换值。
+ 
+　　返回值：如果函数成功，返回值是指定的32位整数的原来的值。如果函数失败，返回值为0。若想获得更多错误信息，请调用GetLastError函数。
+ 
+　　如果指定32位整数的原来的值为0，并且函数成功，则返回值为0，但是函数并不清除最后的错误信息，这就很难判断函数是否成功。这时，就应在调用SetWindowLong之前调用callingSetLastError（0）函数来清除最后的错误信息。这样，如果函数失败就会返回0，并且GetLastError。也返回一个非零值。
+ 
+　　备注；如果由hWnd参数指定的窗口与调用线程不属于同一进程，将导致SetWindowLong函数失败。
+ 
+　　指定的窗口数据是在缓存中保存的，因此在调用SetWindowLong之后再调用SetWindowPos函数才能使SetWindowLong函数所作的改变生效。
+ 
+　　如果使用带GWL_WNDPROC索引值的SetWindowLong函数替换窗口过程，则该窗口过程必须与WindowProccallback函数说明部分指定的指导行一致。
+ 
+　　如果使用带DWL_MSGRESULT索引值的SetWindowLong函数来设置由一个对话框过程处理的消息的返回值，应在此后立即返回TRUE。否则，如果又调用了其他函数而使对话框过程接收到一个窗口消息，则嵌套的窗口消息可能改写使用DWL_MSGRESULT设定的返回值。
+ 
+　　可以使用带GWL_WNDPROC索引值的SetWindowLong函数创建一个窗口类的子类，该窗口类是用于创建该窗口的关。一个应用程序可以一个系统美为于类，但是不能以一个其他进程产生的窗口类为子类，SetwindowLong函数通过改变与一个特殊的窗口类相联系的窗口过程来创建窗口子类，从而使系统调用新的窗口过程而不是以前定义的窗口过程。应用程序必须通过调用CallWindowProc函数向前窗口传递未被新窗口处理的消息，这样作允许应用程序创建一个窗口过程链。
+ 
+　　通过使用函数RegisterClassEx将结构WNDCLASSEX中的cbWndExtra单元指定为一个非0值来保留新外窗口内存。
+ 
+　　不能通过调用带GWL_HWNDPARENT索引值的SetWindowLong的函数来改变子窗口的父窗口，应使用SetParent函数。
+ 
+　　Windows CE：nlndex参数必须是4个字节的倍数不支持unaligned access。
+ 
+　　不支持下列nlndex参数值：。
+ 
+　　GWL_HINSTANCE；GWL_HWNDPARENTGWL;GWL_USERDATA
+ 
+　　Windows CE 2.0版支持在nlndex参数中的DWL_DLGPROC值，但是WindowsCE1.0不支持。
+ 
+　　速查：Windows NT：3.1以上版本；Windows：95以上版本；Windows CE：1.0以上版本：头文件：winuser.h；库文件：user32.lib；Unicode：在Windows NT上实现为Unicode和ANSI两种版本。
+ 
+　　函数功能：该函数删除一个窗口类，清空该类所需的内存。
+ 
+　　函数原型：BOOL UnRegisterClass（LPCTSTR IpClassName； HINSTANCE hlnstance）；
+ 
+　　参数：
+ 
+　　IpClassName：指向一个空结束字符串的指针，或是一个整型原子。如果IpClassName是一个字符串，则它指定了窗口类的类名。这个类名必须由此前调用RegisterClassEx函数来注册。系统类，如对话框控制，必须被注册。
+ 
+　　如果这个参数是一个整型原子，它必须是由此前调用GlobalAdd原子函数创建的全局原子。这个16位整型数小于OxCOOO，必须是lpszClass的低16位，其高位宇必须为0。
+ 
+　　hlnstance：创建类的模块的事例句柄。
+ 
+　　返回值：如果函数成功，返回值为非零；如果未发现类或由此类创建的窗口仍然存在，则返回值为0。
+ 
+　　若想获得更多错误信息，请调用GetLastError函数。
+ 
+　　备注：在调用这个函数之前，应用程序必须销毁由指定类创建的所有窗口。
+ 
+　　应用程序注册的所有窗口类在应用程序中止后都为未注册的类。
+ 
+　　Windows 95：所有由OLL注册的窗口类在DLL卸载后均未注册的类。
+ 
+　　windows NT：所有由DLL注册的类在DLL卸载后仍为已注册的类。
+ 
+ 
+　[DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+ 
+　　static extern bool SetWindowPos(
+ 
+　　IntPtr hWnd,
+ 
+　　IntPtr hWndInsertAfter,
+ 
+　　int X,
+ 
+　　int Y,
+ 
+　　int cx,
+ 
+　　int cy,
+ 
+　　uint uFlags
+ 
+　　);
+ 
+　　static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+ 
+　　static readonly IntPtr HWND_NOTOPMOST = new IntPtr(-2);
+ 
+　　static readonly IntPtr HWND_TOP = new IntPtr(0);
+ 
+　　const UInt32 SWP_NOSIZE = 0x0001;
+ 
+　　const UInt32 SWP_NOMOVE = 0x0002;
+ 
+　　const UInt32 SWP_NOZORDER = 0x0004;
+ 
+　　const UInt32 SWP_NOREDRAW = 0x0008;
+ 
+　　const UInt32 SWP_NOACTIVATE = 0x0010;
+ 
+　　const UInt32 SWP_FRAMECHANGED = 0x0020;
+ 
+　　const UInt32 SWP_SHOWWINDOW = 0x0040;
+ 
+　　const UInt32 SWP_HIDEWINDOW = 0x0080;
+ 
+　　const UInt32 SWP_NOCOPYBITS = 0x0100;
+ 
+　　const UInt32 SWP_NOOWNERZORDER = 0x0200;
+ 
+　　const UInt32 SWP_NOSENDCHANGING = 0x0400;
+ 
+　　const UInt32 TOPMOST_FLAGS = SWP_NOMOVE | SWP_NOSIZE;
+
+
+
+13.锁屏的一个有趣的问题：HWND_TOP 与 HWND_TOPMOST 漫谈
+http://blog.csdn.net/u012814856/article/details/76861480
+
+一、引言
+
+今天遇到了一个非常有趣的问题，问题背景是一个用户反馈了这么一个问题：
+
+    当软件已经被锁屏了：
+    1. 用户点击出一个窗口显示（这是一个真窗口）
+    2. 此时用户再通过停靠在侧边的 QQ 界面，仍然可以通过点击里面的 QQ空间 图标点开网页，从而进入浏览器界面
+
+根据我们软件的需求，进入了锁屏界面，就不应该再能让用户进入其他软件界面了才对。
+
+那么，这个问题究竟是什么原因呢？
+
+是什么原因引起的，我们的锁屏机制就那么简单的被破解了吗？
+二、探索：WS_EX_NOACTIVATE
+
+猜测1：是否是新建的窗口夺取了主窗口的输入焦点，而导致主窗口被夺取了焦点，然后丧失了锁屏功能呢？
+
+这里，我经过 CreateWindow() 传入了 WS_EX_NOACTIVATE 参数创建了非激活窗口（类似我们的输入法的候选窗口），经过测试，这个方法并没有解决问题。
+
+结论：这个问题与新建的窗口是否获取焦点或者激活没有关系。
+三、探索：SWP_NOACTIVATE
+
+猜测2： 是否可以通过 SetWindowPos 函数设置属性 SWP_NOACTIVATE 不激活窗口来解决问题呢？
+
+这里，我抱着估计也不行的想法还是厚着脸皮去试了下，仍然还是不行。
+
+结论：这个问题绝对与新建的窗口是否获取焦点没有关系。
+四、探索：锁屏机制
+
+猜测3： 是否与锁屏机制有关？
+
+这里，我去看了看锁屏实现的那个类，顺便说下，这个类的注释非常有趣：
+
+////////////////////////////////////////////////////////////////
+// MSDN Magazine -- September 2002
+// If this code works, it was written by Paul DiLascia.
+// If not, I don't know who wrote it.
+// Compiles with Visual Studio 6.0 and Visual Studio .NET on Windows XP.
+//
+
+    1
+    2
+    3
+    4
+    5
+    6
+
+哈哈哈
+
+不过问题还是要解决，通过查看代码，我发现锁屏机制的实现其实非常简单，通过注册表设置，将主窗口置顶锁住。
+
+而触发锁屏破解的原因是什么呢?
+
+是我们新建了一个窗口，这个窗口是拥有句柄的真实窗口，并且默认新建置顶。
+
+注意了，这个新建窗口后的置顶操作，是导致锁屏失败的最重要原因，为什么呢？
+
+想想，因为我们设置了主窗口为 HWND_TOP（也就是 z-order 上的最顶层窗口），而我们通过新建窗口，将主窗口的 z-order 向后移动了一位，也就是说此时最顶层窗口已经不是主窗口，而是新建的窗口了；然后新建的窗口并没有锁屏属性，因此 QQ界面 点击出 QQ空间 就可以呼叫浏览器打开网页了。
+
+原因找到了，怎么解决呢？
+
+很简单：
+
+首先设置新建窗口的 z-order 为 HWND_TOPMOST（也就是所有非顶层窗口的最上面）
+
+::SetWindowPos(newWindowHwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+
+    1
+
+然后再设置新建窗口的 z-order 为 HWND_TOP（也就是最顶层窗口）
+
+::SetWindowPos(mainHWnd, HWND_TOP, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+
+    1
+
+通过测试，修改后就没有问题了。
+
+花了一个下午的时间，问题终于搞定了 ^_^
+五、总结
+
+锁屏机制的实现，是与最顶层窗口息息相关的，一旦最顶层窗口的 z-order 更改了，锁屏机制也就相当于被破解了。
+
+这真是一个非常有趣的问题，从表入里分析问题，本身就是一件很快乐的事情 ：）
+
+14.hwnd_top和hwnd_topmost，哪一个在最前面？
+http://bbs.csdn.net/topics/390621834?page=1
+
+15.SetWindowPos函数详解
+http://www.cnblogs.com/findumars/p/3948315.html
+//声明:
+SetWindowPos(
+hWnd: HWND; {窗口句柄}
+hWndInsertAfter: HWND; {窗口的 Z 顺序}
+X, Y: Integer; {位置}
+cx, cy: Integer; {大小}
+uFlags: UINT {选项}
+): BOOL;
+//hWndInsertAfter 参数可选值:
+HWND_TOP = 0; {在前面}
+HWND_BOTTOM = 1; {在后面}
+HWND_TOPMOST = HWND(-1); {在前面, 位于任何顶部窗口的前面}
+HWND_NOTOPMOST = HWND(-2); {在前面, 位于其他顶部窗口的后面}
+//uFlags 参数可选值:
+SWP_NOSIZE = 1; {忽略 cx、cy, 保持大小}
+SWP_NOMOVE = 2; {忽略 X、Y, 不改变位置}
+SWP_NOZORDER = 4; {忽略 hWndInsertAfter, 保持 Z 顺序}
+SWP_NOREDRAW = 8; {不重绘}
+SWP_NOACTIVATE = $10; {不激活}
+SWP_FRAMECHANGED = $20; {强制发送 WM_NCCALCSIZE 消息, 一般只是在改变大小时才发送此消息}
+SWP_SHOWWINDOW = $40; {显示窗口}
+SWP_HIDEWINDOW = $80; {隐藏窗口}
+SWP_NOCOPYBITS = $100; {丢弃客户区}
+SWP_NOOWNERZORDER = $200; {忽略 hWndInsertAfter, 不改变 Z 序列的所有者}
+SWP_NOSENDCHANGING = $400; {不发出 WM_WINDOWPOSCHANGING 消息}
+SWP_DRAWFRAME = SWP_FRAMECHANGED; {画边框}
+SWP_NOREPOSITION = SWP_NOOWNERZORDER;{}
+SWP_DEFERERASE = $2000; {防止产生 WM_SYNCPAINT 消息}
+SWP_ASYNCWINDOWPOS = $4000; {若调用进程不拥有窗口, 系统会向拥有窗口的线程发出需求}
+
+
+//举例:
+procedure TForm1.Button1Click(Sender: TObject);
+begin
+SetWindowPos(Handle, HWND_TOPMOST, 0,0, 100,200, SWP_SHOWWINDOW);
+end;
+
+--------------------------------------------------------------------------------------
+
+WinAPI: SetWindowPos - 改变窗口的位置与状态
+
+SetWindowPos(
+hWnd: HWND; {窗口句柄}
+hWndInsertAfter: HWND; {窗口的 Z 顺序}
+X, Y: Integer; {位置}
+cx, cy: Integer; {大小}
+uFlags: UINT {选项}
+): BOOL;
+
+//hWndInsertAfter 参数可选值:
+HWND_TOP = 0; {在前面}
+HWND_BOTTOM = 1; {在后面}
+HWND_TOPMOST = HWND(-1); {在前面, 位于任何顶部窗口的前面}
+HWND_NOTOPMOST = HWND(-2); {在前面, 位于其他顶部窗口的后面}
+
+//uFlags 参数可选值:
+SWP_NOSIZE = 1; {忽略 cx、cy, 保持大小}
+SWP_NOMOVE = 2; {忽略 X、Y, 不改变位置}
+SWP_NOZORDER = 4; {忽略 hWndInsertAfter, 保持 Z 顺序}
+SWP_NOREDRAW = 8; {不重绘}
+SWP_NOACTIVATE = $10; {不激活}
+SWP_FRAMECHANGED = $20; {强制发送 WM_NCCALCSIZE 消息, 一般只是在改变大小时才发送此消息}
+SWP_SHOWWINDOW = $40; {显示窗口}
+SWP_HIDEWINDOW = $80; {隐藏窗口}
+
+--------------------------------------------------------------------------------------
+
+SetWindowPos（）
+函数功能：该函数改变一个子窗口，弹出式窗口式顶层窗口的尺寸，位置和Z序。子窗口，弹出式窗口，及顶层窗口根据它们在屏幕上出现的顺序排序、顶层窗口设置的级别最高，并且被设置为Z序的第一个窗口。
+函数原型：BOOL SetWindowPos（HWN hWnd，HWND hWndlnsertAfter,int X，int Y,int cx，int cy,UNIT．Flags）；
+参数：
+hWnd:窗口句柄。
+hWndlnsertAfter:在z序中的位于被置位的窗口前的窗口句柄。该参数必须为一个窗口句柄，或下列值之一：
+HWND_BOTTOM：将窗口置于Z序的底部。如果参数hWnd标识了一个顶层窗口，则窗口失去顶级位置，并且被置在其他窗口的底部。
+HWND_DOTTOPMOST：将窗口置于所有非顶层窗口之上（即在所有顶层窗口之后）。如果窗口已经是非顶层窗口则该标志不起作用。
+HWND_TOP:将窗口置于Z序的顶部。
+HWND_TOPMOST:将窗口置于所有非顶层窗口之上。即使窗口未被激活窗口也将保持顶级位置。
+
+查看该参数的使用方法，请看说明部分。
+x：以客户坐标指定窗口新位置的左边界。
+Y：以客户坐标指定窗口新位置的顶边界。
+cx:以像素指定窗口的新的宽度。
+cy：以像素指定窗口的新的高度。
+
+uFlags:窗口尺寸和定位的标志。该参数可以是下列值的组合：
+SWP_ASNCWINDOWPOS：如果调用进程不拥有窗口，系统会向拥有窗口的线程发出需求。这就防止调用线程在其他线程处理需求的时候发生死锁。
+SWP_DEFERERASE：防止产生WM_SYNCPAINT消息。
+SWP_DRAWFRAME：在窗口周围画一个边框（定义在窗口类描述中）。
+SWP_FRAMECHANGED：给窗口发送WM_NCCALCSIZE消息，即使窗口尺寸没有改变也会发送该消息。如果未指定这个标志，只有在改变了窗口尺寸时才发送WM_NCCALCSIZE。
+SWP_HIDEWINDOW;隐藏窗口。
+SWP_NOACTIVATE：不激活窗口。如果未设置标志，则窗口被激活，并被设置到其他最高级窗口或非最高级组的顶部（根据参数hWndlnsertAfter设置）。
+SWP_NOCOPYBITS：清除客户区的所有内容。如果未设置该标志，客户区的有效内容被保存并且在窗口尺寸更新和重定位后拷贝回客户区。
+SWP_NOMOVE：维持当前位置（忽略X和Y参数）。
+SWP_NOOWNERZORDER：不改变z序中的所有者窗口的位置。
+SWP_NOREDRAW: 不重画改变的内容。如果设置了这个标志，则不发生任何重画动作。适用于客户区和非客户区（包括标题栏和滚动条）和任何由于窗回移动而露出的父窗口的所有部分。如果设置了这个标志，应用程序必须明确地使窗口无效并区重画窗口的任何部分和父窗口需要重画的部分。
+SWP_NOREPOSITION；与SWP_NOOWNERZORDER标志相同。
+SWP_NOSENDCHANGING：防止窗口接收WM_WINDOWPOSCHANGING消息。
+SWP_NOSIZE：维持当前尺寸（忽略cx和Cy参数）。
+SWP_NOZORDER：维持当前Z序（忽略hWndlnsertAfter参数）。
+SWP_SHOWWINDOW：显示窗口。
+
+返回值：如果函数成功，返回值为非零；如果函数失败，返回值为零。若想获得更多错误消息，请调用GetLastError函数。
+备注：如果设置了SWP_SHOWWINDOW和SWP_HIDEWINDOW标志，则窗口不能被移动和改变大小。如果使用SetWindowLoog改变了窗口的某些数据，则必须调用函数SetWindowPos来作真正的改变。使用下列的组合标志：SWP_NOMOVEISWP_NOSIZEISWP_FRAMECHANGED。
+有两种方法将窗口设为最顶层窗口：一种是将参数hWndlnsertAfter设置为HWND_TOPMOST并确保没有设置SWP_NOZORDER标志；另一种是设置窗口在Z序中的位置以使其在其他存在的窗口之上。当一个窗口被置为最顶层窗口时
+
+
+
+DWORD_PRT SetWindowPos(HWND hWnd,HWND hInsertAfter,int x,int y,int cx,int cy,UINT nFlag)
+
+SetWindowPos函数功能是将一个窗口在三维空间中移动，利用它，你可以改变一个窗口的位置，甚至可以在Z轴上改变（Z轴决定了一个窗口和其它窗口的前后关系），你还可以改变窗口的尺寸。为了实现TopMost类型的窗口，我们只需调用该函数，将窗口放在所有窗口的前面并永远保持在最前面即可
+
+
+表1 SetWindowPos函数的参数解释
+参数名 参数含义
+hwnd 要移动的窗口的句柄（可以用窗体的hwnd属性）
+hWndInsertAfter 关于如何在Z轴上放置窗口的标记（具体见表2）
+x 相当于窗口的Left属性
+y 相当于窗口的Top属性
+cx 相当于窗口的Right属性
+cy 相当于窗口的Bottom属性
+wFlags 关于如何移动窗口的标记（具体见表3）
+表2 HWndInsertAfter参数的可能取值及含义
+hWndInsertAfter的可能取值 功能
+某一窗口的句柄 将窗口放在该句柄指定的窗口后面
+HWND_BOTTOM(1) 把窗口放在Z轴的最后，即所有窗口的后面
+HWND_TOP(0) 将窗口放在Z轴的前面，即所有窗口的前面
+HWND_TOPMOST(-1) 使窗口成为“TopMost”类型的窗口，这种类型
+的窗口总是在其它窗口的前面，真到它被关闭
+HWND_NOTOPMOST(-2) 将窗口放在所有“TopMost”类型
+窗口的后面、其它类型窗口的前面
+表3 wFlags参数的可能值及含义
+wFlags参数的可能值 功能
+SWP_DRAWFRAME(&H20) 移动窗口后重画窗口及其上的所有内容
+SWP_HIDEWINDOW(&H80) 隐藏窗口，窗口隐藏后既不出现在屏幕上也不出现在任
+务栏上，但它仍然处于激活状态
+SWP_NOACTIVATE(&H10) 窗口移动后不激活窗口，当然，如果窗口在移动前就是
+激活的则例外
+SWP_NOCOPYBITS(&H100) 当窗口移动后，不重画它上面的任何内容
+SWP_NOMOVE(&H2) 不移动窗口（即忽略X和Y参数）
+SWP_NOSIZE(&H1) 不改变窗口尺寸（即忽略Cx和Cy参数）
+SWP_NOREDRAW(&H8) Do not remove the image of the window in its former position
+from the screen. In other words,leave behind a ghost image
+of the window in its old position
+SWP_NOZORDER(&H4) 不改变窗口听Z轴位置（即忽略hWndInsertAfter参数）
+SWP_SHOWWINDOW(&H40) 显示窗口（之前必须使用过SWP_HIDEWINDOW
+隐藏窗口）
+
+
+注释：
+
+假如指定了SWP_SHOWWINDOW或SWP_HIDEWINDOW,窗口不能被移动或改变大小。
+子窗口的所有坐标都是客户区坐标(相对于父窗口的客户区左上角).
+一个窗口能够成为一个Topmost窗口，可以通过设置hWndInsertAfter参数为HWND_TOPMOST并且保证SWP_NOZORDER标志没有设置,或者通过设置它的窗口在Z轴方向上的位置，以便使它在现存的任何Topmost窗口之上.当一个非Topmost窗口被设置成topmost,那么它拥有的窗口也将成为，然而它的拥有者们没有变。
+
+假如SWP_NOACTIVATE和SWP_NOZORDER标志都没有指定(指当应用程序要求窗口被激活同时改变它在Z轴方向上的位置时),则hWndInsertAfter仅用在以下几种情况:
+1.HWND_TOPMOST和HWND_NOTOPMOST标志在hWndInsertAfter中都没有指定.
+2.hWnd句柄指定的窗口不是活动窗口.
+
+如果一个应用程序不把一个非活动窗口调整到Z轴方向顶部，则不能激活非活动窗口。应用程序能够没有限制地改变一个活动窗口在Z轴方向上的位置,它能够激活一个窗口并且把它移动到topmost或者非topmost窗口的顶部。
+假如一个topmost窗口被重定位到Z轴方向上最下面(HWND_BOTTOM)，或者在任何非topmost窗口后面,那么它不在是topmost窗口.当一个Topmost窗口变成非topmost窗口时,它的拥有者和它拥有的窗口也都将成为非topmost窗口.
+
+一个非Topmost窗口能够拥有一个Topmost窗口,但是反过来不行.任何窗口(例如：一个对话框）被一个Topmost窗口拥有，同时它使也自己成为一个Topmost窗口,要保证所有被拥有的窗口处在它们的拥有者的上面。
+假如一个应用程序没有在前台，但是要成为前台程序,它应该调用SetForegroundWindow函数.
+
+参看：
+MoveWindow, SetActiveWindow, SetForegroundWindow
+
+
+头文件: 在Winuser.h中定义。
+静态库: User32.lib.
+
+示例代码：
+移动到屏幕的左上角：
+　　　　SetWindowPos(m_hWnd,NULL,0,0,0,0,SWP_NOSIZE);
+使其成为Topmost窗口并移动到屏幕的左上角：
+SetWindowPos(m_hWnd,HWND_TOPMOST,0,0,0,0,SWP_NOSIZE)；
+显示窗口：
+SetWindowPos(m_hWnd,NULL,0,0,0,0,SWP_SHOWWINDOW|SWP_NOSIZE|SWP_NOMOVE)；
+隐藏窗口：
+SetWindowPos(m_hWnd,NULL,0,0,0,0,SWP_HIDEWINDOW|SWP_NOSIZE|SWP_NOMOVE)；
+改变窗口大小：
+CRect newRect;
+::GetWindowRect(m_hWnd,&newRect);
+::SetWindowPos(m_hWnd,NULL,0,0,newRect.Width()/2,newRect.Height()/2,SWP_NOMOVE);
+SWP_NOCOPYBITS = $100; {丢弃客户区}
+SWP_NOOWNERZORDER = $200; {忽略 hWndInsertAfter, 不改变 Z 序列的所有者}
+SWP_NOSENDCHANGING = $400; {不发出 WM_WINDOWPOSCHANGING 消息}
+SWP_DRAWFRAME = SWP_FRAMECHANGED; {画边框}
+SWP_NOREPOSITION = SWP_NOOWNERZORDER;{}
+SWP_DEFERERASE = $2000; {防止产生 WM_SYNCPAINT 消息}
+SWP_ASYNCWINDOWPOS = $4000; {若调用进程不拥有窗口, 系统会向拥有窗口的线程发出需求}
+
+
+16.Win32 窗口的层级和样式 http://blog.csdn.net/see11see/article/details/4513736
+
+前几天看到 vcbear 翻译的文章“探索 Win32系统之窗口类”，觉得文章很好，翻译的也很好。于是又找了找相关的文章，找到了这篇，但是没有见到中文翻译，所以我把它翻译了下来。
+
+
+MSDN ; MSDN Library ; Win32 and COM Development ; Technical Articles ; User Interface ; User Interface Design and Usability ; Win32 Window Hierarchy and Styles
+
+http://msdn.microsoft.com/en-us/library/ms997562.aspx
+
+
+Windows User Interface Technical Articles
+Win32 Window Hierarchy and Styles
+
+Kyle Marsh
+Microsoft Developer Network Technology Group
+
+Created: September 29, 1993
+
+摘要
+
+本文介绍 Win32 版本的 Microsoft Windows 操作系统提供的桌面窗口、顶层窗口和子窗口，以及它们之间的层级关系；解释了应用程序如何游历窗口结构，如何控制桌面上显示的窗口的样式和外观。
+窗口层级
+
+在 Microsoft Windows 图形环境中，用来显示信息的最基本元件是窗口。一个窗口和其它窗口之间的关系包括可见性关系、拥有关系和父/子关系，由 Microsoft Windows 管理这些关系。当创建、销毁或者显示一个窗口时，Windows 要用到这种关系信息。Windows 的窗口管理器控制着一个窗口如何和另一个窗口关联，并把每个窗口的窗口进程信息连接起来形成一张层级表，即 window manager's list 。
+
+窗口管理器使用每个窗口的进程信息结构中的四个元素来构建窗口管理器列表：
+
+    本窗口子窗口的句柄
+    子窗口列表中下一个子窗口的句柄 (本窗口的下一兄弟)
+    本窗口父窗口的句柄
+    本窗口拥有者的句柄
+
+图1.
+
+在初始化 Windows 的时候创建 desktop window，桌面窗口的大小被调整为可以覆盖整个显示区域。窗口管理器把桌面窗口放在窗口管理器列表的顶层。因此，桌面窗口位于窗口层级的顶层。
+
+窗口层级中下一层的窗口叫做 top-level window。一个窗口只要不是子窗口，就是顶层窗口。顶层窗口没有 WS_CHILD 样式。窗口管理器填写每个顶层窗口的下一窗口句柄，把所有的顶层窗口连成一张链表，然后把此链表的表头存储在桌面窗口的子窗口句柄中。这样就建立了顶层窗口和桌面窗口的联系。这个链表被称为 child window list，因为它连接到一个窗口的子窗口句柄。一张子窗口列表中的所有窗口相互间都是兄弟，因此所有顶层窗口互为兄弟。子窗口列表中各元素的顺序决定了它们的Z序，列表中的第一个在Z序的顶端，列表中的最后一个在Z序的底端。窗口管理器依此Z序决定哪个窗口或窗口的哪个部分可见，哪个窗口或窗口的哪个部分被其它窗口盖住。如果一个窗口A出现在另一个窗口B的下面，那么在子窗口列表中 A 位于 B 之后。
+
+所有顶层窗口也通过自己窗口进程信息的父窗口句柄同桌面窗口连接。顶层窗口通过这种方式和桌面窗口连接，就好像它们是桌面窗口的子窗口一样。在游历父/子关系的技术中，确实可以把顶层窗口当作桌面窗口的子窗口。
+
+顶层窗口在创建时，被窗口管理器放到Z序的顶端，因此整个窗口都是可见的。窗口管理器把这个窗口放到桌面窗口的子窗口列表的顶部。有个扩展样式，WS_EX_TOPMOST，可以控制窗口管理器把最近创建的窗口放到窗口管理器列表的哪个部分。所有不包含 WS_EX_TOPMOST 样式的窗口都被窗口管理器放到包含 WS_EX_TOPMOST 样式的窗口之后。因此所有具有 WS_EX_TOPMOST 样式的窗口总是显示在不具有 WS_EX_TOPMOST 样式的窗口前面。
+
+图2.
+
+另一种类型的关系，可以存在于顶层窗口之间：顶层窗口可以拥有其它顶层窗口、或者被其它顶层窗口拥有。一个被拥有的窗口在Z序上总是高于它的拥有者窗口；在它的拥有者最小化时，它总是被隐藏。但是如果它的拥有者被隐藏，这个被拥有的窗口并不会隐藏。因此，如果窗口A拥有窗口B，窗口B又拥有窗口C，当窗口A最小化时，窗口B将被隐藏，而窗口C保持可见。在调用 CreateWindow（或者 CreateWindowEx）创建窗口的时候，给 hwndParent 参数指定一个窗口句柄，这样就指定了被创建的窗口的拥有者。如果 hwndParent 参数指定的窗口不是顶层窗口，Windows 查找此参数指向的窗口的顶层窗口，将找到的顶层窗口作为拥有者。这个被拥有的窗口创建以后，hwndParent 参数指定的窗口存储在窗口进程信息的父窗口字段；作为拥有者的顶层窗口存储在窗口进程信息的拥有者字段。如果应用程序在创建对话框的时候没有特别声明此对话框要是一个子窗口，Windows 将创建一个被拥有的对话框。
+
+图3.
+
+桌面窗口占据着窗口层级的第一层，顶层窗口位于第二层。Child window，即那些创建时带有 WS_CHILD 样式的窗口，位于所有的其它层级。窗口管理器将子窗口同它们的父窗口连接起来的方式和将顶层窗口和桌面窗口连接起来的方式一样。
+
+图4.
+
+子窗口显示在它们父窗口的客户区。窗口管理器使用子窗口列表中从头到尾的顺序来决定子窗口们的Z序。这和用来决定顶层窗口的Z序的方法是一样的。所有顶层窗口都显示在桌面窗口的客户区，因此，看起来就好像它们是桌面的子窗口。
+Win32 中有什么不同？
+
+上面介绍的桌面窗口、顶层窗口、被拥有的窗口及子窗口之间的关系，在 Win32 和 Win16 中是一样的。这保证了 Win32 和 Win16 之间的高度兼容，使用窗口层级的应用程序在这两种环境下都能工作。Win32 和 Win16 有两点不同：安全性，多线程。
+
+Windows NT 向窗口层级中添加了一个新层级：每一个运行 Windows NT 的计算机都有一个被称为 WindowStation object 的对象。这个对象构成了工作站的第一层安全性，所有用户对象的安全性都继承自这个对象。一个窗口站对象可以依次地拥有任意数量的桌面对象。每个桌面对象都是一个桌面窗口，前面介绍过桌面窗口。Windows NT 使用两个桌面：一个用来处理登录屏幕、CTRL+ALT+DEL 屏幕、被锁定的工作站的屏幕、屏幕保护程序；另一个桌面用来处理所有其它。目前，应用程序不能创建或者删除桌面。
+
+Win32 和 Win16 的另一个不同之处是使用多线程。Win16 不支持多线程，所以当应用程序创建一个窗口时，程序员不需要考虑线程。在 Win32 中，只要窗口间存在父/子或者拥有/被拥有关系，创建这些窗口的线程就共享同一个输入队列。程序员必须记住，共享输入队列抵消了使用线程带来的好处——任一时刻只有一个线程能处理消息，另外那些共享输入队列的线程必须等待 GetMessage 或 PeekMessage 的返回。在可能的情况下尽量保证父/子窗口或拥有/被拥有的窗口属于同一个线程。
+
+Win32 定义了两个不在窗口层级内的新的窗口类型：foreground window 和 background window。前景窗口是用户当前正在使用的窗口；所有其它窗口都是背景窗口。正常情况下，程序员应当让用户设定前景窗口，然而 Win32 确实提供了两个函数来处理前景窗口，SetForegroundWindow 和 GetForegroundWindow。
+游历窗口管理器列表
+
+应用程序以两种方式游历窗口管理器列表：要么通过窗口管理器获得拥有者、父、子、或下一窗口；要么让 Windows 调用一个应用程序为一个窗口集合提供的回调函数。下列函数游历了窗口管理器列表。
+EnumChildWindows
+
+应用程序使用此函数让 Windows 调用一个应用程序提供的回调函数，此回调函数作用于指定窗口的每个子窗口。Windows 枚举包括子窗口的子窗口在内的所有子窗口。Windows 不会为在 EnumChildWindows 调用之后、返回之前的这段时间内创建的子窗口调用回调函数。
+EnumThreadWindows
+
+应用程序使用此函数让 Windows 调用一个应用程序提供的回调函数，此回调函数作用于指定线程的每个窗口。Windows 枚举线程的所有被拥有的和不被拥有的顶层窗口、子窗口、子窗口的子窗口。Windows 不会为在 EnumThreadWindows 调用之后、返回之前的这段时间内创建的窗口调用回调函数。
+EnumWindows
+
+应用程序使用此函数让 Windows 调用一个应用程序提供的回调函数，此回调函数作用于每个顶层窗口。Windows 枚举所有被拥有的和不被拥有的顶层窗口。Windows 不会为在 EnumWindows 调用之后、返回之前的这段时间内创建的顶层窗口调用回调函数。
+FindWindow
+
+应用程序使用此函数查找符合指定窗口类和窗口标题的、Z序中的第一个顶层窗口。可以仅指定窗口类，或者仅指定窗口标题，或者都指定，或者都不指定。如果都不指定，FindWindow 函数返回Z序中最高的那个顶层窗口。无法通过 FindWindow 获得Z序中位于第一次找到的窗口之下的窗口。
+GetDesktopWindow
+
+此函数返回桌面窗口的句柄。
+GetNextWindow
+
+Win16 定义了此函数来完成和 GetWindow （见下）不同的功能。Win32 中并没有实现此函数，只是在 WINUSER.H 头文件中定义了一个宏，用来把对 GetNextWindow 的调用转换成对 GetWindow 的调用。
+GetParent
+
+如果指定的窗口有父窗口，此函数返回父窗口句柄。对于子窗口，此函数返回其父窗口句柄；对于顶层窗口，若该窗口被拥有，此函数返回拥有者的句柄。当使用 CreateWindow 或 CreateWindowEx 创建被拥有的窗口时，如果想取得传递给这两个函数的窗口句柄，使用 GetWindowWord(GWW_HWNDPARENT)。如果给 CreateWindow 或 CreateWindowEx 传递的是一个非顶层窗口的句柄，那么通过调用 GetWindowWord(GWW_HWNDPARENT) 取得的窗口句柄和 GetParent 的返回值是不一样的。例如：使用 CreateWindow 或 CreateWindowEx 创建对话框时，给 hwndParent 参数传递了一个子窗口句柄。
+GetThreadDesktop
+
+此函数返回指定线程的桌面句柄。
+GetTopWindow
+
+此函数返回指定窗口的第一个子窗口。第一个子窗口总是位于指定窗口拥有的Z序的顶部。不指定窗口，即传递 NULL 时，此函数返回位于Z序顶部的顶层窗口。
+GetWindow
+
+应用程序使用此函数游历窗口管理器列表。GetWindow 接受两个参数：一个窗口句柄（HWND），一个 fwRel（WORD）。fwRel 指出两个窗口要满足什么样的关系，GetWindow 返回满足条件的另一个窗口的句柄。fwRel 取值如下：
+
+    GW_HWNDNEXT: GetWindow 返回下一兄弟窗口的句柄。用 GW_HWNDNEXT 作参数调用 GetNextWindow 将得到同样的结果。
+    GW_HWNDFIRST: GetWindow 返回Z序中顶端的兄弟窗口句柄。这窗口的可见度最高。此调用和 GetTopWindow 调用结果相同。
+    GW_HWNDLAST: GetWindow 返回Z序中底端的兄弟窗口句柄。这窗口的可见度最低。
+    GW_HWNDPREV: GetWindow 返回上一兄弟窗口的句柄。用 GW_HWNDPREV 作参数调用 GetNextWindow 将得到同样的结果。
+    GW_OWNER: GetWindow 返回拥有者的句柄。如果没有拥有者，返回 NULL。
+    GW_CHILD: GetWindow 返回第一个子窗口的句柄。第一个子窗口位于指定窗口拥有的Z序的顶部。如果没有子窗口，返回 NULL。
+
+IsChild
+
+IsChild 接受两个窗口句柄作参数：hWndParent 和 hWnd。当 hWnd 是 hWndParent 的子、孙、后代时，返回 TRUE。如果从 hWnd 的的父窗口一层一层向上查找，这当中发现了 hWndParent，就说 hWnd 是 hWndParent 的后代。当 hWnd 和 hWndParent 相同时，返回 FALSE。
+窗口样式
+
+当应用程序使用 CreateWindow 或 CreateWindowEx 函数创建窗口时，需要通过 dwStyle 参数给窗口指定一些样式属性。样式属性决定了窗口的类型、功能和初始状态。Win32 没有添加、修改或删除原来的样式，Win32 样式和 Win16 样式一模一样。
+决定窗口类型的样式
+WS_OVERLAPPED
+
+层叠式窗口是顶层窗口，连接到桌面窗口的子窗口列表。应用程序通常使用层叠式窗口作为它们的主窗口。层叠式窗口一定包含一个标题栏，无论是否指定 WS_CAPTION。由于它一定包含一个标题栏，所以它也一定包含一个边框。下面的 WS_CAPTION 部分中有更多关于边框样式的内容。层叠式窗口可以拥有别的顶层窗口、可以被别的顶层窗口拥有、或者同时满足这两种情况。所有层叠式窗口，无论是否指定 WS_CLIPSIBLINGS，都具有此样式。
+
+Windows 可以决定层叠式窗口的初始大小和位置。如果要让 Windows 这么做，应用程序使用 CW_USEDEFAULT 作为 CreateWindow 或 CreateWindowEx 的 X 参数的实参。如果应用程序使用 CW_USEDEFAULT 指定层叠式窗口的位置，并且使用 WS_VISIBLE 样式来让窗口一被创建就显示出来，那么 Windows 就会使用 CreateWindow 或 CreateWindowEx 的 Y 参数调用ShowWindow。因此，当一个应用程序将 CW_USEDEFAULT 作为 CreateWindow 或 CreateWindowEx 的 X 参数时，Y 的值必须是下面中的一个：
+
+    SW_HIDE
+    SW_SHOWNORMAL
+    SW_NORMAL
+    SW_SHOWMINIMIZED
+    SW_SHOWMAXIMIZED
+    SW_MAXIMIZE
+    SW_SHOWNOACTIVATE
+    SW_SHOW
+    SW_MINIMIZE
+    SW_SHOWMINNOACTIVE
+    SW_SHOWNA
+    SW_RESTORE
+
+通常使用 SW_SHOW 作为 Y 参数因为 SW_SHOW 可以让 WS_MAXIMIZE 和 WS_MINIMIZE 样式正确地发挥功能。
+
+如果想让 Windows 决定窗口的初始大小，应用程序要把 CreateWindow 或 CreateWindowEx 的 nWidth 参数设为 CW_USEDEFAULT。这时，CreateWindow 或 CreateWindowEx 的 nHeight 参数被忽略。
+WS_POPUP
+
+弹出式窗口是顶层窗口，连接到桌面窗口的子窗口列表。弹出式窗口常用于对话框。弹出式窗口和层叠式窗口的主要区别在于弹出式窗口不需要拥有标题栏，而层叠式窗口一定拥有标题栏。弹出式窗口如果没有标题栏，就也可以没有边框。弹出式窗口可以拥有别的顶层窗口、可以被别的顶层窗口拥有、或者同时满足这两种情况。所有弹出式窗口，无论是否指定 WS_CLIPSIBLINGS，都具有此样式。弹出式窗口不能使用 CW_USEDEFAULT 作为位置或大小参数，如果使用，窗口会存在，但是不具有大小，或者不具有位置，或者都不具有。
+WS_CHILD
+
+子窗口必须属于一个父窗口，它被限定在这个父窗口的客户区。这是子窗口和层叠式、弹出式窗口的主要区别。子窗口的父窗口既可以是顶层窗口也可以是子窗口。顶层窗口的位置从屏幕的左上角开始计算，子窗口的位置从它们的父窗口的左上角开始计算。子窗口被限制在它们父窗口的客户区，超出的部分被裁剪掉。对话框中的控件是此对话框的子窗口。子窗口不能用 CW_USEDEFAULT 作为位置或大小参数，如果使用，窗口会存在，但是不具有大小，或者不具有位置，或者都不具有。
+决定窗口功能和外观的样式
+WS_CAPTION
+
+这个样式使得 Windows 在窗口顶部添加一个矩形区域，用来显示文本或标题。层叠式窗口一定包含标题栏。可以在 CreateWindow 或 CreateWindowEx 时指定要显示的文本，也可以调用 SetWindowText 改变文本。包含标题栏的窗口可以包含最大化按钮（WS_MAXIMIZEBOX）、最小化按钮（WS_MINIMIZEBOX）和系统菜单（WS_SYSMENU）。不包含标题栏的窗口，即使包含上面三个样式，Windows 也不会创建它们。
+
+不包含标题栏的窗口不能拥有菜单，因为菜单系统依据标题栏来放置菜单。
+
+用户可以用鼠标移动具有标题栏的窗口。如果窗口没有标题栏，用户就不能移动它，因为用户必须通过系统菜单移动窗口，而没有标题栏的窗口不具有系统菜单。
+
+具有标题栏的窗口要么有一个单线边框，要么有一个较粗的可用来调整窗口大小的边框。如果没有包含 WS_BORDER （单线）和 WS_THICKFRAME （可调整大小）这两个样式中的任何一个，窗口将具有单线边框。WS_CAPTION 实际上是 WS_BORDER 和 WS_DLGFRAME 的组合，WS_CAPTION = WS_BORDER | WS_DLGFRAME，这使得你无法区分具有标题栏、单线边框的窗口和具有标题栏、对话边框的窗口。结果是具有标题栏的窗口无法具有对话框的边框效果，除非使用 WS_EX_DLGMODALFRAME 扩展样式。
+WS_MINIMIZEBOX
+
+这个样式使得 Windows 将一个最小化按钮的位图放在窗口右上角。如果窗口有最大化按钮，Windows 把最小化按钮放在最大化按钮的左边。窗口如果没有标题栏就不能有最小化按钮。窗口如果拥有最小化按钮，用户可以通过点击最小化按钮或者通过系统菜单来最小化它；如果不拥有最小化按钮，用户不能最小化它。
+WS_MAXIMIZEBOX
+
+这个样式使得 Windows 将一个最大化按钮的位图放在窗口右上角。窗口如果没有标题栏就不能有最大化按钮。窗口如果拥有最大化按钮，用户可以通过点击最大化按钮或者通过系统菜单来最大化它；如果不拥有最大化按钮，用户不能最大化它。
+WS_SYSMENU
+
+这个样式使得 Windows 将一个系统菜单的位图放在窗口左上角。系统菜单提供了一个接口，供用户执行下列系统命令：
+
+    还原最小化的窗口
+    用键盘移动窗口
+    用键盘调整窗口大小
+    最小化窗口
+    最大化窗口
+    关闭窗口
+    切换到另一个任务
+
+当窗口拥有系统菜单时，用户可以单击菜单的位图、输入 ALT+SPACEBAR 或者在窗口最小化时单击其图标来展开菜单。如果窗口没有系统菜单，应用程序又没有专门为此提供键盘接口，用户就无法执行系统命令。
+
+对于那些最大化以后占据整个屏幕的窗口来说，系统菜单是很重要的。这类窗口如果具有系统菜单，那么在窗口被还原到正常尺寸之前，不能被移动；如果不具有系统菜单，即使它最大化占据了整个屏幕，仍然能够在不还原的情况下移动它。窗口被最大化后，Windows 在系统菜单中禁用移动、调整大小和最大化。因而，具有系统菜单的窗口，最大化以后不能移动；不具有系统菜单的窗口，最大化以后，仍然可以移动。
+WS_HSCROLL
+
+这个样式使得 Windows 将一个水平卷动条放在窗口底部。Windows 不会自动卷动窗口的内容。允许水平卷动的窗口必须在自己的窗口过程里处理 WM_HSCROLL 消息，窗口必须在创建时包含 WS_HSCROLL 样式。
+WS_VSCROLL
+
+这个样式使得 Windows 将一个垂直卷动条放在窗口右边。Windows 不会自动卷动窗口的内容。允许垂直卷动的窗口必须在自己的窗口过程里处理 WM_VSCROLL 消息，窗口必须在创建时包含 WS_VSCROLL 样式。
+WS_BORDER
+
+这个样式使得 Windows 用单线绘制窗口的边框。如果没有指定边框样式，Windows 使用单线绘制所有具有标题栏的窗口。用此样式创建出的窗口不能使用鼠标或键盘来调整大小。
+WS_DLGFRAME
+
+这个样式使得 Windows 绘制一个对话框架：一条单线和一条较粗的有颜色的线围绕窗口。这种样式一般指定给一个对话框，但是也可以用在任何没有标题栏的窗口上。仅当指定了WS_EX_DLGMODALFRAME 扩展样式时，具有标题栏的窗口才可以具有此样式。用此样式创建出的窗口不能使用鼠标或键盘来调整大小。
+WS_THICKFRAME
+
+这个样式使得 Windows 绘制一个可调整大小的框架：一条较粗的有颜色的线夹在两条单线之间，它们围绕着窗口。此样式常用于应用程序的主窗口。用此样式创建的窗口能够使用鼠标调整大小或者使用键盘通过系统菜单来调整大小。
+WS_CLIPCHILDREN
+
+这个样式用于拥有子窗口的窗口，使得 Windows 把子窗口占据的那部分父窗口区域，从父窗口区域中排除。父窗口的绘制不会影响到这部分区域。不包含这个样式时，父窗口的绘制会影响到这部分区域。此样式稍微降低性能，如果应用程序不在窗口上绘制，不要包含此样式。
+WS_CLIPSIBLINGS
+
+这个样式使得 Windows 剪取各兄弟窗口之间的客户区域。就是说，兄弟窗口之间不能在彼此的客户区绘制。Windows 对所有顶层窗口（弹出式和层叠式窗口）强制使用此样式。所以顶层窗口不能在其它任何顶层窗口上绘制。默认情况下，Windows 并不剪取兄弟窗口，因此子窗口之间如果存在兄弟关系，它们可以在彼此的窗口上绘制。此样式稍微降低性能，如果兄弟窗口之间无法在彼此的窗口上绘制，不要包含此样式。
+决定窗口初始状态的样式
+WS_VISIBLE
+
+这个样式使得窗口创建以后马上可见。正常情况下，应用程序必须调用 ShowWindow 函数使窗口可见。
+WS_DISABLED
+
+这个样式使得 Windows 创建一个不能使用的窗口。窗口在能被使用之前，无法接受用户输入。应用程序必须提供一个使得窗口能够使用的方法。此样式常用于控件窗口。
+WS_MAXIMIZE
+
+这个样式使得 Windows 创建一个最大化的窗口。通过响应 WM_GETMINMAXINFO 消息应用程序可以控制窗口最大化时的尺寸。默认情况下，Windows 把顶层窗口的最大化尺寸设为屏幕尺寸；把子窗口的最大化尺寸设为其父窗口的客户区尺寸。应用程序应该确保 ShowWindow 被调用，以使 WS_MAXIMIZE 样式生效。
+WS_MINIMIZE (WS_ICONIC)
+
+这个样式使得 Windows 创建一个最小化的窗口，即，一个图标化的窗口。应用程序应该确保 ShowWindow 被调用，以使 WS_MINIMIZE 样式生效。
+窗口标准样式
+
+微软视窗软件开发工具包（sdk）为几种窗口类型提供了一些标准样式。这些样式大多是基本样式的组合。使用这些样式比逐一指定每个单独的样式方便些。
+WS_CHILDWINDOW
+
+等同于 WS_CHILD 。一般情况下，创建子窗口时应使用 WS_CLIPSIBLINGS 样式和 WS_CHILD 或 WS_CHILDWINDOW 样式。
+WS_OVERLAPPEDWINDOW
+
+等同于 WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX 。应用程序主窗口经常使用此样式。
+WS_POPUPWINDOW
+
+等同于 WS_POPUP | WS_BORDER | WS_SYSMENU 。虽然它包含了 WS_SYSMENU 样式，在没有标题栏（WS_CAPTION）的情况下，它不会有系统菜单。
+扩展的窗口样式
+
+扩展的窗口样式最早在 3.0 版本的 Windows 中加入。要创建一个具有扩展样式的窗口，应用程序必须使用 CreateWindowEx 函数，不能使用 CreateWindow 函数。
+WS_EX_DLGMODALFRAME
+
+这个样式使得 Windows 为具有标题栏的窗口使用对话边框。此样式覆盖 WS_BORDER 和 WS_THICKFRAME 样式，产生一个具有对话框架的窗口。此扩展样式常用于对话框，但任何想使用对话框架的窗口都能使用此样式。
+WS_EX_NOPARENTNOTIFY
+
+这个样式是让子窗口使用的。若包含这个样式，Windows 就不向该子窗口的父窗口发送 WM_NOTIFY 消息。默认的情况下，当子窗口被创建或销毁时，Windows 向它的父窗口发送 WM_NOTIFY 消息。
+
+从 3.1 版本的 Windows 开始，加入下列扩展的窗口样式。
+WS_EX_TOPMOST
+
+这个样式仅用于顶层窗口，子窗口忽略此样式。这个样式使得 Windows 把窗口放在所有不具有 WS_EX_TOPMOST 样式的窗口上面。从 3.1 版本的 Windows 开始，有两类顶层窗口：最顶层的顶层窗口和顶层窗口。最顶层的顶层窗口在Z序上总是位于顶层窗口之上。通过调用 SetWindowPos 函数，给函数传递窗口句柄，给 hwndInsertAfter 参数传递 -1，顶层窗口可以变成最顶层的顶层窗口；通过调用 SetWindowPos 函数，给函数传递窗口句柄，给 hwndInsertAfter 参数传递 1，最顶层的顶层窗口可以变成顶层窗口。
+WS_EX_ACCEPTFILES
+
+接受拖放对象的窗口必须包含此样式，Windows 据此来判断一个窗口是否接受对象。若接受，当用户将对象拖过窗口时，Windows 改变拖放时的光标。
+WS_EX_TRANSPARENT
+
+这个样式使窗口透明；就是说，窗口下面的任何内容都保持可见，能透过窗口看到它们。但是窗口不会把鼠标或键盘事件也透到下面去。如果它下面的的东西发生变化，窗口将接到绘制消息。透明窗口很适合用来绘制一个位于其它窗口之上的、用于拖动的把手；或者实现一个不需要点击测试的“热点”区域，因为透明的窗口接收了点击消息。
+
+
+17. windows程序窗口层次Z-order，顶层窗口，前台窗口，后台窗口，兄弟窗口，活动窗口 
+http://blog.csdn.net/u012372584/article/details/53783393
+
+窗口Z次序：表明了重叠窗口堆中窗口的位置，这个窗口堆是按照一个假象的轴定位的，这个轴是从屏幕向外伸展的Z轴，上面的窗口覆盖下面的窗口。
+
+Windows系统管理三个独立的Z次序----一个用于顶层窗口、一个用于兄弟窗口、还有一个用于最顶层窗口，最顶层窗口覆盖其他非最顶层窗口，而不管它是不是活动窗口或是前台窗口。应用程序通过设置WS_EX_TOPMOST风格创建最顶层窗口。
+
+一般情况下，Windows系统把刚刚创建的窗口放在Z次序的顶部，用户可以通过另外一个窗口来改变Z次序；Windows总是把活动的窗口放在Z次序的顶部，应用程序可以用函数BringWindowToTop把一个窗口放置到Z次序的顶部。函数SetWindowPos和DeferWindowPos用来重排Z次序。
+
+兄弟窗口：共享同一个父窗口的子窗口叫做兄弟窗口。
+
+活动窗口：活动窗口是应用程序的顶层窗口，也是当前使用的窗口。只有一个顶层窗口可以是活动窗口，如果用户使用的是一个子窗口，Windows系统就激活与这个子窗口相应的顶层窗口。
+
+任何时候系统中只能有一个顶层窗口是活动的。用户通过单击窗口（或其中的一个子窗口）、使用ALT+TAB或ALT+ESC组合键来激活一个顶层窗口，应用程序则调用函数SetActiveWindow来激活一个顶层窗口。
+
+前台窗口和后台窗口：
+
+在Windows系统中，每个进程可运行多个线程，每个线程都能创建窗口。创建正在使用的窗口的线程称之为前台线程，这个窗口也称之为前台窗口。所有其他的线程都是后台线程，由后台线程所创建的窗口叫做后台窗口。
+
+用户通过单击一个窗口，使用ALT+TAB或ALT+ESC组合键来设置前台窗口，应用程序则用函数SetForegroundWindow设置前台窗口。如果新的前台窗口是一个顶层窗口，那么Windows系统就激活它，换句话说，Windows系统激活相应的顶层窗口。
+
+
+18.Windows 窗口层次关系及窗口层次说明
+http://blog.csdn.net/chenlycly/article/details/53350638
+
+相信在Windows 下面编程的很多兄弟们都不是很清楚Windows 中窗口的层次关系是怎么样的，这个东西很久已经研究过一下，后来又忘记了，今天又一次遇到了这个问题，所以便整理一下。下面就说说Windows 中桌面（Desktop）以及顶层窗口，以及子窗口之间的关系。
+
+    在Windows 的图形界面下，最基本显示信息的元素就是窗口，每一个Windows 窗口都管理着自己与其他窗口之间的关系和自身的一些信息，如：是否可见，窗口的所有者，窗口的父/子关系等等信息，当窗口创建、销毁、显示的时候，就会用到这些信息。
+
+       在每一个窗口实例中，有四个元素被窗口管理器用来建立窗口管理链表。
+
+      
+
+    Child ： 指向窗口子窗口的句柄
+    Parent：指向窗口父窗口的句柄
+    Owner：指向窗口所有者的句柄
+    Next：   指向下一个同属窗口的句柄
+
+    众所周知当Windows初始化的时候，它创建桌面这个窗口，桌面覆盖着整个窗口，窗口管理器用这个窗口作为窗口链表中第一个元素。因此桌面在窗口的层次关系中在最上层。
+   在窗口层次关系中，桌面窗口下一层窗口叫做顶层窗口，顶层窗口就是那些不是子窗口的窗口，顶层窗口不能够有WS_CHILD属性。窗口管理器是如何把桌面窗口和顶层窗口联系起来的呢？窗口管理器把顶层窗口都组织到一个链表中，而这个链表的头存储的就是桌面窗口的子窗口句柄，每一个子窗口通过Next就可以找到链表中下一个窗口了。这个链表被称为子窗口链表，在同一个子窗口链表中的窗口是互为同属窗口，所有顶层窗口都是同属窗口。窗口在子窗口链表中的次序，也表明了窗口距离距离桌面窗口的距离[依次减小，第一个最上面，第二个在第一个下面，最后一个离桌面最近，也就是Z次序依次减小，第一个Z次序最大最能被看见]。顶层窗口所形成的子窗口链表构成了一个Z 轴，窗口管理器就是根据Z序列来觉得窗口的哪一部分是显示的，哪一部分是被遮盖的。
+
+   所有顶层窗口的父窗口都是指向桌面窗口的，这样一来顶层窗口是桌面窗口的子窗口，所有顶层窗口构成的链表是桌面窗口的子窗口链表。当顶层窗口创建的时候，窗口管理器把顶层窗口放在Z轴的顶上，这样使得整个窗口可见，窗口管理器把窗口插入到桌面窗口子窗口链表的前面。WS_EX_TOPMOST这个属性控制着窗口管理器创建顶层窗口，窗口管理器把没有WS_EX_TOPMOST属性的窗口放在具有WS_EX_TOPMOST属性的窗口的后面，这样就使得具有WS_EX_TOPMOST属性的窗口一直显示在前面。
+
+桌面窗口是在窗口层次中的第一层，顶层窗口在窗口层次中的第二层，子窗口也就是那些创建的时候指定了WS_CHILD 属性的窗口占据了窗口层次的其他层。窗口和子窗口之间的联系，就像桌面窗口和顶层窗口之间的关系一样。
+
+子窗口显示在其父窗口的客户区域，所有同一个窗口的子窗口同样建立一个Z轴【次序越大在越最上方】，这个和顶层窗口是类似的，顶层窗口也是显示在其父窗口――桌面窗口的客户区域。
+
+    
+
+16 位和32 位窗口系统的区别 
+
+    窗口之间的父子关系、归属所有关系、以及根据 Z轴来显示的这些规则在16位和32位窗口系统中都是相同的。这样可以是在两种窗口系统中高度的兼容。两种窗口系统的区别在于安全和多线程。
+
+   Windows NT
+在原有的窗口层次关系中多增加了一层，每一个运行着Windows NT的系统中都有一个Windows工作站对象，这个对象是安全对象的第一层，是所有用户安全对象的继承之源，每一个Windows工作站对象可以拥有一些桌面对象，每一个桌面都拥有上面描述的那样的窗口关系。Windows
+ Nt用了两个桌面窗口对象，一个是用来处理登陆界面、屏蔽、锁住工作站等，一个是我们登陆之后进来操作的窗口了。J通常用户是不能够创建和删除桌面的，不过那是通常，实际上在Windows下面也可以实现类似 Linux
+中的多个桌面的效果，每一个桌面都是一个独立的世界。
+ 两种窗口系统还有两位一个区别，在16 位窗口系统中不支持多线程，所以应用程序开发者在创建窗口的时候不必考虑线程的问题了。而在32位窗口系统中由于又支持了窗口的父子关系，归属与拥有关系，同一个窗口下面的所有线程都拥有相同的一个输入队列，应用程序开发者应该明白输入队列是共享的，在同一个时刻只能有一个线程处理消息，其他的线程都在等待输入队列一直到GetMessage或者PeekMessage返回，而且必须注意的是父窗口和子窗口或者是归属与拥有窗口共用同一个线程。
+
+   在32 窗口系统中定义两种新的窗口类型，前台窗口和背景窗口，这两种窗口没有列到窗口的层次关系中，前台窗口就是用户当前操作的窗口，其他的所有窗口都是背景窗口。 32位窗口系统中支持两个函数来处理前台窗口SetForegroundWindow和GetForegroundWindow。
+
+ 
+
+操作窗口列表
+
+   下面是窗口列表操作的一些函数：
+
+Ø      EnumChildWindows
+
+使用这个函数得到一个窗口的所有子窗口，包括子窗口的子窗口。不过在列举的过程中这个函数不能够列出正在创建的或者销毁的窗口。
+
+Ø      EnumThreadWindows
+
+使用这个函数可以列出所有属于这个线程的窗口。在这个函数调用之后创建的窗口是不能够被列举出来的。
+
+Ø      EnumWindows
+
+使用这个函数列举出所有顶层窗口，不能够列举出子窗口，要列出所有的顶层窗口，使用这个函数比GetWindow安全。使用GetWindow来列出所有的窗口，可能会导致程序无限循环，因为在调用GetWindow的过程中，可能一些窗口已经销毁了。EnumWindows不能够列举出调用这个函数之后创建的顶层窗口。
+
+Ø      FindWindow
+
+可以使用这个函数通过类名或者使用窗口的标题来找到顶层窗口，这个函数不能够用来找子窗口，这个函数不区分参数的大小写。这个函数在Z轴中寻找窗口，找到了之后，就会返回。
+
+Ø      GetDesktopWindow
+
+得到桌面窗口句柄
+
+Ø      GetNextWindow
+
+使用这个函数得到这个窗口的同属窗口，在16 位窗口系统中GetNextWindow 和GetWindow是两个不同的函数，在32位系统中这个函数是通过GetWindow来实现的。
+
+Ø      GetParent
+
+如果一个窗口存在父窗口，那么可以通过这个函数得到窗口的父窗口，如果窗口是顶层窗口，则返回其所有者窗口句柄。
+
+Ø      GetThreadDesktop
+
+这个函数用来得到指定线程的所属的桌面窗口句柄，在win95和 win98下面由于不支持多桌面，每次调用该函数都返回同一个值。
+
+Ø      GetTopWindow
+
+可以用这个函数来得到给定窗口的第一个子窗口的句柄，如果传递给函数的参数是NULL的话，那么这个函数将会返回最上面的顶层窗口。
+
+Ø      GetWindow
+
+应用程序可以调用这个函数来在窗口列表中导航，这个函数有两个参数，一个是窗口的句柄，另外是要得到的窗口句柄和这个窗口之间的关系。
+
+·        GW_HWNDNEXT:这个函数返回给定窗口的下一个同属窗口
+
+·        GW_HWNDPREV:返回给定窗口的前一个同属窗口  
+
+·        GW_HWNDFIRST:返回给定窗口的第一个同属窗口
+
+·        GW_HWNDLAST:返回给定窗口的最后一个同属窗口
+·        GW_OWNER:返回给定窗口的所有者窗口句柄
+
+·        GW_CHILD:返回给定窗口的第一个子窗口句柄  
+
+Ø     IsChild
+
+这个函数有两个参数，两个窗口句柄，判断两个窗口是否存在父子关系  
+
+窗口的属性
+
+    当应用程序调用CreateWindow创建窗口的时候，我们必须为窗口指定属性，下面简要的介绍一下窗口的属性。
+
+WS_OVERLAPPED
+
+   交迭属性是顶层窗口的一种属性，使用这种属性创建的窗口，会被链接到桌面窗口的子窗口链表中，应用程序通常使用这种属性的窗口作为应用程序的主窗口，具有交迭属性的窗口通常具有有标题栏，即使是WS_CAPTION 这个属性没有指定。具有交迭属性的窗口通常都是有边框的，具有交迭属性的窗口可以拥有自己的顶层窗口，也可以所属其他的顶层窗口，所有的这类窗口都具有WS_CLIPSIBLINGS 属性，即使是没有给窗口指定这个属性。
+
+WS_POPUP
+
+   弹出属性也是应用到顶层窗口的一种属性，使用这种属性创建的窗口会被链接到桌面窗口的子窗口链表中，应用程序通常为对话框窗口设置这个属性，弹出属性和交迭属性的主要区别在于具有弹出属性的窗口不是一定要有标题栏的，而具有交迭属性的窗口则是一定要具有标题栏，具有弹出属性的窗口可以没有边框。和具有交迭属性的窗口一样，具有弹出属性的窗口可以有自己的顶层所属窗口，也可以所属其他的顶层窗口。所有具有弹出属性的窗口必须具有WS_CLIPSIBINGS 属性，即使是用户没有指定这个属性。具有弹出属性的窗口在创建的时候，它的大小和位置不能够使用CW_USEDEFAULT 值。
+
+WS_CHILD
+
+   子窗口必须具有这个属性，子窗口只能够出现在父窗口的客户区域，这是子窗口和具有交迭属性的窗口以及弹出属性的窗口的主要区别，创建子窗口的时候，位置和大小不能够使用CW_USEDEFAULT 这个值，否则是不能够创建窗口的。
+
+WS_CAPTION
+
+    当窗口被设置这个属性的时候，窗口的最上头会有标题栏，应用程序可以通过SetWindowText 这个函数来改变标题栏的标题，通常具有标题栏的窗口还具有最大、最小、关闭按钮，和系统菜单。如果一个窗口没有标题栏，那么Windows 是不会创建这些东西的，即使是用户指定了这些属性，系统菜单是依赖标题栏窗口的存在而存在的，如果没有标题栏那么是一定不会有系统菜单的存在的。具有标题栏的窗口通常具有单线的边界具有可以改变窗口大小的属性，通常具有标题栏的窗口是不能具有对话框的边界属性的，除非为窗口设置WS_EX_DLGMODALFRAME 属性。 
+
+WS_MINIMIZEBOX
+
+   当为窗口设置这个属性的时候，窗口的标题栏上会有一个最小化的按钮，其实对于Windows 来实现这个属性的时候，只是在标题栏上面放置了一个最小化的位图，当用户点击这个最小化位图的时候，窗口最小化，如果最大化位图最在，那么最小化位图被放置在最大化位图的左边。没有这个属性的窗口是不能够最小化的。
+
+WS_MAXIMIZEBOX
+
+   当为窗口设置这个属性的时候，窗口的标题栏的右上会被放置一个最大化的位图，如果窗口设置了这个属性，用户可以点击最大化的位图或者是通过系统菜单来实现窗口的最大化，没有这个属性的窗口是不能够被最大化的。
+
+WS_SYSMENU
+
+   如果为窗口指定这个属性，那么就会在窗口的左上角上放置系统菜单位图，系统菜单为用户提供了操作窗口的接口，通常系统菜单会有下面这些系统命令：
+
+    恢复最小化的窗口
+    使用键盘移动窗口
+    使用键盘改变窗口的大小
+    最小化窗口
+    最大化窗口
+    关闭窗口
+    切换到其他的任务
+
+如果一个窗口有系统菜单，用户可以通过点击系统菜单图标来调用系统菜单，或者通过Alt+ 空格的快捷键调出系统菜单，或者通过点击任务栏上窗口的图标来调出系统菜单，如果一个窗口没有系统菜单，那么用户不能够通过键盘来实现系统命令，除非应用程序自身提供了这样的接口。系统菜单对于最大化的窗口也是很有用处的，最大化的窗口覆盖了整个屏幕，这样的窗口不能够被移动，除非恢复到不是最大化的状态，如果这个最大化的窗口有了系统菜单，则就不必一定恢复到非最大化的状态才能够移动。
+
+WS_HSCROLL
+
+如果窗口被指定了这个属性，那么窗口会有一个水平的滚动条，窗口是不会自动的滚动滚动条的，如果应用程序要支持滚动条，那么必须自己处理WM_HSCROLL 消息，这个属性通常是在窗口创建的时候，被指定的。 
+
+WS_VSCROLL
+
+如果窗口被指定了这个属性，那么窗口会有一个竖直的滚动条，窗口不会自动的滚动滚动条，应用程序必须自己处理WM_VSCROOL 消息来处理滚动条滚动的消息，这个属性通常是在窗口被创建的时候指定的。
+
+WS_BORDER
+
+如果窗口被指定了这个属性，那么窗口会有一个单线的边在窗口的周围，如果没有指定这个属性，但是窗口具有标题栏，那么窗口会自动的拥有这个属性，如果窗口没有这个属性，拥有这个属性的窗口不能够通过键盘或者是鼠标改变窗口的大小。
+
+WS_DLGFRAME
+
+如果窗口被指定了这个属性，那么窗口具有对话框的边框，这个属性通常是用在对话框窗口的，只能够用在窗口没有标题栏的情况下，如果一个不是对话框的窗口使用了这个窗口，那么窗口必须被指定WS_EX_DLGMODALFRAME 属性。使用这个属性创建的窗口，不能够通过键盘和鼠标改变窗口的大小。
+
+WS_THICKFRAME
+
+当窗口被指定了这个属性，那么窗口会有一个可以改变大小的边框，这种属性通常用在程序的主窗口，具有这种属性的窗口的大小可以通过键盘或者鼠标来改变。
+
+WS_CLIPCHILDREN
+
+这个属性用在具有子窗口的窗口，使用这个属性，可以使Windows 把子窗口所占的区域拷贝到父窗口，而不是甴父窗口直接的画子窗口所属的区域，如果窗口没有指定这个属性，那么那么父窗口会覆盖子窗口的区域。在一些图片显示或者OpenGL 显示的窗口中，指定这个属性是很重要的。
+
+WS_CLIPSIBLINGS
+
+当窗口赋予这个属性，窗口在自绘的时候，不会绘制到同属的子窗口，所有具有交迭属性和弹出属性的窗口都具有这个属性，所有的顶层窗口都具有这个属性，这样一来顶层窗口在自绘的时候，不会绘制在到其他的顶层窗口。 
+
+WS_VISIBLE
+
+当窗口被设置这个属性的时候，窗口是可见的，默认的情况下，应用程序必须自己调用ShowWindow 来显示窗口。
+
+WS_DISABLED
+
+当窗口被设置这个属性的时候，创建的窗口不能够接受用户的输入，除非应用程序自身提供方法来输入。这个属性通常用在Windows 控件上面。
+
+WS_CHILDWINDOWS
+
+这个属性同WS_CHILD。
+WS_OVERLAPPEDWINDOW
+
+S
+
+这个属性同WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX，这个属性通常用在应用程序的主窗口。
+
+WS_POPUPWINDOWS
+
+这个属性同WS_POPUP | WS_BORDER | WS_SYSMENU，尽管这个属性中包含了WS_SYSMENU 属性，如果窗口没有 WS_CAPTION 属性，那么窗口也不会有系统菜单。
+
+WS_EX_DLGMODALFRAME
+
+当窗口设置了这个属性的时候，窗口具有对话框的边框，这个属性通常用在对话框窗口，不过任何窗口都可以使用这个属性来获得对话框的边框。
+
+WS_EX_NOPARENTNOTIFY
+
+这个属性是用在子窗口上的，当子窗口设置了这个属性，Windows 不发送WM_NOTIFY 消息给子窗口的父窗口，默认情况下，Windows 会在子窗口创建或者销毁的时候发送WM_NOTIFY 消息给子窗口的父窗口。
+
+WS_EX_TOPMOST
+
+这个属性仅用在顶层窗口，对于子窗口设置这个属性是被忽略的，如果窗口设置了这个属性，那么窗口会一直在其他窗口的上面。
+
+WS_EX_ACCEPTFILES
+
+窗口设置了这个属性，那么窗口可以接受拖放的对象。
+
+WS_EX_TRANSPARENT
+
+这个属性能够使窗口透明，设置了这个属性的窗口的背景使可以被看到的，透明窗口对于鼠标和键盘的消息事件并不是透明的 
+
+19. 父子窗口和窗口拥有者的区别分析 http://blog.csdn.net/hanyang291/article/details/41010723
+
+在windows系统中，每个窗口对象都对应有一个数据结构，形成一个list链表。系统的窗口管理器通过这个list来获取窗口信息和管理每个窗口。这个数据结构中有四个数据用来构建list，即child、sibling、parent、owner四个域。
+所以我们可以看到，窗口之间的关系有两种：owner-owned 关系和 parent-child关系。前者称之为拥有/被拥有关系，后者称之为父/子关系。在这篇文字中，我把owner窗口称之所有者窗口。换句话说，一个窗口在有一个父窗口（parent)的同时，还可能被不同的窗口拥有（owner)，也可以有自己的子窗口(child)。在MFC 的CWnd类中，所有者窗口保存在m_hWndOwner成员变量中，父窗口则保存在m_hParent中，但是这两个值并不一定和窗口对象数据结构中的值相对应。
+    
+    窗口之间的关系，决定了窗口的外在表现。比如显示、销毁等。
+
+    如果一个窗口数据的owner域非NULL，则它和该窗口建立了owner-owned 关系，拥有关系决定了：
+    （1）被拥有的窗口永远显示在拥有它的那个窗口的前面；
+    （2）当所有者窗口最小化的时候，它所拥有的窗口都会被隐藏；
+    （3）当所有者窗口被销毁的时候，它所拥有的窗口都会被销毁。
+    需要注意的是，隐藏所有者窗口并不会影响它所拥有的窗口的可见状态。比如：如果窗口 A 拥有窗口B,窗口B拥有窗口C,则当窗口A最小化的时候，窗口B被隐藏，但是窗口 C还是可见。
+
+
+    如果一个窗口的parent域非NULL，则它和该窗口之间就建立了parent-child关系。父子决定了：
+    （1）窗口在屏幕上面的显示位置。父窗口提供了用来定位子窗口的坐标系统，一个子窗口只能显示在它的父窗口的客户区中，之外的部分将被裁减。这个裁减法则决定了如果父窗口不可见，则子窗口肯定不可见。如果父窗口移动到了屏幕之外，子窗口也一样。
+    （2）当父窗口被隐藏时，它的所有子窗口也被隐藏。
+    （3）父窗口被销毁的时候，它所拥有的子窗口都会被销毁。
+     注意！最小化父窗口不会影响子窗口的可见状态，子窗口会随着父窗口被最小化，但是它的WS_VISIBLE属性不会变。
+
+
+20.窗口分析 http://blog.csdn.net/guogangj/article/details/3460267
+
+
+
+（本文尝试通过一些简单的实验，来分析Windows的窗口机制，并对微软的设计理由进行一定的猜测，需要读者具备C++、Windows编程及MFC经验，还得有一定动手能力。文中可能出现一些术语不统一的现象，比如“子窗口”，有时候我写作“child window”，有时候写作“child”，我想应该不会有太大影响，文章太长，不一一更正了）
+
+问题开始于我的最近的一次开发经历，我打算把程序的一部分界面放在DLL中，而这部分界面又需要使用到Tooltip，但DLL中的虚函数PreTranslateMessage无法被调用到，原因大家可以在网上搜索一下，这并不是我这篇文章要讲的。PreTranslateMessage不能被调，那Tooltip也就不能起作用，因为Tooltip需要在PreTranslateMessage中加入tooltip.RelayEvent(&msg)来触发事件，方可正常显示。解决方法有好几个，我用的是比较麻烦的一个——完全自己手动编写Tooltip，然后用WM_MOUSEMOVE等事件来触发Tooltip显示，写好之后发现些小问题，那就是调试运行时候IDE给了个warning，说我在析构函数中调用了DestroyWindow，这样会导致窗口OnDestry和OnNcDestroy不被正常调用，这个问题我以前遇到过，当然解决方法也是显而易见的，只需要在窗口对象（C++概念，非Windows内核对象，下文同）销毁前，调用DestroyWindow即可。对于要销毁的这个窗口的子窗口，是不需要显式调用DestroyWindow的，因为父窗口在销毁的时候也会销毁掉它们，OK，我把这个过程用个示意图说明一下：
+
+图1
+
+上图表示了App Window及其子窗口的关系，现在假设我们要销毁Parent Window 1（对应的对象指针是m_pWndParent1），我们可以m_pWndParent1->DestroyWindow()，这样Child Window 1，Parent Window 2，Child Window 2都被销毁了，销毁的时候这些窗口的OnDestry和OnNcDestroy都被调用了，最后delete m_pWndParent1，此时m_pWndParent1->m_hWnd已经是NULL，不会再去调用Destroy，在析构的时候也就不会出现Warning。但如果不先执行m_pWndParent1->DestroyWindow()而直接delete m_pWndParent1，那么在CWnd::~CWnd中就会调用DestroyWindow(m_hWnd)，这样会产生WM_DESTROY和WM_NCDESTROY，会尝试去调用OnDestry和OnNcDestroy，但由于是在CWnd的函数~CWnd()的内部调用这两个成员，此时的虚函数表指针并不指向派生类的虚函数表，因此调用的其实是CWnd::OnDestroy和CWnd::OnNcDestroy，派生类的OnDestry和OnNcDestroy不被调用，但我们很多时候把释放内存等操作写在派生类的OnDestroy和OnNcDestroy中，这样，就容易导致内存泄露和逻辑混乱了。
+
+上面这些道理我当然是知道的，但Warning还是出现了，而且我用排除法确定了是跟我写的那个Tooltip有关，下面是关于我的Tooltip的截图：
+
+图2
+
+大家看到，Tooltip显示在我的图形窗口上，它是个弹出式（popup）窗口，其内容为当前鼠标光标的坐标值，图形窗口之外，我是不想让它显示的，那么按照我的思路，Tooltip就应该设计是图形窗口的子窗口，它的窗口对象就应该作为图形窗口对象的成员，在图形窗口OnCreate的时候创建，在图形窗口被DestroyWindow的时候自动销毁，前面提到过，父窗口被销毁的时候，其子窗口会被自动销毁，没错吧，所以不需要显式去对Tooltip调用DestroyWindow。可事实证明了这样是有问题的，因为Tooltip的父窗口根本不是，也不能是图形窗口。大家可以看到我的图形窗口是作为一个子窗口嵌入到别的窗口中去的，它的属性包含了WS_CHILD，通过实验，我发现Tooltip的父窗口只能指定为程序主窗口，如果企图指定为那个图形窗口的话，它就自动变为程序主窗口，再进一步研究发现，弹出式窗口的父窗口都不能是带WS_CHILD风格的窗口，然后打开spy++查看，弹出式窗口的上一级都是桌面，可是，通过GetParent函数，得到的弹出式窗口的父窗口却是程序主窗口而不是桌面，为什么？……问题越来越多，我糊涂了，上面说的都是在我深入理解前，所看到的现象，包括了我的一些概念认识方面的错误。
+
+好吧，我们现在开始，一点点地通过实验去攻破这些难题！
+
+一、神秘的WS_OVERLAPPED
+
+我们从WinUser.h头文件中可以看出，窗口可分三种，其Window Styles定义如下：
+
+    #define WS_OVERLAPPED       0x00000000L
+    #define WS_POPUP            0x80000000L
+    #define WS_CHILD            0x40000000L
+
+那么我们很容易得到这个结论：style的最高位是1的，是一个popup窗口，style的次高位是1的，代表是一个child窗口，如果最高位次高位都是0，那这个窗口就是一个overlapped窗口，如果两位都是1，厄……MSDN告诉我们不能这么干，事实呢？我后面再讲。其实这个结论是有点过时的，甚至很能误导人，不是我们的原因，很可能是Windows的历史原因，为什么？具体也是后面讲。嘿嘿。
+
+OK，我们现在开始来尝试，看看这些风格究竟影响窗口几何，对了，准备spy++，这是必备工具。
+
+用VC++的向导创建一个Hello World的Windows程序，注意是Windows程序，不是MFC的Hello World，这样我们可以绕开MFC，专注于查看一些Windows的技术细节，编译，运行。
+
+图3
+
+然后用spy++查看这个窗口的风格，发现其风格显示为“WS_OVERLAPPEDWINDOW|WS_VISIBLE|WS_CLIPSIBLING|WS_OVERLAPPED”。此时它的创建函数为：
+
+    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+
+只制定了一个WS_OVERLAPPEDWINDOW，但我们很快就找到了WS_OVERLAPPEDWINDOW的定义：
+
+    #define WS_OVERLAPPEDWINDOW (WS_OVERLAPPED     | /
+                                 WS_CAPTION        | /
+                                 WS_SYSMENU        | /
+                                 WS_THICKFRAME     | /
+                                 WS_MINIMIZEBOX    | /
+                                 WS_MAXIMIZEBOX)
+
+原来overlapped窗口就是有标题，系统菜单，最小最大化按钮和可调整大小边框的窗口，这个定义是正确的，但只是个我们认知上的概念的问题，因为popup和child窗口也同样可以拥有这些（后面证明）。由于WS_OVERLAPPED为0，那我们是不是可以把WS_OVERLAPPEDWINDOW定义中的WS_OVERLAPPED拿掉呢？那是肯定的，那也就是说WS_OVERLAPPED什么都不是！我们只作popup和child的区分，是不是这样？也不是，我们继续实验。
+
+很简单，接下去我们只给这个向导生成的代码加一点点东西，就是把CreateWindow改成：
+
+    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW|WS_POPUP, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+
+对，给窗口风格增一个popup风格，看看会怎么样？运行！这回可不得了，窗口缩到了屏幕的左上角，并且宽度高度都变为了最小，当然，你还是可以用鼠标拖动窗口边缘来调整它的大小的。如图：
+
+图4
+
+这是为什么呢？观察CreateWindow的，第四、第五、第六和第七参数，分别为窗口的x坐标，y坐标，宽度，和高度，CW_USEDEFAULT被define成0，所以窗口被缩到左上角去也就不奇怪了，可没有popup，光是overlapped风格的窗口，为什么不会缩呢？看MSDN的说明，对第四个参数的说明：“If this parameter is set to CW_USEDEFAULT, the system selects the default position for the window's upper-left corner and ignores the y parameter. CW_USEDEFAULT is valid only for overlapped windows; if it is specified for a pop-up or child window, the x and y parameters are set to zero. ”其余几个参数也有类似的描述，这说明了什么？说明Windows对overlapped和popup还是作区分的，而这点，算是我们发现的第一个不同。哦，还有件事情，就是用spy++观察其风格，发现其确实多了一个WS_POPUP，其余没什么变化。
+
+继续，这回还是老地方，把WS_POPUP改为WS_CHILD，试试看，这回创建窗口失败了，返回0，用GetLastError查看具体错误信息，得到的是：“1406:无法创建最上层子窗口。”看来桌面是不让我们随便搞的。继续，还是老地方，这回改成：
+
+    hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW|WS_POPUP|WS_CHILD, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+
+嗯？有没搞错，又是popup又是child，肯定不能成功吧，不试不知道，居然成功了，这个创建出来的窗口乍一看，跟popup风格的很像，但用起来有些怪异，比如：当它被别的窗口挡住的时候，不能通过点击它的客户区来让它显示在前面，即使点击它的标题栏，也是要松开鼠标左键，它才能显示在前面，还有就是用spy++的“瞄准器”没法准确捕捉到这个窗口，瞄准器对准它的时候，就显示Caption为“Program Manager”，class为“Program”，“Program Manager”是什么？其实就是我们所看到的这个桌面（注意，不是桌面，我说的是我们说“看到的桌面”，就是显示桌面图标的这个所能看到的桌面窗口，和前面提到的桌面窗口是有区别的）的父窗口的父窗口，这个窗口一般情况下是不能直接“瞄准”到的，这点可以通过spy++证实，如图：
+
+图5
+
+图6
+
+spy++不能直接“瞄准”这个popup和child并存的怪窗口，但我们有别的办法捕捉到它，<Alt>+<F3>，输入窗口的标题来查找（记得运行程序后刷新一下才能找到），结果见下图：
+
+图7
+
+我们从上图中清楚地看到，popup和child并存！用spy++逐个查看桌面窗口的下属，这种情况还是无独有偶的，但这样的窗口代表了什么意义，我就不清楚了，总之用起来怪怪的，对Microsoft来说，这可能就是Undocumented，OK，我们了解到这里就行了，但一般情况下，我们不要去创建这种奇怪的窗口。这几轮实验给我们什么启示？设计上的启示：一个应用程序的主窗口通常是一个Overlapped类型的窗口，当然有时可以是一个popup窗口，比如基于对话框的程序，但不应该是一个child窗口，尽管上面演示了如何给应用程序主窗口加入child风格。
+
+那还有一个问题，我为什么认为WS_OVERLAPPED神秘呢？这还算是拜spy++所赐，按照我们一般的想法，如果一个窗口的风格的最高两位都是0，它既不是popup也不是child的时候，那它就是Overlapped。事实上spy++的判定不是这样的，就以刚才的实验为例，当使用WS_OVERLAPPEDWINDOW|WS_POPUP风格创建窗口的时候，WS_OVERLAPPED和WS_POPUP属性同时出现了，我做了很多很多的尝试，企图找出其中规律，看看spy++是怎么判定WS_OVERLAPPED的，但至今没结论，我到MSDN上search，未果，有人提起这个问题，但没有令我满意的答复，下面这段文字是我找到的可能有点线索的答复：
+
+Actually, Microsoft Spy++ is wrong.
+There are two bits in the window style that control its type. If the high-order bit of the style DWORD is set, the window is a popup window. If the next bit is set, the window is a child window. If neither is set, the window is overlapped. (If both are set, the result is undocumented.)
+
+Look at these definitions from WinUser.h.
+
+    #define WS_OVERLAPPED       0x00000000L
+    #define WS_POPUP            0x80000000L
+    #define WS_CHILD            0x40000000L
+
+Your window style (0x94c00880) has the high-order bit set and the next bit clear so it is a popup window, not an overlapped window.
+
+The correct way to identify all three types of windows (this is what Spy++ should do) is
+
+    dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+    if (dwStyle&WS_POPUP)
+     // it's a popup window
+    else if (dwStyle&WS_CHILD)
+     // it's a child window
+    else
+     // it's an overlapped window
+
+这断描述跟我的想法一致。要知道，就算你只给窗口一个WS_POPUP的风格，WS_OVERLAPPED也会显示在spy++上的，我认为这十分有问题，究竟spy++如何判，估计得请教比尔盖茨了。还有一段有趣的描述，估计也有所帮助：
+
+As long as...
+WS_POPUP | WS_OVERLAPPED
+...is absolutelly equivalent with...
+WS_POPUP
+... why do you care if Spy++ lists WS_OVERLAPPED or not?
+
+Please stop playing "Thomas Unbeliever" with us.
+Becomes too expensive to use "walking on the water" device here again, and again. ;)
+
+虽然这么说，我还是认为，spy++给了我们不少误导，那么对WS_OVERLAPPED的讨论就暂时告一段落吧，作为一个技术人，很难容忍自己无法理解的逻辑，我就是这么种人……不过如果再扯下去的话这篇文章就不能结束了，所以姑且认为，这是spy++的错，而我们还是认为窗口分3种——popup，child和Overlapped。（Undocumented不在此列，也不在本文讲述之列）
+
+二、Parent与Owner
+
+这是内容最多的一节，做好心理准备。
+
+微软和我们开了个玩笑，告诉我们，窗口和人一样，可以有父母，有主人……我们先来看一个最著名的Windows API：
+
+    HWND CreateWindowEx(
+      DWORD dwExStyle,      // extended window style
+      LPCTSTR lpClassName,  // registered class name
+      LPCTSTR lpWindowName, // window name
+      DWORD dwStyle,        // window style
+      int x,                // horizontal position of window
+      int y,                // vertical position of window
+      int nWidth,           // window width
+      int nHeight,          // window height
+      HWND hWndParent,      // handle to parent or owner window
+      HMENU hMenu,          // menu handle or child identifier
+      HINSTANCE hInstance,  // handle to application instance
+      LPVOID lpParam        // window-creation data
+    );
+
+猜对了，我就是从MSDN上copy下来的，看第九个参数的名字叫hWndParent，顾名思义哦，这就是Parent窗口了，不过我们中国人不喜欢称之“父母窗口”，我们喜欢叫它“父窗口”，简单一点。其实这个名字对我们造成了不少的误导，我只能说，可能也是由于历史原因，比如在Windows 1.0（1985年出的，当时没什么影响力）的时候，只有Parent这个概念，没有Owner的概念。
+
+回头看看文章开始我提起的，我企图将Tooltip的父窗口设置为一个图形窗口，不能成功，Tooltip的父窗口会自动变成应用程序主窗口，这是为什么？好，现在开始讲概念了，都是我花了很多时间在互联网上搜索，筛选，确认，得出来的结论：
+
+规则一：Owner window控制了Owned window的生存，当Owner window被销毁的时候，其所属的Owned window就会被销毁。
+规则二：Parent window控制了Child window的绘制，Child window不可能显示在其Parent window的客户区之外。
+规则三：Parent window同时控制了Child window的生存，当Parent window被销毁的时候，其所属的Child window就会被销毁。
+规则四：Owner window不能是Child window。
+规则五：Child window一定有Parent（否则怎么叫Child？），一定没有Owner。
+规则六：非Child window的Parent一定是桌面，它们不一定有Owner。
+
+这是比较重要的几点，如果你认为这跟你以前学到的，或者认知的有所不同，先别急着抗议，先看看我是怎么理解的。除了这几条规则，下面我还会逐步给出一些规则。
+
+先说比较好理解的Child window，上文提到了，包含了WS_CHILD风格的窗口就叫Child window，我们中文叫“子窗口”。那么我前面提到的我写的那个Tooltip，是不是“子窗口”呢？——当然不是了，它没有WS_CHILD风格啊，它是popup风格的，我想当然地认为在创建它的时候给它指定了那个Parent参数，那它的Parent就是那个参数，其实是错的。这个实验最简单了，随便找些应用程序，比如“附件”里的计算器，用spy++的“瞄准器”观察上面的按钮等“子窗口”，在Styles标签中，我们可以看到WS_CHILD（或者WS_CHILDWINDOW，一样的）属性，然后在Windows标签中，我们可以清楚地看到，凡是包含了WS_CHILD属性的窗口（子窗口），都没有Owner window，不信还可以继续观察其它应用程序，省去自己编程了。再看它们的Parent window，是不是一定有的？——当然一定有。
+
+前面说了，子窗口不能显示在父窗口客户区之外，我们最常见的子窗口就是那些摆在对话框上的控件，什么button啊，listbox啊，combobox啊……都有个共同特点，不能拖动的，除非你重写它们的window procedure，然后响应WM_MOUSEMOVE等消息，实现所谓“拖动”。那么有没有能够像应用程序主窗口那样有标题栏，能够被自由拖动的子窗口呢？——当然有！要创建是吗？简单，直接用MFC向导创建一个MDI程序即可，MDI的那些View其实就是可以自由拖动的子窗口，可以用spy++查看一下它们的属性，当然，你是不能把它们拖出主窗口的客户区的。也许你跟我一样，觉得MFC封装了过多的技术细节，想完全自己手动创建一个能拖动的子窗口，而且看起来就像个MDI的界面，OK，follow me。
+
+首先当然是用应用程序向导生成最普通的Window应用程序了。然后增加一个窗口处理函数，也就是我们准备创建的子窗口的处理函数了。
+
+    LRESULT CALLBACK WndProcDoNothing(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+     return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+
+DoNothing？好名字。注册之：
+
+     WNDCLASSEX wcex;
+     wcex.cbSize = sizeof(WNDCLASSEX); 
+     wcex.style         = CS_HREDRAW | CS_VREDRAW;
+     wcex.lpfnWndProc   = (WNDPROC)WndProcDoNothing;
+     wcex.cbClsExtra    = 0;
+     wcex.cbWndExtra    = 0;
+     wcex.hInstance     = hInstance;
+     wcex.hIcon         = LoadIcon(hInstance, (LPCTSTR)IDI_ALLWINDOWTEST);
+     wcex.hCursor       = LoadCursor(NULL, IDC_ARROW);
+     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+     wcex.lpszMenuName  = NULL; //子窗口不能拥有菜单，指定了也没有用
+     wcex.lpszClassName = TEXT("child_window");
+     wcex.hIconSm       = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
+     RegisterClassEx(&wcex);
+
+最后当然是把它给创建出来了：
+
+     g_hwndChild = CreateWindowEx(NULL, TEXT("child_window"), TEXT(""), WS_CHILD|WS_VISIBLE|WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS, 30, 30, 400, 300, hWnd, NULL, hInstance, NULL);
+
+关于WS_CLIPSIBLINGS属性，下文将提到。好，就这样，大家看看运行效果：
+
+图8
+
+是不是很少遇到这种窗口组织结构？确实很少人这样用，而且哦，你会发现子窗口的标题栏没办法变为彩色，它一直是灰的，就表示它一直处于未激活状态，你怎么点它，拖它，调它，都没用的，而这个时候程序主窗口一直显示为激活状态，如何激活这个子窗口？我曾经对此苦思冥想，最后才知道，子窗口是无法被激活的，你立即反驳：“那MFC如何做到的？”哈哈，好，你反应够快，我下文会给你演示如何“激活”子窗口。（注意是加引号的）现在尝试移动主窗口，你会发现所有它的子窗口都会跟着主窗口移动的，这就好像我们看苹果落地一样，不会觉得奇怪，但你有没有想过，主窗口移动的时候，其子窗口对屏幕的位置也发生了变化，不变的是相对主窗口的客户区坐标。这就是子窗口的特性。再试试看启用/禁用主窗口，显示/隐藏主窗口看看，就不难得出结论：
+
+规则七：子窗口会随着其父窗口移动，启用/禁用，显示/隐藏。
+
+子窗口我们就暂时讲那么多，接着讲所有者窗口，就是Owner window，由于子窗口一定没有Owner，因此Owner window是对popup和Overlapped而言的，而popup和Overlapped前面也提到了，不一定有Owner，不像Child那样一定有Parent。现在进入我们下一个实验：
+
+还是用向导生成最普通的Windows hello world程序，步骤和上一个实验很相似，仅仅改了一点点东西，改了哪点？就是把CreateWindowEx函数的第四个参数的WS_CHILD拿掉，其余不变，代码我就不贴了，大家编译并运行看看。大家会看到类似这个效果：
+
+图9
+
+弹出窗口的caption是蓝色的，说明它处于激活状态，如果你现在点击程序主窗口，那弹出窗口的标题栏就变灰，而程序主窗口的标题栏变蓝，两个窗口看起来就像并列的关系，但你很快发现它们其实不并列，因为如果它们有重叠部分的话，弹出窗口总是遮挡程序主窗口。用spy++观察之，发现程序主窗口就是弹出窗口的Owner。
+
+规则八：非Child window总是显示在它们的Owner之前。
+
+看到了没？这个时候CreateWindowEx的第九个参数的意义就不是Parent window，而是Owner，那把这个参数改为NULL，会有什么效果呢？马上试试看，反正这么容易。
+
+图10
+
+初一看没什么变化，其实变化大了，一是主窗口这回可以显示在弹出窗口之前了，二是任务栏上出现了两个button。
+
+图11
+
+用spy++观察到这两个窗口的Owner都是NULL。
+
+规则九：Owner为NULL的非Child窗口能够（不是一定哦）在任务栏上出现它们的按钮。
+
+这个时候，你应该清楚为什么给一个MessageBox正确指定一个Owner这么重要了吧？我以前有个同事，非常“厉害”，他创建了一个程序，一旦出现点什么问题，就能把MessageBox弹得满屏都是，而且把任务栏霸占得渣都不剩，他大概是没明白这个道理。MessageBox是一个非child窗口，如果不指定一个正确的Owner，那弹出MessageBox之后，Owner还是处于可操作的状态，两个窗口看起来是并列的，都在任务栏上有显示，如果再弹出MessageBox，先关闭那个MessageBox？我看先关哪个都没问题，因为界面操作上没有限制，但这样很容易导致逻辑混乱，如果不幸走入了个死循环，连续弹MessageBox，那就像这位同事写的那个程序那样，满屏皆是消息框了。
+
+我们现在来进行一些稍微复杂点点的实验，就是创建A弹出窗口，其Owner为主窗口，创建B弹出窗口，其Owner为A窗口，创建C弹出窗口，其Owner为B窗口。步骤模仿上面的窗口创建步骤即可，好，编译，运行，效果大致如此：
+
+图12
+
+现在，把主窗口最小化，看看发生了什么事情。你会发现A窗口不见了，而B，C窗口尚在，A窗口究竟是跟随主窗口一起最小化了呢，或者被销毁了呢？还是被隐藏了呢？答案是被隐藏了，我们可以通过spy++找到它，发现它的属性里边没有WS_VISIBLE。那现在将主窗口还原，A这时候出现了，那现在我们最小化A，Oh？What happen？B不见了，主窗口和C都还在，我们还是老办法，用spy++看B，发现它没了WS_VISIBLE属性，现在还原A窗口，方法如下图所示：
+
+图12_x
+注意，最小化的A并不显示在任务栏上。还原A后B也出现了。
+
+规则十：Owner窗口最小化后，被它拥有的窗口会被隐藏。
+
+前面测试的是最小化，那我们现在不妨来测试一下，让A隐藏，会怎么样？在主窗口里创建一个button，点这个button，就执行ShowWindow(g_hwndA, SW_HIDE)，如图：
+
+图13
+
+你会发现，被隐藏的只有A，A隐藏后主窗口，B和C都是可见的，你可以继续尝试，隐藏B和C，或者主窗口，不过，你隐藏了主窗口的话恐怕就没法通过主窗口的菜单来关闭程序了，只能打开任务管理器结束掉程序。
+
+规则十一：Owner隐藏，不会影响其拥有的窗口。
+
+现在不是最小化，也不是隐藏，而是测试“关闭”，即销毁窗口，尝试关闭A，发现B，C被关闭；尝试关闭B，发现C被关闭。这个规则也就是规则一了，不必再列。
+
+好，我不可能把所有的规则都列出来，但我相信前面所写的这些东西，对大家起到了抛砖引玉的作用了，其它规则，也可以通过类似的实验得出，或者用已有的规则去推导。那在转入下一节前，我提点问题：
+
+为什么子窗口没有Owner？（就是我们来猜猜微软为什么这样设计）试想一个Child既有Parent，又有Owner，Parent控制其绘制，Owner控制其存在，在Owner销毁的时候，子窗口就要被销毁，而其Parent有可能还继续存在，那这个子窗口的消失可能有点不明不白，这是其中一个原因，另一个原因也类似，如果Parent不控制子窗口的存在，只管其绘制，那么在Parent销毁的时候，Owner可以继续存在，这个时候的子窗口是存在，而又不能显示和访问的，这可能会导致别的怪异问题，既然起了Child这个名字，就应该把它全权交给Parent，由Parent来决定它的一切，我想这就是微软的道理。
+
+那我们如何获取一个窗口的Parent和Owner？大家都知道API函数，GetParent，这是用来获取Parent窗口句柄的API——慢！这并不完全正确！大家再仔细点看看MSDN，再仔细点：
+
+If the window is a child window, the return value is a handle to the parent window. If the window is a top-level window, the return value is a handle to the owner window.
+
+什么是top-level window？就是非Child window，这个后面再详细谈这个，现在注意看了，GetParent返回的有可能不是parent，对于非child窗口来说，返回的就不是parent，为什么？因为非child窗口的parent恒定是Desktop啊（规则6），这还需要获取吗？我们接下去的实验是用来测试GetParent这个函数是否工作正常的，什么？测试M$提供的API，没错，呵呵，当一把微软的测试员吧。接上面那个实验：
+
+//在窗口创建完成后，调用下面的代码，在第一个GetParent处设置个断点，查看返回值，如果返回NULL，按照MSDN所说的，用GetLastError看看是否有出错。
+
+    {
+     DWORD rtn;
+     HWND hw = GetParent(hWnd); //获取主窗口的“Parent”
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = GetParent(g_hwndA); //获取A的“Parent”
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = GetParent(g_hwndB); //获取B的“Parent”
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = GetParent(g_hwndC); //获取C的“Parent”
+     if(hw==NULL)
+      rtn = GetLastError();
+    }
+
+我的实验结果有些令我不解，清一色返回0，包括GetLastError，也就是说没有出错，那GetParent返回0，根据MSDN上的描述，原因只可能是：这些窗口确实没有Owner。不对啊？难道前面的规则和推论都是错误的不成？我创建它们的时候，就明明白白地指定了hWndParent参数，而且上面的实验也表明了他们之间的Owner和Owned关系，那是不是GetParent错了？我想是的，你先别对着我扔砖头，想看到正确的情况么？好，我弄给你看。
+
+我们是如何创建A，B和C这几个弹出窗口的？我再把创建它们的语句贴一下吧：
+
+    g_hwndX = CreateWindowEx(NULL, TEXT("child_window"), TEXT("X"), WS_VISIBLE|WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS, 30, 30, 400, 300, hWnd, NULL, hInstance, NULL);
+
+现在把这个语句改为：
+
+    g_hwndX = CreateWindowEx(NULL, TEXT("child_window"), TEXT("X"), WS_POPUP|WS_VISIBLE|WS_OVERLAPPEDWINDOW|WS_CLIPSIBLINGS, 30, 30, 400, 300, hWnd, NULL, hInstance, NULL);
+
+对，就是加上一个WS_POPUP，看看情况变得怎么样？
+
+很惊讶，对不？GetParent这回全部都正确地按照MSDN的描述工作了，这是我发现的popup和Overlapped的第二个差别，第一个差别？在文章开头附近，自己回去找。而spy++显示出来的那个Parent，其实就是GetParent返回的结果。记住，对于非child窗口来说，GetParent返回的并不是Parent，MSDN也是这么说的，你看看这个函数的名字是不是很有误导性？还有spy++也真是的，将错就错。好吧，就让它错去吧，但我们得记住：对非Child窗口来说，Parent一定是桌面。好，再有个问题，看刚刚这个实验，对于有WS_POPUP风格的非Child窗口来说，GetParent能够取回它的Owner，可对于没有WS_POPUP风格的非Child窗口来说，GetParent恒定返回0，那我们如何有效地取得非Child窗口真正的主人呢？方法当然是有的，看：
+
+    {
+     DWORD rtn;
+     HWND hw = GetWindow(hWnd, GW_OWNER); //获取主窗口的Owner
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = GetWindow(g_hwndA, GW_OWNER);   //获取A的Owner
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = GetWindow(g_hwndB, GW_OWNER);   //获取B的Owner
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = GetWindow(g_hwndC, GW_OWNER);   //获取C的Owner
+     if(hw==NULL)
+      rtn = GetLastError();
+    }
+
+这么一来，无论是否带有WS_POPUP风格，都能够正常取得其所有者了，这个跟spy++的结果一致，用GetWindow取得的Owner总是正确的，那有没有一种方法，使得取得的Parent总是正确的？很遗憾，没有直接的API，包括使用GetWindowLong(hwnd, GWL_HWNDPARENT)都不能一直正确返回Parent，BTW，有位高人说，GetWindowLong(hwnd, GWL_HWNDPARENT)和GetParent(hwnd)有时候会得到不同的结果，不过这个我尝试不出来，我观察的，它们总是返回一样的结果，无论对什么窗口，真怀疑GetParent(hwnd)就是return (HWND)GetWindowLong(hwnd, GWL_HWNDPARENT)，虽然我们不能直接一步获取正确的Parent，但我们可以写一个简单的函数：
+
+    HWND GetTrueParent(HWND hwnd)
+    {
+     DWORD dwStyle = GetWindowLong(hwnd, GWL_STYLE);
+     if((dwStyle & WS_CHILD) == WS_CHILD)
+      return GetParent(hwnd);
+     else
+      return GetDesktopWindow();
+    }
+
+你终于憋不住了，对我大吼：“你有什么依据说非Child窗口的Parent一定是Desktop？”我当然是有依据的，首先是这些非child window的绘制，不能超出桌面，超出桌面就什么都看不见了，只能是桌面管理着它们的绘制，如果它们确实存在Parent的话，当然，聪明你认为这个理由并不充分，OK，我们编程来证明，先介绍一个API：
+
+    HWND FindWindowEx(
+      HWND hwndParent,      // handle to parent window
+      HWND hwndChildAfter,  // handle to child window
+      LPCTSTR lpszClass,    // class name
+      LPCTSTR lpszWindow    // window name
+    );
+
+又被你猜对了，我是从MSDN上copy下来的（^_^），看MSDN对这个函数的说明：
+
+hwndParent
+[in] Handle to the parent window whose child windows are to be searched.
+If hwndParent is NULL, the function uses the desktop window as the parent window. The function searches among windows that are child windows of the desktop.
+
+hwndChildAfter
+[in] Handle to a child window. The search begins with the next child window in the Z order. The child window must be a direct child window of hwndParent, not just a descendant window.
+If hwndChildAfter is NULL, the search begins with the first child window of hwndParent.
+
+lpszClass
+窗口类名（我来翻译，简单点）
+
+lpszWindow
+窗口标题
+
+关键是看第一个参数，如果hwndParent为NULL，函数就查找desktop的“子窗口”，但这个“子窗口”是加引号的，因为这里的“子窗口”和本文前面一直提到的子窗口确实不太一样，那就是这里的“子窗口”没有WS_CHILD风格，算是一个特殊吧，也难怪GetParent不愿意告诉我们desktop就是这些非Child的父窗口。好，有这个函数，我们就可以知道刚才创建的那几个弹出窗口的老爸究竟是不是桌面。代码十分简单：
+
+    {
+     DWORD rtn;
+     HWND hw = FindWindowEx(NULL, NULL, TEXT("ALLWINDOWTEST"), TEXT("AllWindowTest")); //从桌面开始查找主窗口
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = FindWindowEx(NULL, NULL, TEXT("child_window"), TEXT("A")); //从桌面开始查找A
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = FindWindowEx(NULL, NULL, TEXT("child_window"), TEXT("B")); //从桌面开始查找B
+     if(hw==NULL)
+      rtn = GetLastError();
+     hw = FindWindowEx(NULL, NULL, TEXT("child_window"), TEXT("C")); //从桌面开始查找C
+     if(hw==NULL)
+      rtn = GetLastError();
+    }
+
+结果如何？（是不是偷懒干脆不做，等着我说结果啊？）我的结果是全部找到了，和用spy++查找的结果一样，所以我有充分的理由认为，所有非child窗口其实是desktop的child，spy++的树形结构组织确实也是这么阐述的。你很厉害，你还是能够驳斥我：“根据规则三，Parent被销毁的时候，其Child将被销毁，你证明给我看？”这个……有点难：
+
+    HWND hwndDesktop = GetDesktopWindow();
+    BOOL rtn = DestroyWindow(hwndDesktop);
+    if(!rtn)
+     DWORD dwErr = GetLastError();
+
+My god，Desktop没了，你说我们还能看到什么呢？当然微软不会没想到这点，DestroyWindow当然不能成功，错误代码为5，“拒绝访问”。好，我有些累了，不能再纠缠了，转入下一节！留个作业如何？尝试使用SetParent这个API，改变窗口的Parent，观察运行情况，并思考这样做有什么不好之处。
+
+三、如何体现WS_CLIPSIBLING和WS_CLIPCHILD？
+
+看了这个标题，应该怎么做？我想你十有八九是打开MSDN，输入这两个关键字去搜索吧？OK，不用了，我把MSDN对这两个窗口风格的说明贴出来：
+
+WS_CLIPCHILDREN   Excludes the area occupied by child windows when you draw within the parent window. Used when you create the parent window.
+
+WS_CLIPSIBLINGS   Clips child windows relative to each other; that is, when a particular child window receives a paint message, the WS_CLIPSIBLINGS style clips all other overlapped child windows out of the region of the child window to be updated. (If WS_CLIPSIBLINGS is not given and child windows overlap, when you draw within the client area of a child window, it is possible to draw within the client area of a neighboring child window.) For use with the
+WS_CHILD style only.
+
+找到是不难，但如果光看这个就明白的话我也不必要写这种文章了，没有适当的代码去实践，估计很多人是不懂这两个风格什么含义的。OK，现在我来带你实践。spy++开着不？哈，别关啊，后面还要用到。用spy++观察各个top-level window（非Child窗口）的属性，是不是都有个WS_CLIPSIBLINGS？想找个没有的都不行，如果你不服气，你要自己创建一个没有WS_CLIPSIBLINGS风格的顶层窗口，好吧，我在这里等你一会儿（……一会儿过去了……），你垂头丧气地回来了：“不行，即便我不指定这个风格，Windows也强制帮我加上。”那……你可以强制剥离掉这个风格啊，这样：
+
+    DWORD dwStyle = GetWindowLong(hWnd, GWL_STYLE);
+    dwStyle &= ~(WS_CLIPSIBLINGS);
+    SetWindowLong(hWnd, GWL_STYLE);
+
+执行后用spy++一看，还是没有把WS_CLIPSIBLINGS风格去掉，看来Windows是吃定你的了。嗯，前面说的都是top-level window，那对于child window呢？创建一个MFC对话框，在上面加几个button，然后增加/删除这几个button的WS_CLIPSIBLINGS风格？你除了发现child window对与WS_CLIPSIBLING风格不再是强制的之外，恐怕仍然一无所获吧。还是得Follow me，我还是不用MFC，用最简单的Windows API。模仿第二节的创建几个popup窗口A、B、C的那个例子，只不过现在的CreateWindowEx改成这样：
+
+    g_hwndA = CreateWindowEx(NULL, TEXT("child_window"), TEXT("A"), 
+     WS_CHILD|WS_VISIBLE|WS_OVERLAPPEDWINDOW, 30, 30, 400, 300, hWnd, NULL, hInst, NULL);
+    g_hwndB = CreateWindowEx(NULL, TEXT("child_window"), TEXT("B"),
+     WS_CHILD|WS_VISIBLE|WS_OVERLAPPEDWINDOW, 60, 60, 400, 300, hWnd, NULL, hInst, NULL);
+    g_hwndC = CreateWindowEx(NULL, TEXT("child_window"), TEXT("C"), 
+     WS_CHILD|WS_VISIBLE|WS_OVERLAPPEDWINDOW, 90, 90, 400, 300, hWnd, NULL, hInst, NULL);
+
+创建出来的效果如图：
+
+图14
+
+一眼看没什么奇怪的，但尝试拖动里边的窗口就出现些问题了，首先是显示在最前端的C窗口不能拖动（其实是被挡住了），然后你发现B也不能拖动，A可以，A一拖，就出现这种情况：
+
+图15
+
+如果你尝试拖动B，C，情况可能更奇怪，总之就是窗口似乎不能正常绘制。那如何才能正常呢？我不说你都知道了，就是这节的主题，给这几个child window加上WS_CLIPSIBLINGS风格，就OK了，那如何解释？现在看图14，表面上看是C叠在B上面，而B叠在A上面，事实上正好相反不是，（关于窗口Z order的问题看下一节）事实是B叠在C之上，A叠在B上面，所以企图拖C，其实点到的是A的客户区，C当然“拖不动”，那为什么看起来是C叠B，B叠A？这跟绘制顺序有关系，A先绘，然后B，最后C，也许你又要我验证了，好，我改一下代码，打个log出来给你看。把Do nothing的那个窗口过程改为：
+
+    LRESULT CALLBACK WndProcDoNothing(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+     switch(message) 
+     {
+     case WM_PAINT:
+      {
+       TCHAR szOut[20];
+       TCHAR szWindowTxt[10];
+       GetWindowText(hWnd, szWindowTxt, 10);
+       wsprintf(szOut, TEXT("%s Paint/n"), szWindowTxt);
+       OutputDebugString(szOut);
+      }
+      break;
+     }
+     return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+
+打印结果为：
+A Paint
+B Paint
+C Paint
+
+那B为什么绘在A的上面？那就是因为没有指定WS_CLIPSIBLINGS，WS_CLIPSIBLINGS这个风格会在窗口绘制的时候裁掉“它被它的兄弟姐妹挡住的区域”，被裁掉的区域当然不会被绘制。对子窗口来说，这个风格不是一定有的，因为微软考虑到大多数子窗口，比如dialog上的控件，基本上都是固定不会移动的，不会产生互相叠起来的现象。那对于top-level窗口，如果可以没有这个风格，那我们的界面可能很容易混乱，所以这个风格是强制的。也许你要问：“那为什么我移动A的时候，A自己不会重绘？”当然不会了，因为我移动A，A本来就是在最顶层，完全可见的，没有什么区域变得无效需要重新绘制，所以它不会被重绘，这个可以通过log看出来。
+
+现在分析下一个风格WS_CLIPCHILDREN，前一个是裁兄弟姐妹，这个是裁孩子，微软也够狠的。不多说了，直接改代码来体会这个风格的作用，按照这个意思，有这个风格的父窗口在绘制的时候，不会把东西绘到子窗口的区域上去，这个嘛，简单，我们只要在父窗口的WM_PAINT里画点东西试试看就好了。代码还是前面的代码，把A，B，C都加上WS_CLIPSIBLINGS，主窗口不要WS_CLIPCHILDREN风格，我们看看是不是能把东西画到子窗口的区域去。
+
+    case WM_PAINT:
+     hdc = BeginPaint(hWnd, &ps);
+     RECT rt;
+     GetClientRect(hWnd, &rt);
+     DrawText(hdc, szHello, strlen(szHello), &rt, DT_CENTER);
+     MoveToEx(hdc, 0, 0, NULL);
+     LineTo(hdc, 600, 400);  //To be simple, just a line.
+     EndPaint(hWnd, &ps);
+     break;
+
+运行结果如图：
+
+ 
+
+图16
+
+嗯？没有穿过啊？为什么？先动脑想想半分钟。
+那是因为我们的实验不够严谨，现在在主窗口WM_PAINT消息的处理中加入一个Debug内容：
+
+    OutputDebugString(TEXT("Main window paint/n"));
+
+再看看debug出来的log：
+Main window paint
+A Paint
+B Paint
+C Paint
+因为是主窗口先绘制，然后才是子窗口，所以即便这根线是穿过子窗口区域的，恐怕也看不出来了。那我们就不要在WM_PAINT里绘制，我们增加一个菜单项，叫paint a line，点这个菜单就执行下面的代码：
+
+    //在主窗口的WM_COMMAND消息处理中
+    switch (wmId)
+    {
+     //...
+     case ID_PAINT_A_LINE:
+     {
+      HDC hdc = GetDC(hWnd);
+      MoveToEx(hdc, 0, 0, NULL);
+      LineTo(hdc, 600, 400);  //To be simple, just a line.
+      ReleaseDC(hWnd, hdc);
+     }
+    }
+
+运行程序，点菜单“paint a line”，看运行效果：
+
+ 
+
+图17
+
+算是“成功穿越”了，这时候你再给父窗口加上WS_CLIPCHILDREN看看，结果我就不说了，就算不尝试其实也能想得到。相信大家到此为止都理解了这两个风格的作用了。
+
+再顺便说些实践经验，有时候我们会发觉程序在频繁重绘的时候闪烁比较厉害，还是拿这个例子改装一下吧，先把主窗口的WS_CLIPCHILDREN风格拿掉，然后在其窗口处理函数中加入些代码：
+
+    case WM_CREATE:
+     //...
+     SetTimer(hWnd, 1, 200, NULL);
+     break;
+    case WM_TIMER:
+     if (wParam==1)
+      InvalidateRect(hWnd, NULL, TRUE);
+     break;
+
+意思是说每0.2秒重绘一次主窗口，大家看看，是不是闪烁得厉害，闪烁过程中，我们依稀看到了这根线穿过了子窗口的区域……然后把WS_CLIPCHILDREN风格赋予主窗口，其余不变，再看看，是不是闪烁现象大为减少？通过这个例子告诉大家什么叫“把现有的技术用得最好”（参考我上一篇博文），有时候就差那么一点点。
+
+四、Foreground、Active、Focus及对Z order的理解
+
+看前面的这个“MDI”例子，也许你发现它跟MFC向导创建出来的MDI界面的最大不同就是子窗口无法“激活”，你怎么点，怎么拖都不行，它们的caption恒定是灰色的，我曾经为此苦思冥想……spy++是个好东西，前面主要是用它来查看窗口的属性，现在我们用它来查看窗口消息，（不知道怎么做的看看spy++的帮助）在消息过滤中，我们只选择一个消息，就是WM_NCACTIVATE，MSDN对这个消息的说明是：The WM_NCACTIVATE message is sent to a window when its nonclient area needs to be changed to indicate an active or inactive state. 那就是窗口激活状态改变的时候，会收到这个消息啰？而我观察下来的结果是，The WM_NCACTIVATE never came.
+
+办法总该是有的，比如利用SetActiveWindow这个API，在主界面上做个按钮，点一下这个按钮，就SetActiveWindow(g_hwndA)，这样来激活A窗口，而事实上这样做是徒劳，A既没有被激活，也没有收到WM_NCACTIVATE。但我还是有办法的，大家看下面的代码，在那个叫WndProcDoNothing的窗口里加入对WM_MOUSEACTIVATE消息的处理：
+
+    case WM_MOUSEACTIVATE:
+    {
+     HWND hwndFind=NULL;
+     while(TRUE)
+     {
+      hwndFind = FindWindowEx(g_hwndMain, hwndFind, TEXT("child_window"), NULL);
+      if (hwndFind==NULL)
+       break;
+      if (hwndFind==hWnd)
+       PostMessage(hwndFind, WM_NCACTIVATE, TRUE, NULL);
+      else
+       PostMessage(hwndFind, WM_NCACTIVATE, FALSE, NULL);
+     }
+    }
+    break;
+
+现在再尝试运行程序，点击A，B，C窗口，是不是就可以把它们的caption变为彩色（我的是默认的浅蓝色）了？什么道理？虽然这几个子窗口不能真正地被激活（Windows机制决定的，只有top-level window才能被激活），但可以通过发WM_NCACTIVATE消息来欺骗它们，让它们以为自己被激活了，于是把自己的caption绘制为浅蓝色。如图：
+
+图18
+
+也许你还发现，点击子窗口的客户区不能让子窗口调整到其它子窗口的前面，窗口那个前，那个后的这种次序叫“Z order”，又译作“Z轴”，order是“序”的意思，这其实是窗口管理器维护的一个链表，没错，是链表，不是数组，不是队列，不是堆栈，为什么是链表？因为窗口的次序经常发生变化，链表是最方便修改次序的了，只需要改变节点的指针，这点性能考虑，微软是肯定做过的。下面是窗口的Z order的描述（我的描述，从MSDN改编）：
+
+桌面是最底层的窗口，不能改变的；对于top-level window，如果存在owner，一定会显示在owner之上（owner一定不会挡住它），不存在拥有关系的top-level窗口，互相之间都有可能会阻挡，用户的操作，窗口显示隐藏最大最小化还原，或者显式调用API设定等都有可能影响它们的次序，但微软为了使得有些窗口总是能够显示在最顶或最底，还设立了一套特殊的规则，那就是top most window，SetWindowPos这个API就有调整次序的功能，或者把某窗口设置为top most，top most总是显示在其它非top most窗口的上面，如果两个窗口同时是top most，那么谁更上面呢？——都有可能，top most之间又是“公平竞争”的关系了，虽然他们对非top most总是保持着优势，那把一个owner设置为top most，会怎么样呢？由于被拥有的窗口必须在其owner的上面，所以那些被拥有的窗口也都全部变成了top most，尽管你没有给他们指定top most，用spy++观察top most窗口的属性，在Extended Style栏目中，能看到一个“WS_EX_TOPMOST”属性，这就是top most窗口的标志了。OK，top-level window的情况看来都没什么问题了，那child window的情况呢？大家都知道，child是绘制在其parent的客户区中的，不可能超出其parent的界限，相当于是其parent的一部分，那我们可不能以认为其child的z order跟其parent的是一致的呢？对于其它top-level窗口来说，这样看是没问题的，因为一个top-level窗口被移到了前面，它的child也会跟着它显示在前面，反之亦然，但一个在Parent窗口内部，哪个child在前，哪个在后，又是有自己的一套private z order的，所谓国有国法，家有家规嘛，这样看，我想就没什么问题了。哦，不对，还有一点没说，对于child来说，不能是top most窗口，用SetWindowPos设置也是没用的。
+
+那我们如何来知道整个Z order的链表？可以这样：
+
+    void ListZOrder(HWND hParent)
+    {
+     TCHAR szOutput[10];
+     HWND hwnd = GetTopWindow(hParent);
+     while(hwnd!=NULL)
+     {
+      wsprintf(szOutput, TEXT("%08X/n"), (UINT)hwnd);
+      OutputDebugString(szOutput);
+      hwnd = GetNextWindow(hwnd, GW_HWNDNEXT);
+     }
+    }
+
+这个函数会把某个Parent的子窗口句柄值，按照z order次序，从最顶打印到最底。如果hParent为NULL，那么就从桌面的最顶窗口开始，列出所有桌面的窗口，这样意义不大，为什么？因为你会找出来很多很多窗口，可见的，不可见的，奇奇怪怪的，变来变去的，所以这种列窗口的方法通常是用于列子窗口的。
+
+最后我想提提Foreground、Active和Focus这三者，非常容易让人搞混的三个概念，我给出一些提示和方法，读者自己去编程序体验。
+
+首先是Foreground窗口，说起Foreground就不能不说Foreground线程，Windows同时管理着很多线程，但为了给用户操作起来“爽”一些，需要更快地响应用户的操作，就弄了这么个Foreground线程的概念。比如用户在玩扫雷，那扫雷这个程序的某个线程（据我所知扫雷只有一个线程）就被提升为Foreground线程，这个线程拥有比别的线程略高的优先级，能获取更多的cpu时间片，以此更快一些地响应用户，用户正在使用的这个扫雷程序的主界面，就是Foreground窗口。那Active窗口是什么呢？Active窗口就是目前用户正在使用的那个窗口……厄，这种解释也未免太敷衍人了，那它跟Foreground窗口有什么异同啊？首先说“同”，那就是它们都必须是top-level window，而不能是child window，不同嘛……还是等等再说，那现在轮到Focus窗口了，Focus窗口就是目前直接接收到用户键盘输入消息的那个窗口，可以是child window。我就给那么多提示吧。
+
+我不想直接告诉你它们究竟还有什么不同，我现在给出三个API：GetFocus、GetActiveWindow和GetForegroundWindow，大家用这三个API去做些实验就知道了。
+
+后记
+
+这篇文章我想已经足够长，我必须得结束了，这恐怕也是我写的最长的一篇技术文章（除了我的本科毕业论文），如果你能够从头到尾读到这里，我倍感荣幸，如果它能够给你些帮助，我想这份辛苦也是值得的。进入冬天了，天气很冷，注意保暖。（其实现在我觉得我的脚正踩在南极大陆上……）
+
