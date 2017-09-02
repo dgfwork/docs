@@ -1,0 +1,70 @@
+1.parent
+
+GetParent: 也许为parent 也许为owner
+child->parent
+popup->owner
+overlap->NULL
+
+GetAncestor(hWnd, GA_PARENT):
+maybe desktop window,should detect the desktop(GetDesktopWindow) and then reset to NULL
+
+GetWindowLong(GWL_HWNDPARENT):
+
+//
+// Returns the real parent window
+// Same as GetParent(), but doesn't return the owner
+//
+HWND GetRealParent(HWND hWnd)
+{
+    HWND hParent;
+
+    hParent = GetAncestor(hWnd, GA_PARENT);
+    if(!hParent || hParent == GetDesktopWindow())
+        return NULL;
+
+    return hParent;
+}
+
+
+
+
+A slightly better version that goes both "routes" and if it can't find a proper parent it will return the window itself(as to avoid null references). Using GetParent instead of GetAncestor worked in my case and returned the window I was after.
+
+    public static IntPtr GetRealParent(IntPtr hWnd)
+    {
+        IntPtr hParent;
+
+        hParent = GetAncestor(hWnd, GetAncestorFlags.GetParent);
+        if (hParent.ToInt64() == 0 || hParent == GetDesktopWindow())
+        { 
+            hParent = GetParent(hWnd);
+            if (hParent.ToInt64() == 0 || hParent == GetDesktopWindow())
+            { 
+                hParent = hWnd;
+            }
+
+        }
+
+        return hParent;
+    }
+
+
+
+2.owner
+GetWindow with the GW_OWNER
+
+
+
+
+3.GetAncestor:
+GA_PARENT
+Retrieves the parent window. This does not include the owner, as it does with the GetParent function.
+
+GA_ROOT
+Retrieves the root window by walking the chain of parent windows.
+
+GA_ROOTOWNER
+Retrieves the owned root window by walking the chain of parent and owner windows returned by GetParent. 
+
+
+
