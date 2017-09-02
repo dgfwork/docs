@@ -1,0 +1,5 @@
+1.when we disabled some window, we should keep the zorder
+As for zorder changing, you can intercept the WM_WINDOWPOSCHANGING message and set the SWP_NOZORDER flag to prevent the zorder change.
+Make sure you only do this while you are setting EnableWindow(false).
+
+https://msdn.microsoft.com/en-us/library/windows/desktop/ms632653.aspx
