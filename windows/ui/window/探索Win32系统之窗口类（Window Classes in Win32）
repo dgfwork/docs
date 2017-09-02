@@ -1,0 +1,611 @@
+http://blog.chinaunix.net/uid-20476365-id-1942393.html
+
+摘要
+
+本文主要介绍win32系统里窗口类的运做和使用机制，探索一些细节问题，使win32窗口类的信息更加明朗化。
+
+在本文中,"类"，"窗口类"这两个术语等同，都不是指C++类，而是指和窗口相关的一组信息的集合。
+
+    简介
+
+窗口类的风格决定了窗口的外观和风格。所有的窗口都会属于某一个窗口类。在创建一个窗口之前，必须注册(register)一个相应的窗口类。32位Windows操作系统类可以注册被系统里所有的程序所使用的窗口类。
+
+大部分开发人员认为窗口类是个麻烦的东西，他们顶多就是从例子或其他代码中拷贝一个RegisterClass函数，修改一下部分参数而已。这仿佛有些轻视了，没有发挥窗口类的作用。本文将对此进行探索，并且描述窗口类如何的使应用程序得到优化。
+
+我们的将讨论的题目包括：
+
+    什么是窗口类(Windows Classes)
+
+    系统全局，应用程序全局，应用程序局部类的区别
+
+    类里包含了那些信息
+
+    这些信息如何影响窗口的表现
+
+    应用程序如何使用窗口类信息。
+
+　
+
+一：窗口类的类型
+
+window系统提供了三种类型的窗口类
+
+    系统全局类（System global classes）
+
+    应用程序全局类（Application global classes）
+
+    应用程序局部类（Application local classes）
+
+1.系统全局窗口类（System Global Classes）
+
+windows 本身注册了几个系统全局类供全部的应用程序使用，这些类包括了以下的常用标准窗口控件
+
+    Listbox （列表框）
+
+    ComboBox （下拉组合框）
+
+    ScrollBar （滚动条）
+
+    Button （按钮）
+
+    Static （静态标签）
+
+    Edit （编辑框）
+
+以及其他不那么常用的控件如TabCtrl等.
+
+还有：
+
+    菜单窗口
+
+    桌面窗口
+
+    对话框窗口
+
+    任务条窗口
+
+    题头带图标的窗口
+
+    ComboLBox:ComBoBox控件的下拉列表窗口
+
+    MDIClient: MDI风格窗口的子窗口
+
+WindowsNT为DDEML（Dynamic Data Exchange Management Library）增加了DDEMLEvent类，因为DDEML功能已经结合到USER里去了。
+
+Windows 95/98不注册类 #32772，因为它不使用题头带图标风格的窗口(由于我用的是win2k操作系统，这一点没有尝试)
+
+所有的win32应用程序都可以使用系统全局类，但不能增加或删除一个这样的类。
+
+应用程序可以通过“子类化”(SubClassing)这些类来改变系统全局类的属性。在Win32里，应用程序子类化某个系统全局类只会影响本进程内窗口的表现，而不会影响另外一个进程或应用程序。比起相应的操作会影响其他窗口的win16时代，这是一个进步。
+
+在Win32里，Ms鼓励“子类化”系统类的行为。因为这个技术可以非常有效和方便的改变窗口的表现。例如：如果应用程序希望限制edit控件的输入和编辑行为，可以通过子类化edit类并设置一个新的窗口过程(WindowProc)来自己处理处理键盘操作来实现。子类化以后，此应用程序里创建的edit控件将使用新的窗口过程，以代替标准的edit控件窗口过程。
+
+系统全局窗口类实现
+
+现在的win32平台使系统类和各32位进程互不相干，系统类如何实现的并不会直接影响应用程序。本节将描述系统类的实现，当然，跳过此节并不妨碍全文的阅读和理解。
+
+    在win9x里的实现
+
+系统全局类在win9x和win3.1的实现使相当相象的。在系统启动时，USER模块创建了系统类。win9x和win3.1不同的是：当发现一个应用程序子类化了某个系统类的时候，win9x将进行如下工作：
+
+    如果在debug模式下运行，在debug屏幕上显示一个 warning 信息
+
+    复制一份被子类化的窗口类的信息 。将复制的新类填加到应用程序的“私有”系统类列表里。win9x系统里，系统为每个进程都保持了这样的一个列表，以供系统存放系统全局类的克隆信息。
+
+    强制进程里所有的子类化过的窗口实例使用这个系统类的拷贝。但这不影响已经存在的窗口，窗口是使用事先已经拷贝到窗口实例数据区的类信息，并非直接使用进程里保存的类的信息。子类化只更新了进程的窗口类列表里的类的信息，而没有更新窗口实例里的类。
+
+16位应用程序共享相同的进程空间。在win9x里，16位程序的表现和它在win3.1里是一样的。
+
+    winNT的实现
+
+winNT则有很多的不同。winNT包括了两个win32子系统：一个服务进程和一个在各win32进程里运行的动态连接库(DLL)。以edit类为例，winNT在各进程空间里，从DLL里导出和注册edit类。这样，处理EDIT控件的代码可以存在于DLL里，也即在各进程空间里。不需要系统分配局部过程调用来处理Edit控件，应用程序对控件的频繁调用所导致的系统开销也被避免了。因为EDIT 控件实例仅仅在各进程空间里操作自身数据，所以对系统鲁棒性的冲击就降低了。
+
+服务进程管理每个win32应用程序的信息，包括应用程序的公有和私有窗口类。当创建一个win32线程的过程开始（即某个线程调用USER模块或GDI模块的函数时），USER模块检查该线程是否该进程的第一个线程，如果是（一般是主线程），USER模块为该进程注册系统类。当为了任何一个进程而注册一个类（服务模块进程除外），该类就会添加到该进程的公有或私有列表里。为了提高效率，windows为每个进程都注册系统类，并且把类信息的拷贝储存在应用程序的空间里。这增加了鲁棒性，但是比起Windows95,增加了需要使用的内存。windowsNT也由此获得了更高的性能，因为当子类化一个系统类的时候，winNT不需要象window95那样重新分配内存和拷贝类信息。
+
+在winNT里,16位的应用程序依然共享同一进程，也共享所有的系统全局类。16位程序总是不稳定因素的起源。
+
+2.应用程序全局类。
+
+应用程序全局类是注册的时候指定了CS_GLOBALCLASS标志的类(该标志还有后续叙述)。
+
+16位系统比如win3.1的应用程序“全局”类是真正意义的“全局”的，一个DLL或应用程序注册的应用程序全局类，系统内所有的DLL和应用程序都可以使用。一个应用程序全局类在“全局”的意义上和系统全局类一致，只是它是由应用程序创建的而不是系统创建的而已。
+
+Win32的应用系统全局类本质的不同是：应用程序全局类只是在进程内部的“全局”而已。这是什么意思呢？一个DLL或.EXE可以注册一个类，这个类可以让在相同的进程空间里其他.EXE和DLL使用。如果一个DLL注册了一个非应用程序全局类的窗口类，那么，只有该DLL可以使用该类，同样的，.EXE里注册的非应用程序全局类也适用这个规则，即该类只在该.EXE里有效。
+
+作为这个特性的扩展，win32有一项技术，允许一个第三方窗口控件在DLL里实现，然后把这个DLL载入和初始化到每个Win32进程空间里。这项技术的细节是，把DLL的名字写入注册表的指定键值里：
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Windows\APPINIT_DLLS
+
+这样当任意一个win32应用程序加载的时候，系统也同时将该dll加载到进程空间里（这可能有点过于奢侈，因为很多win32程序不一定会使用该控件）。DLL在初始化的时候注册应用程序全局类，这样的窗口类就可以在每个进程空间的.EXE或DLL里使用了。这个技术基于win32系统的这个特性：允许在每个进程空间里自动的（也是强制的）加载特定的DLL（事实上，这也是打破进程边界，把你的代码切入到其他进程里的一种办法）。
+
+　
+
+3. 应用程序局部类
+
+WIN32应用程序局部类是使用最频繁的类（绝大部分的应用程序为主窗口注册的类都是应用程序局部类），仅仅在声明和注册该类的应用程序模块或DLL自身里使用。注册一个应用程序局部类和应用程序全局类的区别是，局部类不包括CS_GLOBAL CLASS标志。
+
+　
+
+二：窗口类包含的信息和作用
+
+窗口类都包含些什么信息呢？让我们看以下窗口类结构体。
+
+WNDCLASS结构包含的是一般的窗口类的信息
+
+typedef struct tagWNDCLASS {   
+    UINT      style;
+    WNDPROC   lpfnWndProc;
+    int       cbClsExtra;
+    int       cbWndExtra;
+    HINSTANCE hInstance;
+    HICON     hIcon;
+    HCURSOR   hCursor;
+    HBRUSH    hbrBackground;
+    LPCSTR    lpszMenuName;
+    LPCSTR    lpszClassName;
+} WNDCLASS;
+
+成员
+	
+
+描述
+
+style
+	
+
+一组标志位的组合。定义比如窗口位置，设备上下文(DC)分配，双击的处理等特征。
+
+lpfnWndProc
+	
+
+指向窗口过程的地址，该窗口过程负责处理窗口类相应的窗口消息
+
+cbClsExtra
+	
+
+指明需要额外分配的内存数量，单位为byte,系统为该类分配保留指定数量的额外内存
+
+cbWndExtra
+	
+
+指明需要额外分配的内存数量，单位为byte,系统为每个该类所对应的窗口实例分配保留指定数量的额外内存
+
+hInstance
+	
+
+标识注册该类的DLL或应用程序实例
+
+hIcon
+	
+
+当一个属于该类的窗口被最小化的时候，显示的图标.
+
+hCursor
+	
+
+属于鼠标该类的窗口里显示的指针
+
+hbrBackground
+	
+
+定义当程序打开或重画某个属于该类的窗口是，填充窗口客户区的颜色和样式
+
+lpszMenuName
+	
+
+如果没有显性定义菜单时，窗口的默认菜单
+
+lpszClassName
+	
+
+字符串的类名
+
+以下详细讨论各成员的具体意义：
+
+    Class Styles (style)
+
+Style成员决定了从该类创建出来的窗口的风格，可以使用下列值的一个或几个的组合。
+CS_BYTEALIGNCLIENT ,CS_BYTEALIGNWINDOW
+
+如果使用这两个标志，窗口的的客户区或整个窗口都在“字节边界”上对齐，也就是说，系统调整窗口的水平位置，客户区或整个窗口的左边坐标是8的倍数。win32 SDk的文档说这两个标志影响窗口的宽度，但是实际上笔者没有发现这个现象，此标志只影响窗口的水平位置（左边）。
+
+看看系统如何摆放一个边框宽度为4的窗口：
+
+Original window location
+	
+
+Placement with CS_BYTEALIGNWINDOW
+	
+
+Placement with CS_BYTEALIGNCLIENT
+
+0,y
+	
+
+0,y
+	
+
+4,y
+
+1,y
+	
+
+0,y
+	
+
+4,y
+
+2,y
+	
+
+0,y
+	
+
+4,y
+
+3,y
+	
+
+0,y
+	
+
+4,y
+
+4,y
+	
+
+8,y
+	
+
+4,y
+
+5,y
+	
+
+8,y
+	
+
+4,y
+
+6,y
+	
+
+8,y
+	
+
+4,y
+
+7,y
+	
+
+8,y
+	
+
+4,y
+
+8,y
+	
+
+8,y
+	
+
+12,y
+
+9,y
+	
+
+8,y
+	
+
+12,y
+
+10,y
+	
+
+8,y
+	
+
+12,y
+
+11,y
+	
+
+8,y
+	
+
+12,y
+
+12,y
+	
+
+16,y
+	
+
+12,y
+
+13,y
+	
+
+16,y
+	
+
+12,y
+
+14,y
+	
+
+16,y
+	
+
+12,y
+
+15,y
+	
+
+16,y
+	
+
+12,y
+
+16,y
+	
+
+16,y
+	
+
+20,y
+
+这两个标志在以下两个情况中无效：
+
+    如果显示设备对每个象素使用8个或更多的位数，字节对齐并不会带来什么好处。这种情况下，系统在创建和移动的时候忽略了CS_BYTEALIGNCLIENT和CS_BYTEALIGNWINDOW这两个标志。
+
+    如果使用SetWindowPos函数改变窗口的位置，此函数忽略窗口的CS_BYTEALIGNCLIENT和CS_BYTEALGNWINDOW标志指定的位置限定。在Win32 SDK文档关于WM_WINDOWPOSCHANGEING的描述让人费解，它说：“对于一个有WS_OVERLAPPED和WS_THICKFRAME风格的窗口来说，DefWindowProc函数响应WM_WINDOWPOSCHANGING消息，并向窗口发送一个WM_GETMINMAXINFO消息，此消息的处理是验证窗口的新位置和尺寸，迫使窗口接受CS_BYTEALIGNCLIENT和CS_BYTEALIGNWINDOW限定”
+
+其实当DefWindowProc接受到WM_WINDOWPOSCHANGING消息后，确实发送一条WM_GETMINMAXINFO消息，但是并不迫使窗口接受字节对齐的风格，为了确保字节对齐风格，应用程序必须通过计算再改变其水平位置
+
+CS_BYTEALIGNCLIENT 和CS_BYTEALIGNWINDOW的存在是为了优化程序的性能，尤其在是3.0版本的windows系统以前。那时侯，所有的系统字体宽度都是固定的，系统可以通过使窗口字节对齐优化字体的显示。在3.0以后的window里，这一点已经被忽略了。
+
+如果程序使用BitBlt函数从一个窗口向另一个窗口，或者从窗口的某个矩形区域向另一个矩形区域拷贝象素，还是可以通过设置CS_BYTEALIGNCLIENT标志来获得更好的性能。如果客户区是字节对齐的，程序也可以尽量保证BitBlt操作发生在字节对齐的矩形里， BitBlt操作将会比发生于非字节对齐的矩形里的操作更快。当然，字节对齐仅仅是对窗口的左边界而言的，如果要进一步的提高性能，应该连宽度都进行字节对齐。
+
+其实对于可以显示256及以上颜色的视频卡或显示器，对字节对齐的需求已经微乎其微了。256色显示器已经自己实现了字节对齐，实际上，一些16色的显示器也是字节对齐的。在大部分显示器上根本看不出来字节对齐限定对窗口位置的影响。一句话，字节对齐标志已经没有什么重要的作用了。
+
+使用CS_BYTEALIGNWINDOW的时候也等同于包含了CS_BYTEALIGNCLIENT；对话框类本身已经默认包含了CS_BYTEALIGNWINDOW标志
+CS_OWNDC, CS_CLASSDC, CS_PARENTDC
+
+这几个标志决定窗口的默认DC
+
+    如果使用CS_OWNDC标志，属于此窗口类的窗口实例都有自己的DC(称为私有DC)，私有DC仅属于该窗口实例，所以程序只需要调用一次GetDC或BeginPaint获取DC,系统就为窗口初始化一个DC，并且保存程序对其进行的改变。ReleaseDC和EndPaint函数不再需要了，因为其他程序无法访问和改变私有DC。当选择了CS_OWNDC，程序改变影射模式（Mapping Mode）的时候必须小心，当由系统擦除窗口的背景时，系统假定和默认其影射模式是MM_TEXT。如果私有DC的影射模式不一样，窗口被擦除的地方将不再可见。
+
+CS_OWNDC标志在WinNT和Win9x的作用也是有差别的。在WinNT,win32子系统和其他NT进程有相同的地址空间(4GB)，应用程序使用此地址空间里的2GB,每个有CS_OWNDC标志窗口实例占用800个字节，在NT下，这里面没有什么问题。而Win9x为GDI保留了64K的局部堆，DC进入这个堆之后，即使其他GDI对象数据被释放，DC依然在。这意味着每个CS_OWNDC的窗口都在这个宝贵的内存空间里占用800个字节。所以，为win9x写的程序最好尽量少的使用CS_OWNDC这个标志。win9x的修正版打算解决这个问题，但效果不明显（而且win9x已经开始式微了）
+
+如果使用CS_CLASSDC标志，所有属于该类的窗口实例共享相同的DC（称为类DC）.类DC有一些私有DC的优点，而更加节约内存（因为不需要为每个窗口实例都分配800字节的DC空间了）。每个窗口实例都通过GetDC或BeginPaintde得到设备上下文(DC)句柄，如果没有别的窗口需要该DC，不需要调用ReleaseDC或EndPaint释放DC。在一个窗口实例上通过GetWindowDC,GetDC,GetDCEx,BeginPaint获得 DC，并对其中的一些参数进行更改的话，所进行的更改除了剪切区域和设备本身属性(Device origin)之外对所有其他窗口实例都是有效的。和CS_OWNDC相同的是，必须确保影射模式也是MM_TEXT,否则，被系统擦除的背景将不再可见。
+
+为NT编写的程序最好不要使用这个标志，因为“节约内存”的好处根本不明显。对于win9x来说，却是有用的，因为对于win9x的64K的GDI局部堆来说，节约的空间意义更重大一些。
+
+    如果使用了CS_PARENTDC标志，属于这个类的窗口都使用它的父窗口的句柄。和CS_CLASSDC相似的是，多个窗口共享一个DC，不同的是，这多个窗口（虽然有父子关系并且共享DC）并不要求都属于同一个窗口类。
+
+WIN9x下，所有的标准窗口控件都有CS_PARENTDC标志。WinNT下，除了ComBoBox之外的窗口控件都有此标志。因此，比如Edit控件和ListBox控件都共享他们的父窗口（比如对话框）的DC
+
+(注：这一段是我根据原文再加上自己的理解，不一定完全正确：) CS_PARENTDC带来的好处就一个字：速度。Win9x系统为每个线程预留了5个DC缓冲区，如果一个窗口（比如一个对话框）有多于5个的字窗口（比如有6个或以上的编辑框），而每个子窗口都有自己的DC的话，DC缓冲区就失去了效力，系统得为每个子窗口根据剪切边界和设备属性重新初始化一个DC，这多于5个的DC在DC缓冲里不停交换，不能确保在缓冲里被访问。而如果每个子窗口都和父窗口共享一个DC，在频繁访问该DC时，该DC在于DC 缓冲里被找到的几率显然相当的高，从而可以被高速的访问,显著的提高了速度，所以一般来说标准窗口控件都和父窗口共享DC。WinNT可以拥有多于5个的DC缓冲，所以它可能可以提供足够的DC缓冲 -- 但是不保证时时如此。
+
+使用CS_PARENTDC的另一个效果是，子窗口可以在父窗口的客户区随意做画，就象画在自己的客户区一样. 负责表现Edit控件和ListBox控件周围的3D效果的CTL3D库就是利用了这个特性。注意如果程序需要改变各子窗口的影射模式，那么最好不要用CS_PARENTDC标志，否则将很容易引起各子窗口影射模式的混乱，因为所有的子窗口都使用同一个DC。
+
+    如果不指定CS_OWNDC，CS_CLASSDC或CS_PARENTDC这几个标志，此类的窗口使用一个通用DC，并置于DC缓冲里以供使用。通用DC在使用前获取，使用后释放，在DC获取的时候，DC里的上下文按默认值初始化，除非当时该DC已经在窗口的DC缓冲里（比如没有调用ReleaseDC或EndPaint释放DC），这样的话DC的剪切边界和设备属性都不需要被重新初试化，可以节约一些时间。
+
+在WinNT里，DC缓冲没有确定的数量。如果所有的DC缓冲都在使用中，而程序调用了GetDC和BeginPaint,NT则再分配一个缓冲。
+
+出于对win9x的兼容考虑，win32程序最好把 DC的使用限制在5个以下，并且尽可能快的释放DC.
+
+如果要忽略类创建时由标志位决定的窗口的默认DC,程序可以使用GetDCEx函数，指定DCX_CACHE标志，则完全忽略CS_OWNDC和CS_CLASSDC标志，并从缓冲里返回一个通用DC.
+
+ScrollWindow和ScrollWindowEx函数处理DC的方法则有所不同：
+
+    ScrollWindow使用窗口默认的DC。因此，如果窗口使用CS_OWNDC或CS_CLASSDC标志，ScrollWindow使用相应的DC（窗口私有DC或类DC，其影射模式有可能被程序改变,不为MM_TEXT）.传递给ScrollWindow的坐标值必须和DC的影射模式相一致。
+
+    ScrollWindowEx使用系统通用DC（这种DC使用MM_TEXT的影射模式）,而忽略窗口的标志。传递给ScrollWindowEx的坐标值必须是MM_TEXT影射模式下的客户区坐标值。
+
+CS_DBLCLKS
+
+CS_DBLCLKS标志使窗口可以检测到双击事件。窗口响应双击的细节如下：
+
+    如果窗口没有CS_DBLCLKS标志，系统向窗口依次发送如下消息：
+
+WM_LBUTTONDOWN
+
+    WM_LBUTTONUP
+
+    WM_LBUTTONDOWN
+
+    WM_LBUTTONUP.
+
+其实相当于两个单击。
+
+    如果窗口有CS_DBLCLKS标志，则系统向窗口依次发送如下消息：
+
+WM_LBUTTONDOWN
+
+    WM_LBUTTONUP
+
+    WM_LBUTTONDBLCLK
+
+    WM_LBUTTONUP.
+
+第一种情况中的第二个WM_LBUTTONDOWN被WM_LBUTTONDBLCLK代替了。
+
+注意，在上述序列中间可能会插入其他的一条或一些消息，所以这两个消息序列不一定是完全连续的。
+
+其实，在没有指定CS_DBLCLKS标志时，程序本身也可以检测到双击事件的。参见MSDN里Dr.GUT的"Simulating Mouse Button Clicks"文章，不过要有一些技巧.一般的情况下，如果没有指定CS_DBLCLKS，在窗口的消息循环里将不会得到WM_LBUTTONDBLCLK消息。
+
+所有的标准窗口控件，对话框，桌面窗口类都默认拥有CS_DBLCLKS标志。第三方控件最好也加上此风格，以使其在对话框编辑器里可以正常工作。
+CS_GLOBALCLASS
+
+CS_GLOBALCLASS是唯一一个针对类本身起作用而不是对单个窗口起作用的标志.系统将包含这种标志的窗口类作为应用程序全局类保存，这样类可以应用于注册该类的进程内的所有EXE和DLL，当EXE或DLL退出或卸载，或对该类调用UnregisterClass后，该类则被销毁。在注册该窗口的程序退出前，所有从该类创建的窗口都必须先关闭（对于DLL来说，这是自动进行的）。
+CS_HREDRAW ,CS_VREDRAW
+
+CS_HREDRAW标志表示当窗口的水平尺寸（宽度）改变的时候，重画整个窗口。CS_VREDRAW则是在窗口垂直尺寸（高度）改变时重画整个窗口。按钮和滚动条都有这两种风格。
+CS_NOCLOSE
+
+如果指定了CS_NOCLOSE标志，则窗口上的关闭按钮和系统菜单上的关闭命令失效。
+CS_SAVEBITS
+
+菜单，对话框，下拉框都拥有CS_SAVEBITS标志。当窗口使用这个标志时，系统用位图形式保存一份被窗口遮盖（或灰隐）的屏幕图象。首先，系统要求显示驱动保存图象位数据，如果显示驱动本身的存储空间足够，保存操作成功，window系统也可以使用这些保存的位数据。如果不够，系统将位数据在全局内存里以位图的方式保存，并且在USE模块局部堆里为每个窗口分配空间，保存一些事务数据（比如位图数据缓冲的大小）的结构。当程序使遮盖屏幕的窗口消失时，系统可以很快的从内存里恢复屏幕图象。
+
+CS_SAVEBITS的效率本身是很难度量的。CS_SAVEBITS提高了“临时”窗口比如菜单，对话框，下拉框的性能。但是，存贮位信息的开销也是很明显的，尤其由系统代替显示驱动存储位信息的时候，系统承担了速度和存储开销。 使用CS_SAVEBITS的好处其实依赖于窗口遮盖的区域发生了什么事情，如果该区域相当复杂，需要重画很多的效果，那么，存储该区域可能比重画该区域要来的轻松，如果反之，该区域可以相当快速的重画，或者在被遮盖的时候还经常发生变化并且变化很显著，保存的方案反而影响了整体性能。
+
+　
+
+以上都是style成员的可选标志。
+
+　
+
+    The Window Procedure (lpfnWndProc)
+
+WNDCLASS结构里的lpfnWndProc成员保存了该窗口类的窗口过程地址。该窗口类的所有窗口都使用该过程地址，对于从该类创建的窗口，系统将所有相关的消息交给此窗口过程来处理。窗口过程实现窗口的功能，程序可以使用SetClassLong函数来改变窗口类的窗口过程。这个操作叫“子类化”(Subclassing)。当程序改变了该过程的地址，在改变前已经创建的窗口还是使用原来的地址，而以后创建的窗口才使用新的过程地址。
+
+当一个程序或DLL子类化一个窗口或设置窗口过程函数，必须在模块定义文件里输出该新窗口过程。
+
+    Extra Class and Window Bytes (cbClsExtra and cbWndExtra)
+
+cbClsExtra成员指明为每个窗口类多分配的额外数据量，cbWndExtra成员则是指明为每个窗口实例分配的额外数据量。如果程序不需要分配额外的数据，这两个成员的值都应该设置为 0，以免产生不确定的数（比如一个非常大的数）而使系统进行错误分配，如果是负数，则该窗口类将不会被注册。
+
+在Win9x和NT，分配40个及以下字节是没有多大意义的，当然，开发人员可以根据需要分配额外数据大小。
+
+如果用类声明并注册一个对话框类型的窗口，cbWndExtra的值必须设置为DLGWINDOWEXTRA，系统对话框管理器需要这么多的额外数据对对话框进行管理。
+
+    Instance Handle (hInstance)
+
+WNDCLASS的hInstance成员标识类所在的模块。此成员可以为进程的hInstance,或DLL的hInstance，但不可以为NULL.
+
+    Class Icon (hIcon)
+
+WNDCLASS的hIcon成员标识此窗口类的图标。程序一般使用LoadIcon，从系统标准图标库（如IDI_APPLICATION）或用户指定的图标资源中来获取一个图标句柄。如果hIcon的值为NULL,当系统给程序发送WM_ICONERASEBKGND消息的时候，程序给窗口画上程序的主图标.
+
+    Class Cursor (hCursor)
+
+WNDCLASS里的hCursor成员表示属于该类窗口的默认鼠标指针。当设置了该值，当鼠标移入窗口区域时，系统将指针由系统默认形状变成所设置的指针形状。程序可以使用LoadCursor函数从标准系统指针库（比如IDC_ARROW）或用户指定指针资源中获取指针句柄。程序可以通过SetCursor函数随时改变指针。如果hCursor的值未设置（设置为NULL）,程序必须在鼠标指针移入窗口时进行设置，否则将使用系统默认的鼠标指针形状。
+
+    Class Background Brush (hbrBackground)
+
+WNDCLASS里的hbrBackground成员变量表示背景颜色的，类型为HBRUSH，即GDI刷子句柄。可以对其赋值为一个刷子句柄（比如用GetStockObject获取系统内置刷子对象句柄，或者自己创建指定颜色和风格的刷子的句柄）或者颜色值。如果是选择颜色值的话，必须使用下列系统标准颜色之一。
+
+COLOR_ACTIVEBORDER
+	
+
+COLOR_HIGHLIGHTTEXT
+
+COLOR_ACTIVECAPTION
+	
+
+COLOR_INACTIVEBORDER
+
+COLOR_APPWORKSPACE
+	
+
+COLOR_INACTIVECAPTION
+
+COLOR_BACKGROUND
+	
+
+COLOR_INACTIVECAPTIONTEXT
+
+COLOR_BTNFACE
+	
+
+COLOR_MENU
+
+COLOR_BTNSHADOW
+	
+
+COLOR_MENUTEXT
+
+COLOR_BTNTEXT
+	
+
+COLOR_SCROLLBAR
+
+COLOR_CAPTIONTEXT
+	
+
+COLOR_WINDOW
+
+COLOR_GRAYTEXT
+	
+
+COLOR_WINDOWFRAME
+
+COLOR_HIGHLIGHT
+	
+
+COLOR_WINDOWTEXT
+
+用颜色值赋值时，必须强制类型转换为HBRUSH类型：
+
+cls.hbrBackground   = (HBRUSH)(COLOR_WINDOW+1);
+
+如果hbrBackground成员设置为NULL，程序必须在响应WM_PAINT的时候负责画背景。程序也可以响应WM_ERASEBKGND消息，或根据调用BeginPaint函数时填充的PAINTSTRUCT结构里的成员fErase的值类判断是否需要重画背景。
+
+    Class Menu (lpszMenuName)
+
+WNDCLASS里的lpszMenuName成员表示默认主菜单。可以使用MAKEINTRESOURCE宏把资源里菜单项的ID号转变成连续的字符串值赋给该成员。如果使用CreateWindow或CreateWindowEx函数从该类创建窗口时没有在函数参数里指定别的菜单资源，那么出现在各窗口上的主菜单就是lpszMenuName指定的菜单。如果lpszMenuName为NULL,窗口则没有默认的主菜单。
+
+    Class Name (lpszClassName)
+
+WNDCLASS里的lpszClassName结构表示类的名字。局部窗口类名在进程范围必须为唯一的，由于仅要求“在进程内唯一”，对于两个不同的程序来说，其中的窗口类名有可能相同，比如，两个程序都可能拥有各自的"Main Wnd"窗口。全局窗口类的名字必须在全局窗口类和系统窗类口范围里唯一，比如，程序可以注册一个名字为"Edit"的局部窗口类，但是无法注册同样名字的一个全局窗口类。
+
+　
+
+三 系统如何定位窗口类
+
+当程序需要根据一个类创建一个窗口，系统通过以下步骤来定位该类
+
+1．系统在本进程的局部窗口类列表里寻找有相同名字的类。如果找到，由于局部窗口类是属于某一个.EXE模块或DLL的，所以所找到的类的进程实例句柄(hInstance)和本模块的实例句柄应该保持一致。这样的规则是为了防止进程内一个模块或DLL里注册的局部类被进程其他及其的模块或DLL发现。
+
+2．如果系统无法发现一个同名的局部类，那么，就继续搜索进程的全局类列表，这次的搜索不比较实例句柄。
+
+在win9x,如果在程序全局类空间里无法发现同名类，则继续查询进程内的系统窗口类列表。
+
+    如果系统还是无法发现同名窗口类，则继续搜索全局系统类列表。
+
+winNT将此过程应用于所有由程序创建的窗口，包括从主窗口再创建出的其他窗口，比如对话框和消息框。
+
+win9x 同样将此过程应用于所有的窗口，除了消息框以外。当程序弹出一个消息框，Win9x不对局部类列表进行搜索，而是直接进行后续步骤。
+
+四 应用程序的如何使用窗口类信息。
+
+一旦注册了一个类，一般来说除了使用该类创建窗口之外就没有什么需要作的事情了。当然，如果需要访问该类信息，子类化，或者超类化该类，介绍一些方法就是有用的。
+
+    类访问函数
+
+如果需要获取和改变类的信息，可以使用以下函数：
+
+    GetClassLong, 从类信息读回来一个Long类型的值(比如，窗口类的窗口过程地址)
+
+    SetClassLong 对该类的某成员写入一个long类型的值。比如，写入一个新的窗口过程的地址。
+
+    GetClassWord 从类信息读回来一个word类型的值。比如以下调用得到类的额外数据量:
+
+nClassExtra = GetClassWord(hwnd,GCW_CBCLSEXTRA);
+
+SetClassWord 向类信息写入一个word类型的值。比如改变窗口类图标。
+
+    GetClassName 获取窗口类的名字。
+
+    GetClassInfo 获取除类名和菜单以外的全部类信息。
+
+具体的调用参数以及其他相关的一些类函数可以参见MSDN里windows classs Functions 一节。
+
+    子类化：(SubClassing)
+
+术语“子类化”(subclassing)描述的是用一个新的窗口过程代替原窗口过程。术语“实例子类化”（即子类化单个窗口）是指使用SetWindowLong函数改变某一个窗口实例的窗口过程。“全局子类化”（子类化整个窗口类）则是指使用SetClassLong改变整个类的默认窗口过程函数。
+
+在32位windows 系统里，可能难于子类化另一个进程里的窗口或窗口类，一般来说，子类化都是发生于同一个进程里的（“打破进程边界”的相关的主题本文没有涉及）。
+
+    超类化：(Superclassing)
+
+术语"超类化"(Superclassing)指创建一个新的类，该类使用某个现存类的窗口过程，继承该类的基本功能，并可以在此基础上进行扩展。
+
+关于子类化和超类化的具体描述，请参阅MSDN里"safe subclasing in Win32"一文
+
+　
+
+结束语： win32的窗口类给开发人员带来了很多有用的信息，在win32平台上开发程序，最好是注意使用兼容winNT和win9x的一些特性以保证程序的兼容性。
