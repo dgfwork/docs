@@ -1,0 +1,254 @@
+A window can have a parent or an owner but not both
+https://blogs.msdn.microsoft.com/oldnewthing/20100315-00/?p=14613/
+
+
+
+MontagFTB had a problem which, upon investigation, allegedly was caused by a subtle "fact": "The parent specified in CreateWindowEx is both the parent of the window and the owner of the window, but when you call SetParent it only sets the parent of the window, not the owner." MontagFTB then concluded that some messages were sent to the parent and others were sent to the owner.
+
+This is a faulty diagnosis. We'll look at the correct diagnosis next time, but today's topic is parents and owners. Actually, parent and owner windows were already covered by my 2005 PDC talk, Five Things Every Win32 Programmer Should Know, so for most of you, today's topic is a review. (And I included the topic in the talk specifically so I wouldn't have to blog about it, but obviously that plan didn't work out.)
+
+A window can be created as a child window (WS_CHILD set) or a top-level window (WS_CHILD not set). A child window has a parent, which you specify when you call CreateWindowEx, and which you can change by calling SetParent. A top-level window, on the other hand, has no parent. Its parent is NULL.
+
+Ownership is a concept that relates top-level windows. A top-level window can optionally have an owner, which is also specified when you call CreateWindowEx, and which you can change by a complicated mechanism described in my talk.
+
+Note that changing a window's parent or owner is not a normal operation. You usually create a window with a specific parent or owner and leave it that way for the lifetime of the window.
+
+Now, a window can have a parent, or it can have an owner, or it can have neither, but it can never have both.
+
+What would it mean for a window to have both a parent and an owner? Well, in order to have a parent, the window must itself be a child. But in order to have an owner, the window must be top-level. And top-level windows and child windows are mutually exclusive (and collectively exhaustive), because you either have the WS_CHILD style (which makes you a child) or you don't (which makes you top-level). Since people like tables so much, here's a table:
+	Child window 	Top-level window
+The Parent window is... 	non-NULL 	NULL
+The Owner window is... 	N/A 	NULL or non-NULL
+
+The box for "The Owner window of a Child window..." is marked N/A because the question is meaningless. Ownership is a relationship among top-level windows.
+
+By analogy, consider the people at a school for children. They can be separated into two groups, students and teachers. (We'll treat non-teaching staff as teachers with no students.)
+
+Each student is assigned to a teacher. Each teacher might or might not have another teacher as a mentor. Several students can be assigned the same teacher, but every student must be assigned to some teacher. Similarly, several teachers might have the same mentor, but some teachers won't have a mentor at all, and some mentors might themselves have mentors.
+
+It's impossible for a person to have both a teacher and a mentor, because having a teacher applies only to students, and having a mentor applies only to teachers. Teachers don't attend classes (they lead the classes) so they don't have a teacher. But they might have mentors. Asking for a student's mentor is a meaningless question because students don't have mentors; teachers do.
+
+Since a window cannot have both a parent and an owner, the CreateWindowEx function takes a single HWND parameter which is either the parent or owner of the window being created, depending on what type of window you're creating. If you're creating a child window, then the parameter represents the parent window; if you're creating a top-level window, then the parameter represents the owner window.
+
+A similar overloading of parameters happens with the HMENU: If you're creating a child window, then the parameter represents the child window identifier; if you're creating a top-level window, then the parameter represents the window menu. Because only top-level windows can have menus, and only child windows can have child window identifiers.
+
+If this parameter overloading bothers you, you can write your own helper functions:
+
+HWND CreateChildWindowEx(
+    DWORD dwExStyle,
+    LPCTSTR lpClassName,
+    LPCTSTR lpWindowName,
+    DWORD dwStyle,
+    int x,
+    int y,
+    int nWidth,
+    int nHeight,
+    HWND hWndParent,
+    UINT_PTR id,
+    HINSTANCE hInstance,
+    LPVOID lpParam
+)
+{
+ // A child window must have the WS_CHILD style
+ if (!(dwStyle & WS_CHILD)) {
+  SetLastError(ERROR_INVALID_PARAMETER);
+  return NULL;
+ }
+ return CreateWindowEx(
+    dwExStyle,
+    lpClassName,
+    lpWindowName,
+    dwStyle,
+    x,
+    y,
+    nWidth,
+    nHeight,
+    hWndParent,
+    reinterpret_cast<HMENU>(id),
+    hInstance,
+    lpParam);
+}
+
+HWND CreateTopLevelWindowEx(
+    DWORD dwExStyle,
+    LPCTSTR lpClassName,
+    LPCTSTR lpWindowName,
+    DWORD dwStyle,
+    int x,
+    int y,
+    int nWidth,
+    int nHeight,
+    HWND hWndOwner,
+    HMENU hMenu,
+    HINSTANCE hInstance,
+    LPVOID lpParam
+)
+{
+ // A top-level window must not have the WS_CHILD style
+ if (dwStyle & WS_CHILD) {
+  SetLastError(ERROR_INVALID_PARAMETER);
+  return NULL;
+ }
+ return CreateWindowEx(
+    dwExStyle,
+    lpClassName,
+    lpWindowName,
+    dwStyle,
+    x,
+    y,
+    nWidth,
+    nHeight,
+    hWndOwner,
+    hMenu,
+    hInstance,
+    lpParam);
+}
+
+There's more to parent windows and owner windows than what I've written here; I refer you to my talk (or other documentation) for more details.
+
+Next time, we'll look at what MontagFTB is really seeing.
+Tags Code	
+Comments (19)
+
+    nathan_works
+    March 15, 2010 at 7:34 am	
+
+    is there a reference to your talk ? (are PDCs archived somewhere ? google has 2009 stuff, but no qick hits on 2005 presentations or videos, but I may be searching on the wrong terms..)
+    misampso
+    March 15, 2010 at 7:59 am	
+
+    You can view his talk on Channel 9 here:
+
+    http://channel9.msdn.com/posts/scobleizer/Raymond-Chen-PDC-05-Talk-Five-Things-Every-Win32-Programmer-Needs-to-Know/
+
+    We didn’t start posting all the PDC stuff there until PDC 2008 but this was filmed by hand.
+    Marquess
+    March 15, 2010 at 8:31 am	
+
+    Was that the video where you couldn’t understand half of what Raymond said?
+    Richie Hindle
+    March 15, 2010 at 8:44 am	
+
+    The relevant pieces of that talk start around 49:06 (that’s just after Raymond has explained the basic differences between parents and owners, and is about to go into more detail).
+    Adrian
+    March 15, 2010 at 8:46 am	
+
+    Thanks for describing this so concisely.  The MSDN documentation is–in places–pretty vague about the distinction between owners and parents.
+
+    When I interviewed with Microsoft several years ago, one of my interviewers specifically asked how to create a window with both and owner and a parent that were different.
+
+    I said that I didn’t think it was possible, though my reasoning wasn’t as crisp as described here.
+
+    The interviewer then went on to explain that it was possible and that he had recently used the trick in a product.  I’m not sure I remember the details exactly right, but it went something like this:
+         Create a top-level window with the desired owner.
+
+         After creation, add WS_CHILD to turn it into a child window.
+
+         Use SetParent to re-parent the window, which supposedly leaves the owner alone.
+
+    The idea was that the window would be rendered in the client area of its parent window, but that it would send notification messages to the owner (which was a different top-level window in the same process).
+
+    I was dubious, but I didn’t argue.  Raymond’s explanation sounds much more plausible.
+    WndSks
+    March 15, 2010 at 9:19 am	
+
+    IIRC, the combobox dropdown list is a top level window with WS_CHILD (To allow it to extend outside the parent while not causing titlebar focus issues I’m guessing (WS_EX_NOACTIVATE was added to 2000))
+    Clovis
+    March 15, 2010 at 9:26 am	
+
+    Unlike dogs – they can have both.
+    AsmGuru62
+    March 15, 2010 at 9:28 am	
+
+    The story is complicated even more with developing for MDI. I was just supporting old code base from 1998 (MFC, MDI) and to my surprise when MDI Child window is an owner of a modal dialog (its HWND is passed into DialogBoxParam) – when GetOwner is used in WM_INITDIALOG – it returns the HWND of MDI Frame (not MDI Child)! So, the pointers taken by GetWindowLong of these HWNDs are also wrong. I had a lot of fun debugging this.
+    Joshua
+    March 15, 2010 at 9:56 am	
+
+    Hmmm. There’s one more bizarre corner case I encountered and abused for awhile.
+
+    Calling SetParent() on a window that doesn’t have WS_CHILD makes it into a child window as far as composting goes but the rest of the system doesn’t seem to know about it.
+
+    The primary effect is clicking on the child window steals activation from the parent window and Alt+PrntScrn grabs only the child window.
+
+    I used it for its secondary effect of working around third-party library code that assumed the .NET Framework’s view of the window chain matched the native version (it doesn’t always) until I was able to actually fix the bug in the third party library code.
+
+    This particular behavior seems bloody useful if somebody ever wants to write a UNIX-style window manager to accomplish something that custom themes just can’t.
+    Ivo
+    March 15, 2010 at 11:24 am	
+
+    I think the most common case where the "parent window" and the "window that get the notification messages" differ is for toolbar controls. You can have one window be the parent, and another to be the "toolbar parent" (set with TB_SETPARENT message).
+    zahical
+    March 15, 2010 at 12:25 pm	
+
+    Funnily, the best explanation of the parent/owner difference I’ve seen is an MSDN article written back in 1993 (Did they actually have computers back then? :-P )
+
+    http://msdn.microsoft.com/en-us/library/ms997562.aspx
+    Anonymous
+    March 15, 2010 at 7:25 pm	
+
+    https://docs.google.com/View?id=dfqd62nk_228h28szgz
+    kero
+    March 16, 2010 at 12:56 am	
+
+    For accelerated study parent/owner relationships try my tiny demo/tester:
+
+    http://files.rsdn.ru/42164/parentowner.zip (with Help and src)
+
+    (http://files.rsdn.ru/42164/parentowner.png – shot).
+
+    For example, let’s build the window, that has owner and parent (and let’s owner=parent):
+
+    1) run ParentOwner.exe
+
+    2) push "CreateWindowEx" button (=> Window 1)
+
+    3) push "sWaP" button
+
+    4) push "CreateWindowEx" button (=> Window 2)
+
+    5) push  "SetParent" button
+
+    Our result – Window 2 (its owner=parent – Window 1).
+    Marius Bancila
+    March 16, 2010 at 1:09 am	
+
+    Excellent explanation, especially the analogy with students and teachers. There are many people asking for the difference. I will point them to this post from now on.
+    Windo
+    March 16, 2010 at 5:51 am	
+
+        Funnily, the best explanation of the parent/owner difference I’ve seen is an MSDN article written back in 1993 (Did they actually have computers back then? :-P ) 
+
+    Couldn’t agree more. Because it keep things simple.
+    Six Evil Monkeys
+    March 16, 2010 at 6:42 am	
+
+        kero 
+
+    Holy buckwheat, here you are! We thought you were dead, really! Like, strange incidents happen, you know. Seeing this Raymond’s blogpost we immediately thought about you, and even thought this means what we’ve made another terrible forecast, it’s totally cool you’re out there – and we glad to see you.
+    Karellen
+    March 16, 2010 at 8:39 am	
+
+    Hmmm….OK. But why the distinction between the two heirarchies? Why have both “parents” and “owners” if a window can have at most one? Why not just have a single “progenitor” window. If a “pup” window has a progenitor, then if it has WS_CHILD it’s a parented child, and if it does not have WS_CHILD then it’s an owned top-level window?
+
+    Also, I suppose it’s a violation of the assumption that “programmers are assumed to know what they’re doing”, and would have taken up precious processor cycles back when Windows was first written, but shouldn’t the Windows API prevent these sorts of “invariants” from being violated in the first place by having SetParent() fail when called for a top-level window?
+    [If you prevent people from doing stupid things, then you also prevent them from doing clever things. The original design of Windows left open the possibility of doing clever things. (Merging the trees would have made other parts of the window manager much more complicated. For example, enumerating all top-level windows now involves a tree search.) -Raymond]
+    Michael Geary
+    March 16, 2010 at 9:32 am	
+
+    There’s a bit of historical context missing here.
+
+    The real reason that the owner window and parent window are not separated in the API was to save space in the USER heap in 16-bit Windows. The owner and parent window handles occupied the same field in the USER heap entry for a window, and the WS_CHILD flag told which way to interpret that handle. Similarly, the hMenu and window ID occupied a single field and WS_CHILD also told which way to interpret that field.
+
+    That’s all it ever was, a space-saving hack.
+
+    There’s nothing inherent in the concepts of parent and owner that says a window should be able to have only one or the other. OS/2 Presentation Manager separated the two and allowed you to specify parent and owner windows independently for any window. The parent window is the one that a window is drawn inside of, and the owner window is the one that receives notification messages.
+
+    The teacher/student/mentor analogy is misleading. Child windows are not students, parent windows are not teachers, and owner windows are not mentors. Asserting that a student can’t have a mentor tells us nothing about the relationships among windows.
+
+    (Sorry to disagree on some of the details, Raymond – your post does an excellent job of explaining how these things work, but not *why* they work this way.)
+    Mike
+    March 17, 2010 at 6:58 am	
+
+    The funniest thing about this discussion is apparently MontagFTB had to wait over 3 years for his problem to work its way to the top of the suggestion box.
+
+    I would hope that he has given up way prior to this and re-architected the problem/solution.
