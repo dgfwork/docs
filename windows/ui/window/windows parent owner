@@ -4,6 +4,10 @@ GetParent: 也许为parent 也许为owner
 child->parent
 popup->owner
 overlap->NULL
+    If the window is a child window, then return the parent window.
+    Else, the window is a top-level window. If WS_POPUP style is set, and the window has an owner, then return the owner.
+    Else, return NULL.
+
 
 GetAncestor(hWnd, GA_PARENT):
 maybe desktop window,should detect the desktop(GetDesktopWindow) and then reset to NULL
@@ -67,4 +71,5 @@ GA_ROOTOWNER
 Retrieves the owned root window by walking the chain of parent and owner windows returned by GetParent. 
 
 
+https://blogs.msdn.microsoft.com/oldnewthing/20111207-00/?p=8953/
 
