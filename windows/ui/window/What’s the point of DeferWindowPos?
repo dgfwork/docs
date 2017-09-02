@@ -1,0 +1,339 @@
+What’s the point of DeferWindowPos?
+https://blogs.msdn.microsoft.com/oldnewthing/20050706-26/?p=35023/
+
+
+
+The purpose of the DeferWindowPos function is to move multiple child windows at one go. This reduces somewhat the amount of repainting that goes on when windows move around.
+
+Take that DC brush sample from a few months ago and make the following changes:
+
+HWND g_hwndChildren[2];
+
+BOOL
+OnCreate(HWND hwnd, LPCREATESTRUCT lpcs)
+{
+ const static COLORREF s_rgclr[2] =
+    { RGB(255,0,0), RGB(0,255,0) };
+ for (int i = 0; i < 2; i++) {
+  g_hwndChildren[i] = CreateWindow(TEXT("static"), NULL,
+        WS_VISIBLE | WS_CHILD, 0, 0, 0, 0,
+        hwnd, (HMENU)IntToPtr(s_rgclr[i]), g_hinst, 0);
+  if (!g_hwndChildren[i]) return FALSE;
+ }
+ return TRUE;
+}
+
+Notice that I'm using the control ID to hold the desired color. We retrieve it when choosing our background color.
+
+HBRUSH OnCtlColor(HWND hwnd, HDC hdc, HWND hwndChild, int type)
+{
+  Sleep(500);
+  SetDCBrushColor(hdc, (COLORREF)GetDlgCtrlID(hwndChild));
+  return GetStockBrush(DC_BRUSH);
+}
+
+    HANDLE_MSG(hwnd, WM_CTLCOLORSTATIC, OnCtlColor);
+
+I threw in a half-second sleep. This will make the painting a little easier to see.
+
+void
+OnSize(HWND hwnd, UINT state, int cx, int cy)
+{
+  int cxHalf = cx/2;
+  SetWindowPos(g_hwndChildren[0],
+               NULL, 0, 0, cxHalf, cy,
+               SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
+  SetWindowPos(g_hwndChildren[1],
+               NULL, cxHalf, 0, cx-cxHalf, cy,
+               SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
+}
+
+We place the two child windows side by side in our client area. For our first pass, we'll use the SetWindowPos function to position the windows.
+
+Compile and run this program, and once it's up, click the maximize box. Observe carefully which parts of the green rectangle get repainted.
+
+Now let's change our positioning code to use the DeferWindowPos function. The usage pattern for the deferred window positioning functions is as follows:
+
+HDWP hdwp = BeginDeferWindowPos(n);
+if (hdwp) hdwp = DeferWindowPos(hdwp, ...); // 1 [fixed 7/7]
+if (hdwp) hdwp = DeferWindowPos(hdwp, ...); // 2
+if (hdwp) hdwp = DeferWindowPos(hdwp, ...); // 3
+...
+if (hdwp) hdwp = DeferWindowPos(hdwp, ...); // n
+if (hdwp) EndDeferWindowPos(hdwp);
+
+There are some key points here.
+
+    The value you pass to the BeginDeferWindowPos function is the number of windows you intend to move. It's okay if you get this value wrong, but getting it right will reduce the number of internal reallocations.
+
+    The return value from DeferWindowPos is stored back into the hdwp because the return value is not necessarily the same as the value originally passed in. If the deferral bookkeeping needs to perform a reallocation, the DeferWindowPos function returns a handle to the new defer information; the old defer information is no longer valid. What's more, if the deferral fails, the old defer information is destroyed. This is different from the realloc function which leaves the original object unchanged if the reallocation fails. The pattern p = realloc(p, ...) is a memory leak, but the pattern hdwp = DeferWindowPos(hdwp, ...) is not. 
+
+That second point is important. Many people get it wrong.
+
+Okay, now that you're all probably scared of this function, let's change our repositioning code to take advantage of deferred window positioning. It's really not that hard at all. (Save these changes to a new file, though. We'll want to run the old and new versions side by side.)
+
+void
+OnSize(HWND hwnd, UINT state, int cx, int cy)
+{
+  HDWP hdwp = BeginDeferWindowPos(2);
+  int cxHalf = cx/2;
+  if (hdwp) hdwp = DeferWindowPos(hdwp, g_hwndChildren[0],
+               NULL, 0, 0, cxHalf, cy,
+               SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
+  if (hdwp) hdwp = DeferWindowPos(hdwp, g_hwndChildren[1],
+               NULL, cxHalf, 0, cx-cxHalf, cy,
+               SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE);
+  if (hdwp) EndDeferWindowPos(hdwp);
+}
+
+Compile and run this program, and again, once it's up, maximize the window and observe which regions repaint. Observe that there is slightly less repainting in the new version compared to the old version.
+Tags Code	
+Comments (23)
+
+    muro
+    July 6, 2005 at 10:26 am	
+
+    I don’t understand the purpose of the "if" in front of each call to DeferWindowPos(…). why is it there (each if statement is terminated by ‘;’).
+
+    Was it there for error processing?
+    muro
+    July 6, 2005 at 10:28 am	
+
+    sorry, my bad. I’m overworked… programming for too long today.
+
+    I thought (hdwp) was a cast :)
+
+    now I’m so humilated….
+    Jack Mathews
+    July 6, 2005 at 10:43 am	
+
+    Well I have problems with this example because it’s not guaranteed to work. I mean, it’ll practically work, but really what should be done is writing some sort of implementation that implements a list of windows and positions, and falls through. Something like:
+
+    enum EHDWPException
+
+    {
+
+    kHDWPException
+
+    };
+
+    struct SWindowAndPosition
+
+    {
+
+    HWND mWindow;
+
+    int posx, posy, cx, cy;
+
+    };
+
+    static HDWP filter_hdwp( HDWP check )
+
+    {
+
+    if ( !check )
+
+    {
+
+    throw kHDWPException;
+
+    }
+
+    return check;
+
+    }
+
+    void move_list( std::list<SWindowAndPosition> const &windows )
+
+    {
+
+    try
+
+    {
+
+    HDWP hdwp = filter_hdwp( BeginDeferWindowPos( windows.size() );
+
+    for ( list<SWindowAndPosition>::const_iterator it = windows.begin(); it != windows.end(); ++it )
+
+    {
+
+    hdwp = filter_hdwp( DeferWindowPos( hdwp, it->mWindow, NULL, it->posx, it->posy, it->cx, it->cy, SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOACTIVATE ) );
+
+    }
+
+    EndDeferWindowPos( hdwp );
+
+    }
+
+    catch ( EHDWPException )
+
+    {
+
+    // do a for loop calling SetWindowPos instead….
+
+    }
+
+    }
+    Jack Mathews
+    July 6, 2005 at 10:54 am	
+
+    … ugh. is there a way to do preformatted text correctly ?
+    Brian Friesen
+    July 6, 2005 at 11:09 am	
+
+    I only first discovered DeferWindowPos about 2 months ago. At the time I was working on a resizable app and was calling SetWindowPos to reposition/resize about half a dozen controls. I tried DeferWindowPos instead and was amazed how much smoother it ran, far less flicker. Definitely a cool API, I only wish I knew about it sooner. :)
+    Andreas Haeber
+    July 6, 2005 at 11:31 am	
+
+    "Okay, now that you’re all probably scared of this function, let’s change our repositioning code to take advantage of deferred window positioning."
+
+    Nah didn’t scare me much, the puzzles you posted at the 4. July were A LOT more scarier then DeferWindowPos :)
+    carlso
+    July 6, 2005 at 12:14 pm	
+
+    It’s a bit of a hassle to deal with the failure case of DeferWindowPos(). I’ve always wondered what could possibly cause that function to fail. According to the docs, "insufficient system resources" can cause failure. But it seems that all "resources" should be allocated during the BeginDeferWindowPos(n) call. And, if you got "n" right, then the calls to DeferWindowPos() would never fail.
+
+    I have never coded with that assumption, but it would certainly make my code a lot cleaner if I could.
+
+    Any comments?
+    Kevin Gadd
+    July 6, 2005 at 12:15 pm	
+
+    Shouldn’t it be DeferWindowPos(hdwp, hwnd, …
+    carlso
+    July 6, 2005 at 12:26 pm	
+
+        The other big difference is that when a window is resized with DeferWindowPos, it doesn’t consistently receive WM_SIZE.
+
+        The WM_SIZE message tends to be problematic in general (IMHO). When a window is resized, the wndproc will first receive a WM_WINDOWPOSCHANGED message. It is only when you call DefWindowProc() on this message that you’ll see a WM_SIZE message — and it seems like there might be some logic that does not send the WM_SIZE message if Windows thinks the size hasn’t changed.
+
+        I do all of my resize handling on WM_WINDOWPOSCHANGED and this works well (even with DeferWindowPos). The only thing you need to look out for is that Windows sends a WM_SIZE message when a window is first created (and you will NOT see the corresponding WM_WINDOWPOSCHANGED at this time), so you may need to explicitly call your sizing handler on window creation if your logic depends on that. 
+
+    Mike Dunn
+    July 6, 2005 at 12:46 pm	
+
+        "How to Adapt an App for Chicago," in the July 1994 issue of the Microsoft Developer Network News
+
+        I have a strange urge to go read that article… 
+
+    Someone
+    July 6, 2005 at 1:40 pm	
+
+        The pattern p = realloc(p, …) is a memory leak
+
+        Are you sure about that? Which realloc are you talking about, then? 
+
+    GregM
+    July 6, 2005 at 2:49 pm	
+
+        > The pattern p = realloc(p, …) is a memory leak
+
+        > Are you sure about that? Which realloc are you talking about, then?
+
+        Yes, quite sure.
+
+        If realloc fails, then it returns NULL, but p is still valid, at least until you assign NULL to it and leak what p was pointing to.
+
+    Mongo
+    July 6, 2005 at 5:56 pm	
+
+    I would assume (but haven’t checked, I’ll admit) that the SWP_NOCOPYBITS flag ought to solve the problem where you appear to get a window copied. If you’re not specifying that, then Windows appears to try to efficiently move the windows – only as has been mentioned here earlier, this can be problematic when windows overlap.
+    binaryc
+    July 6, 2005 at 6:03 pm	
+
+    I thought the point of handles was that the caller didn’t have to know or care where the data is located, thus leaving the callee free to move it around at will.
+    Adrian
+    July 6, 2005 at 11:48 am	
+
+    I have a project that I’ve tried to convert to DeferWindowPos several times, but I always end up reverting to regular SetWindowPos because the behavior isn’t identical or even correct.
+
+    In particular, if you swap the positions of two windows, you’ll get the correct results with SetWindowPos, but not with DeferWindowPos. Create two windows A and B, then swap them. It’s as though the system tries to blit the screen bits from A to B and then from B (which now looks like A) to A. You end up with what looks like two copies of A.
+
+    The other big difference is that when a window is resized with DeferWindowPos, it doesn’t consistently receive WM_SIZE. Suppose you have a window class that rearranges its children using DeferWindowPos in response to a WM_SIZE (similar to an Avalon Canvas). Everything works fine until you nest a Canvas windows as a child of another Canvas window. When the parent Canvas rearranges its child Canvas, the child doesn’t in turn rearrange *its* children because it never receives WM_SIZE.
+
+    Perhaps these are just bugs in the Windows 98 implementation. I haven’t bothered trying it on newer versions of Windows because I have to remain backward compatible.
+    asdf
+    July 6, 2005 at 12:02 pm	
+
+    The best way to call DeferWindowPos with reasonable error fallback is:
+
+    void FwdDeferWindowPos(void *&dwp, HWND hwnd, HWND after, int x, int y, int w, int h, unsigned flags)
+
+    {
+
+    if (dwp)
+
+    dwp = DeferWindowPos((HDWP)dwp, hwnd, after, x, y, w, h, flags);
+
+    }
+
+    void FwdSetWindowPos(void *&, HWND hwnd, HWND after, int x, int y, int w, int h, unsigned flags)
+
+    {
+
+    SetWindowPos(hwnd, after, x, y, w, h, flags);
+
+    }
+
+    void (*FwdWindowPosFn)(void*&, HWND, HWND, int, int, int, int, unsigned);
+
+    FwdWindowPosFn pos = FwdDeferWindowPos;
+
+    void *dwp = BeginDeferWindowPos(N);
+
+    for (;;) {
+
+    pos(…);
+
+    pos(…);
+
+    …
+
+    if (pos == FwdDeferWindowPos) {
+
+    if (!dwp) {
+
+    pos = FwdSetWindowPos;
+
+    continue;
+
+    }
+
+    EndDeferWindowPos((HDWP)dwp);
+
+    }
+
+    break;
+
+    }
+    dan
+    July 6, 2005 at 9:01 pm	
+
+    very pertinent post. a while ago i wrote a class wrapper around the DeferWindowPos API which hugely simplified the usage since i could call the Begin and End functions in the c’tor and d’tor respectively, and encapsulate the error checking and fallback on SetWindowPos. except that i wasn’t correctly handling the returned value from each call to DeferWindowPos. now i am. thanks.
+    Larry Osterman [MSFT]
+    July 6, 2005 at 11:08 pm	
+
+        if (hdwp) hdwp = DeferWindowPos(hwnd, …); // 1
+
+        Isn’t the first parameter to DeferWindowPos a hdwp, not a hwnd?
+
+    Glen
+    July 7, 2005 at 9:45 am	
+
+    Is there any advantage to DeferWindowPos over a series of MoveWindow calls with the last argument (bRepaint) FALSE, followed by an InvalidateRect or something? It seems like a more complicated way of accomplishing the same thing.
+    Tom Seddon
+    July 7, 2005 at 1:13 pm	
+
+    Yes, SWP_NOCOPYBITS fixes the problem where you get corrupted window contents after moving them. You can also get this in some cases if the window is moved rapidly (such as if moving windows handling WM_SIZE messages, and the user is dragging the window edge) and its new position sometimes overlaps the old. I’m not sure whether this is a general bug, or something specific to the graphics driver.
+    dan
+    July 7, 2005 at 7:25 pm	
+
+    is there any point checking to see if a window will actually be moved or sized before calling MoveWindow/SetWindowPos/DeferWindowPos, or does Windows do such checks itself (and filter out unnecessary calls)?
+    Matt
+    July 9, 2005 at 8:45 am	
+
+    Well, once I tried in a complex window resizing routine (120 controls) replacing DeferWindowPos() with SetWindowPos() and it was the same. There was absolutely no difference in the repainting speed at all. I left the SetWindowPos() calls in there.
+    cattom
+    May 14, 2006 at 12:05 pm	
+
+    推荐一篇文章
