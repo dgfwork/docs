@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+
+
+<html dir="ltr" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head><link rel="canonical" href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" />
+    <title>Window Features (Windows)</title>
+
+
+
+
+
+
+
+<meta name="DCS.dcsuri" content="/en-us/library/windows/desktop/ms632599(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="NormalizedUrl" content="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="ms.normalizedurl" content="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="AmbientContext" content="{&quot;layout.limit_max_width&quot;:false,&quot;AmbientContextId&quot;:&quot;B821C774-4CEA-445D-8EFC-99F7EF61757C&quot;,&quot;display.use_large_font&quot;:false,&quot;insight.perf_timing&quot;:true,&quot;AmbientContextDownstream&quot;:{&quot;LogTrace&quot;:false},&quot;display.high_contrast&quot;:false,&quot;insight.use_wedcs_vnext&quot;:true}" />
+
+<meta name="VotingContextUrl" content="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(d=default,l=en-us,v=vs.85).aspx" />
+
+<meta name="MN" content="BF1CA93B-7:24:26 PM" />
+
+<meta name="Search.ShortId" content="ms632599" />
+
+<meta name="ms.shortidmsdn" content="ms632599" />
+
+<meta name="ms.locale" content="en-us" />
+
+<meta name="ms.prodver" content="VS.85" />
+
+<meta name="ms.contentlang" content="EN" />
+
+<meta name="ms.lang" content="EN" />
+
+<meta name="ms.loc" content="US" />
+
+<meta name="ms.sitever" content="2017.08.13.1" />
+
+<meta name="ms.assetid" content="VS|winui|~\winui\windowsuserinterface\windowing\windows\windowfeatures.htm" />
+
+<meta name="ms.auth" content="0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    
+        
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" data-do-not-move="true">
+        //<![CDATA[
+        var AmbientContext = null;
+
+        (function(){
+            var root = (function(){return this;}).call(null);
+
+            var GetCookie = function(name){
+                var cookies = root.document.cookie ? root.document.cookie.split('; ') : [];
+                for (var i = 0; i < cookies.length; i++) {
+                    var pos = cookies[i].indexOf('=');
+                    if (name === root.decodeURIComponent(cookies[i].slice(0, pos)))
+                    {
+                        var cookie = cookies[i].slice(pos + 1).replace(/\+/g, ' ');
+                        cookie = root.decodeURIComponent(cookie);
+                        return cookie;
+                    }
+                }
+            };
+
+            var JsonDeserialize = function(content) {
+                return root.JSON && root.JSON.parse ? root.JSON.parse(content) : (new Function('return (' + content + ')'))();
+            };
+
+            try {
+                AmbientContext = GetCookie('AmbientContext');
+                AmbientContext = AmbientContext && JsonDeserialize(AmbientContext);
+            } catch(ex) {
+            } finally {
+                AmbientContext = AmbientContext || null;
+            }
+        })();
+        //]]>
+    </script>
+
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js" data-do-not-move="true" data-provides="jQuery"></script>
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/Areas/Epx/Themes/Windows/Content/Winlogo_favicon.ico" />
+
+
+<link rel="stylesheet" type="text/css" href="https://i-msdn.sec.s-msft.com/Combined.css?resources=0:ImageSprite,0:TopicResponsive,0:TopicResponsive.MediaQueries,1:CodeSnippet,1:ProgrammingSelector,1:ExpandableCollapsibleArea,0:CommunityContent,1:TopicNotInScope,1:FeedViewerBasic,1:ImageSprite,2:Header,2:sprite,0:Breadcrumbs,0:Breadcrumbs.MediaQueries,3:breadcrumbs,0:ResponsiveToc,0:ResponsiveToc.MediaQueries,0:LibraryMemberFilter,2:Footer,4:StandardRating,5:SelectLocaleFromPopUp,3:WindowsResponsive,0:Tables.MediaQueries;/Areas/Library/Content:0,/Areas/Epx/Content/Css:1,/Areas/Epx/Themes/Windows/Content:2,/Areas/Library/Themes/Windows/content:3,/Areas/Global/Content:4,/Areas/Epx/Themes/Base/Content:5&amp;amp;v=787FCEB0B37EBDBB5111ABDE6E15E102" /><style type="text/css">
+/*<![CDATA[*/
+#epb .m-alert {margin-top: 0 }
+
+        #epb .epb-container.epb-brand-color{background-color:#0078D7;color:#FFF;height:72px}.epb-container.epb-brand-color>div .c-paragraph>img{height:40px;float:left;margin-right:12px;padding:0;width:40px}.epb-container.epb-brand-color .c-text-group{float:left;margin-top:-2px}.epb-container.epb-brand-color .c-text-group .epb-text{display:block;line-height:2}.epb-container.epb-brand-color .c-text-group .epb-launch{font-size:16px;font-weight:700}.epb-container.epb-brand-color .c-group{margin-top:10px;margin-right:-36px}.epb-container.epb-brand-color>div{padding:16px 0}.epb-container.epb-brand-color>div .c-paragraph .c-group .c-action-trigger{min-width:120px;text-align:center}.epb-container.epb-brand-color>div .c-paragraph .c-group .c-action-cancel{text-decoration:underline;color:#FFF}.epb-container.epb-brand-color>div .c-paragraph .c-group .c-action-cancel:hover{background-color:#0060ac}.epb-container.epb-brand-color>div .c-paragraph .c-group .c-action-open{background-color:#FFF;color:#262626}.epb-container.epb-brand-color>div .c-paragraph .c-group .c-action-open:hover{background-color:#ccc}.epb-container.epb-default-color{background-color:#f2f2f2;height:72px}.epb-container.epb-default-color>div .c-paragraph>img{height:40px;float:left;margin-right:12px;padding:0;width:40px}.epb-container.epb-default-color .c-text-group{float:left;margin-top:-2px}.epb-container.epb-default-color .c-text-group .epb-text{color:#262626;display:block;opacity:.7;line-height:2}.epb-container.epb-default-color .c-text-group .epb-launch{color:#262626;font-size:16px;font-weight:700}.epb-container.epb-default-color .c-group{margin-top:10px;margin-right:-36px}.epb-container.epb-default-color>div{padding:16px 0}.epb-container.epb-default-color>div .c-paragraph .c-group .c-action-trigger{min-width:120px;text-align:center}.epb-container.epb-default-color>div .c-paragraph .c-group .c-action-cancel{text-decoration:underline;color:#006CC1}.epb-container.epb-default-color>div .c-paragraph .c-group .c-action-cancel:hover{background-color:#c1c1c1}.epb-container.epb-default-color>div .c-paragraph .c-group .c-action-open{background-color:#0078D7;color:#FFF}.epb-container.epb-default-color>div .c-paragraph .c-group .c-action-open:hover{background-color:#0060ac}html[dir="rtl"] .epb-container.epb-brand-color>div .c-paragraph>img{float:right;margin-right:0;margin-left:12px}html[dir="rtl"] .epb-container.epb-brand-color .c-text-group{float:right}html[dir="rtl"] .epb-container.epb-default-color>div .c-paragraph>img{float:right;margin-right:0;margin-left:12px}html[dir="rtl"] .epb-container.epb-default-color .c-text-group{float:right} .epb-container>div .c-paragraph{display:block!important}
+/*]]>*/
+</style><style type="text/css">
+/*<![CDATA[*/
+#epb .m-alert {
+                margin-top: 0;
+            }
+
+            #epb .m-alert {
+                margin-top: 0;
+            }
+
+            @media (min-width: 768px) and (max-width:1084px) {
+                #epb .m-alert[role="alert"] > div {
+                    width: 94%;
+                    margin: 0 auto;
+                }
+            }
+
+            @media (min-width: 1084px) {
+                #epb .m-alert[role="alert"] > div {
+                    width: 90%;
+                    margin: 0 auto;
+                }
+            }
+/*]]>*/
+</style><style type="text/css">
+/*<![CDATA[*/
+#epb {animation:slidedown .5s ease-in; overflow:hidden;}
+            #epb.epb-rollup {animation:slideup .5s ease-in;}
+            @keyframes slideup {from {height:50px}to{height:0}}
+            @keyframes slidedown {from {height:0}to{height:54px}}
+/*]]>*/
+</style><style type="text/css">
+/*<![CDATA[*/
+.c-modal-link{cursor: pointer;}
+/*]]>*/
+</style></head>
+<body class="library FF">
+    <div id="page">
+
+        
+
+        
+
+    
+
+        <link rel="stylesheet" type="text/css" href="https://i-msdn.sec.s-msft.com/Areas/Epx/Themes/Windows/Content/UhfHeaderResponsive.css?v=636382664018669464" data-do-not-move="true" />
+    <div id="uhf-header-wrapper">
+        <link rel="stylesheet" href="https://statics-uhf-eus.akamaized.net/en-us/shell/_scrf/css/themes=default.device=uplevel_pc/a0-c3674a/46-27d9f7/43-f41e07/ea-200cc8/7e-bd9aff/e7-b8f460/81-22b75a?ver=2.0" type="text/css" media="all" /><script data-requires="jQuery" data-provides="uhfHeader" src="https://statics-uhf-eus.akamaized.net/shell/_scrf/js/themes=default/4c-e52210/b9-3c2034/f8-216ab1/27-1a813e/c2-065567/ad-957d7c/33-107873/ff-ddb3c0/1f-e83921/3c-c7ef7b/20-a271e0/12-e070fe/37-5f48b9/f8-b7a078/e2-ee2285/6a-908bf1/49-22c0a7/5a-5754af/ae-dde2ed/ad-27130d/bd-a3d223/31-23122b/aa-11231c/37-835ce7/84-4bd9bb/c8-90d821/66-ead6e6/89-602250/13-fc5afa?ver=2.0&amp;iife=1"></script><script data-requires="jQuery" data-provides="uhfHeader" src="https://mem.gfx.ms/meversion?partner=DEV_Windows&amp;market=en-us"></script>    <section id="headerArea" data-m="{&quot;cN&quot;:&quot;headerArea&quot;,&quot;cT&quot;:&quot;Area_coreuiArea&quot;,&quot;id&quot;:&quot;a1Body&quot;,&quot;sN&quot;:1,&quot;aN&quot;:&quot;Body&quot;}">
+                    <div id="headerRegion" data-region-key="headerregion" data-m="{&quot;cN&quot;:&quot;headerRegion&quot;,&quot;cT&quot;:&quot;Region_coreui-region&quot;,&quot;id&quot;:&quot;r1a1&quot;,&quot;sN&quot;:1,&quot;aN&quot;:&quot;a1&quot;}">
+
+    <div id="headerUniversalHeader" data-m="{&quot;cN&quot;:&quot;headerUniversalHeader&quot;,&quot;cT&quot;:&quot;Module_coreui-universalheader&quot;,&quot;id&quot;:&quot;m1r1a1&quot;,&quot;sN&quot;:1,&quot;aN&quot;:&quot;r1a1&quot;}" data-module-id="Category|headerRegion|headerRegion|headerUniversalHeader|coreui-universalheader">
+        
+
+
+
+        <div id="epb" class="x-hidden x-hidden-vp1 x-hidden-vp2 uhfc-universal-context context-uhf" ms.cmpgrp="epb">
+
+    <div class="m-alert f-information epb-container epb-default-color" role="alert" ms.pgarea="Epb v2">
+        <div>        
+            <p class="c-paragraph">
+                    <img alt="Microsoft Edge" src="https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/REZlo1?ver=5722" />
+
+                <span class="c-text-group">
+                    <span class="epb-launch">Try Microsoft Edge</span>
+                    <span class="epb-text">A fast and secure browser that's designed for Windows 10</span>
+                </span>
+                <span class="c-group">
+                    <button id="close-epb" class="c-action-trigger c-action-cancel glyph-cancel" ms.title="EPB-dismiss" aria-label="No thanks">No thanks</button>
+                    <a id="epbTryNow" aria-label="A fast and secure browser that's designed for Windows 10" class="epb-launch c-action-trigger c-action-open" ms.title="EPB-launch">Get started</a>
+                </span>
+
+            </p>
+        </div>
+    </div>
+    
+
+            
+        </div>
+        
+    
+        
+    
+
+
+
+
+<header role="banner" class="c-universal-header context-uhf no-js " itemscope="itemscope" data-header-footprint="en-us/DEV_Windows/windowsdesktop-header" itemtype="http://schema.org/Organization">
+    <div class="theme-light js-global-head f-closed " ms.pgarea="Universal Header">
+        <div>
+            <button class="c-action-trigger c-glyph glyph-global-nav-button" aria-label="Toggle menu" aria-expanded="false" ms.title="Mobile menu button"></button>
+            <button class="c-action-trigger c-glyph glyph-arrow-htmllegacy" aria-label="Close search" aria-expanded="false" ms.title="Close Search"></button>
+                    <a id="uhfLogo" class="c-logo" itemprop="url" href="https://www.microsoft.com" aria-label="Microsoft" ms.cmpgrp="logo">
+                        <img itemprop="logo" itemscope="itemscope" class="c-image" alt="Microsoft" src="https://assets.onestore.ms/cdnfiles/external/uhf/long/9a49a7e9d8e881327e81b9eb43dabc01de70a9bb/images/microsoft-gray.png" />
+                        <span>Microsoft</span>
+                    </a>
+            <div class="f-mobile-title">
+                <button class="c-action-trigger c-glyph glyph-chevron-left" aria-label="See more menu options" ms.title="Mobile back button"></button>
+                <span data-global-title="Microsoft home" class="js-mobile-title">Windows Dev Center</span>
+                <button class="c-action-trigger c-glyph glyph-chevron-right" aria-label="See more menu options" ms.title="Mobile forward button"></button>
+            </div>
+                    <nav id="uhf-g-nav" aria-labelledby="uhfLogo" role="navigation" ms.cmpgrp="nav">
+            <ul>
+                        <li>
+                            <div class="c-uhf-menu js-nav-menu">
+
+                                <button id="Technologies-navigation" aria-expanded="false" aria-haspopup="true" ms.title="Technologies" ms.interactiontype="14" style="white-space:nowrap">Technologies</button>
+                                <ul aria-labelledby="Technologies-navigation" aria-hidden="true" ms.cmpnm="Technologies">
+    <li ms.cmpnm="Technologies_.NET">
+        <a id="shellmenu_1" href="https://www.dot.net" ms.title="Technologies_.NET">.NET</a>
+        
+    </li>
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Windows">
+
+        <button id="Windows-navigation" aria-expanded="false" ms.title="Windows" ms.interactiontype="14">Windows</button>
+        <ul aria-labelledby="Windows-navigation" aria-hidden="true">
+    <li ms.cmpnm="Windows_Apps">
+        <a id="shellmenu_3" href="https://developer.microsoft.com/windows" ms.title="Windows_Apps">Apps</a>
+        
+    </li>
+    <li ms.cmpnm="Windows_InternetofThings">
+        <a id="shellmenu_4" href="https://developer.microsoft.com/windows/iot" ms.title="Windows_InternetofThings">Internet of Things</a>
+        
+    </li>
+    <li ms.cmpnm="Windows_Holographic">
+        <a id="shellmenu_5" href="https://developer.microsoft.com/en-us/windows/mixed-reality" ms.title="Windows_Holographic">Mixed Reality</a>
+        
+    </li>
+    <li ms.cmpnm="Windows_MicrosoftEdge">
+        <a id="shellmenu_6" href="https://developer.microsoft.com/microsoft-edge" ms.title="Windows_MicrosoftEdge">Microsoft Edge</a>
+        
+    </li>
+    <li ms.cmpnm="Windows_Hardware ">
+        <a id="shellmenu_7" href="https://developer.microsoft.com/windows/hardware" ms.title="Windows_Hardware ">Hardware </a>
+        
+    </li>
+    <li ms.cmpnm="Windows_WindowsTechCenter">
+        <a id="shellmenu_8" href="https://technet.microsoft.com/windows" ms.title="Windows_WindowsTechCenter">IT Center</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="MicrosoftAzure">
+
+        <button id="MicrosoftAzure-navigation" aria-expanded="false" ms.title="MicrosoftAzure" ms.interactiontype="14">Microsoft Azure </button>
+        <ul aria-labelledby="MicrosoftAzure-navigation" aria-hidden="true">
+    <li ms.cmpnm="MicrosoftAzure_WhatisAzure">
+        <a id="shellmenu_10" href="https://azure.microsoft.com/overview/what-is-azure/" ms.title="MicrosoftAzure_WhatisAzure">What is Azure </a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftAzure_Products">
+        <a id="shellmenu_11" href="https://azure.microsoft.com/services/" ms.title="MicrosoftAzure_Products">Products</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftAzure_Solutions">
+        <a id="shellmenu_12" href="https://azure.microsoft.com/solutions/?v=4" ms.title="MicrosoftAzure_Solutions">Solutions</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftAzure_Pricing">
+        <a id="shellmenu_13" href="https://azure.microsoft.com/pricing/" ms.title="MicrosoftAzure_Pricing">Pricing</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftAzure_CreateaFreeAccount">
+        <a id="shellmenu_14" href="https://azure.microsoft.com/free" ms.title="MicrosoftAzure_CreateaFreeAccount">Create a free account</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="MicrosoftVisualStudio">
+
+        <button id="VisualStudio-navigation" aria-expanded="false" ms.title="MicrosoftVisualStudio" ms.interactiontype="14">Visual Studio </button>
+        <ul aria-labelledby="VisualStudio-navigation" aria-hidden="true">
+    <li ms.cmpnm="MicrosoftVisualStudio_VisualStudio">
+        <a id="shellmenu_16" href="https://www.visualstudio.com/ " ms.title="MicrosoftVisualStudio_VisualStudio">Visual Studio</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftVisualStudio_VisualStudioIDE">
+        <a id="shellmenu_17" href="https://www.visualstudio.com/vs/ " ms.title="MicrosoftVisualStudio_VisualStudioIDE">Visual Studio IDE</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftVisualStudio_VisualStudioTeamServices">
+        <a id="shellmenu_18" href="https://www.visualstudio.com/team-services/ " ms.title="MicrosoftVisualStudio_VisualStudioTeamServices">Visual Studio Team Services</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftVisualStudio_VisualStudioCode">
+        <a id="shellmenu_19" href="https://code.visualstudio.com" ms.title="MicrosoftVisualStudio_VisualStudioCode">Visual Studio Code</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftVisualStudio_Xamarin">
+        <a id="shellmenu_20" href="https://www.xamarin.com/" ms.title="MicrosoftVisualStudio_Xamarin">Xamarin</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftVisualStudio_VisualStudioDevEssentials">
+        <a id="shellmenu_21" href="https://www.visualstudio.com/dev-essentials/ " ms.title="MicrosoftVisualStudio_VisualStudioDevEssentials">Visual Studio Dev Essentials</a>
+        
+    </li>
+    <li ms.cmpnm="MicrosoftVisualStudio_Subscriptions">
+        <a id="shellmenu_22" href="https://www.visualstudio.com/subscriptions/" ms.title="MicrosoftVisualStudio_Subscriptions">Subscriptions</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Office">
+
+        <button id="Office-navigation" aria-expanded="false" ms.title="Office" ms.interactiontype="14">Office</button>
+        <ul aria-labelledby="Office-navigation" aria-hidden="true">
+    <li ms.cmpnm="Office_OfficeDevCenter">
+        <a id="shellmenu_24" href="https://dev.office.com/" ms.title="Office_OfficeDevCenter">Office Dev Center</a>
+        
+    </li>
+    <li ms.cmpnm="Office_Office365forITpros">
+        <a id="shellmenu_25" href="https://technet.microsoft.com/en-us/office/dn788774" ms.title="Office_Office365forITpros">Office 365 for IT pros</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li ms.cmpnm="Microsoft Graph">
+        <a id="shellmenu_26" href="https://Graph.microsoft.io/en-us/docs" ms.title="Microsoft Graph">Microsoft Graph</a>
+        
+    </li>
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Services ">
+
+        <button id="Services-navigation" aria-expanded="false" ms.title="Services " ms.interactiontype="14">Services </button>
+        <ul aria-labelledby="Services-navigation" aria-hidden="true">
+    <li ms.cmpnm="Services_OfficeDevCenter">
+        <a id="shellmenu_28" href="https://developer.microsoft.com/store" ms.title="Services_OfficeDevCenter">Store</a>
+        
+    </li>
+    <li ms.cmpnm="Services_Cortana">
+        <a id="shellmenu_29" href="https://developer.microsoft.com/cortana" ms.title="Services_Cortana">Cortana</a>
+        
+    </li>
+    <li ms.cmpnm="Services_Bing">
+        <a id="shellmenu_30" href="https://bing.com/dev/dev-center" ms.title="Services_Bing">Bing</a>
+        
+    </li>
+    <li ms.cmpnm="Services_ApplicationInsights">
+        <a id="shellmenu_31" href="https://azure.microsoft.com/services/application-insights" ms.title="Services_ApplicationInsights">Application Insights</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="c-uhf-menu js-nav-menu">
+
+                                <button id="Documentation-navigation" aria-expanded="false" aria-haspopup="true" ms.title="Documentation" ms.interactiontype="14" style="white-space:nowrap">Documentation</button>
+                                <ul aria-labelledby="Documentation-navigation" aria-hidden="true" ms.cmpnm="Documentation">
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Build_DeveloperCenters">
+
+        <button id="Platforms-navigation" aria-expanded="false" ms.title="Build_DeveloperCenters" ms.interactiontype="14">Platforms</button>
+        <ul aria-labelledby="Platforms-navigation" aria-hidden="true">
+    <li ms.cmpnm="Documentation_Platforms_.NET">
+        <a id="shellmenu_34" href="https://www.dot.net" ms.title="Documentation_Platforms_.NET">.NET</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_MicrosoftAzure">
+        <a id="shellmenu_35" href="https://azure.microsoft.com/en-us/documentation/" ms.title="Build_DeveloperCenters_MicrosoftAzure">Microsoft Azure</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_MicrosoftGraph">
+        <a id="shellmenu_36" href="https://Graph.microsoft.io/en-us/docs" ms.title="Build_DeveloperCenters_MicrosoftGraph">Microsoft Graph</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_VisualStudio">
+        <a id="shellmenu_37" href="https://www.visualstudio.com/vs/getting-started/" ms.title="Build_DeveloperCenters_VisualStudio">Visual Studio</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_VisualStudioTeamServices">
+        <a id="shellmenu_38" href="https://www.visualstudio.com/docs/overview" ms.title="Build_DeveloperCenters_VisualStudioTeamServices">Visual Studio Team Services</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_Windows">
+        <a id="shellmenu_39" href="https://docs.microsoft.com/en-us/windows" ms.title="Build_DeveloperCenters_Windows">Windows</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_Office">
+        <a id="shellmenu_40" href="https://dev.office.com/docs" ms.title="Build_DeveloperCenters_Office">Office</a>
+        
+    </li>
+    <li ms.cmpnm="Build_DeveloperCenters_AllDeveloperCenters">
+        <a id="shellmenu_41" href="https://developer.microsoft.com/en-us/ " ms.title="Build_DeveloperCenters_AllDeveloperCenters">All Developer Centers</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li ms.cmpnm="Learn_TechNet">
+        <a id="shellmenu_42" href="https://technet.microsoft.com" ms.title="Learn_TechNet">TechNet</a>
+        
+    </li>
+    <li ms.cmpnm="Learn_MicrosoftDeveloperNetwork">
+        <a id="shellmenu_43" href="https://msdn.microsoft.com" ms.title="Learn_MicrosoftDeveloperNetwork">Microsoft Developer Network</a>
+        
+    </li>
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Build_TechCenters">
+
+        <button id="ITTechCenters-navigation" aria-expanded="false" ms.title="Build_TechCenters" ms.interactiontype="14">IT TechCenters</button>
+        <ul aria-labelledby="ITTechCenters-navigation" aria-hidden="true">
+    <li ms.cmpnm="TechCenter_WindowsTechCenter">
+        <a id="shellmenu_45" href="https://technet.microsoft.com/windows" ms.title="TechCenter_WindowsTechCenter">Windows IT Center</a>
+        
+    </li>
+    <li ms.cmpnm="TechCenter_Office365forITpros">
+        <a id="shellmenu_46" href="https://technet.microsoft.com/en-us/office/dn788774" ms.title="TechCenter_Office365forITpros">Office 365 for IT Pros</a>
+        
+    </li>
+    <li ms.cmpnm="TechCenter_AllTechcenters">
+        <a id="shellmenu_47" href="https://technet.microsoft.com/en-us/bb421517.aspx?wt.svl=more_centers_link" ms.title="TechCenter_AllTechcenters">All IT TechCenters</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Build_Downloads">
+
+        <button id="Downloads-navigation" aria-expanded="false" ms.title="Build_Downloads" ms.interactiontype="14">Downloads</button>
+        <ul aria-labelledby="Downloads-navigation" aria-hidden="true">
+    <li ms.cmpnm="Build_Downloads_MicrosoftDownloadCenter">
+        <a id="shellmenu_49" href="https://www.microsoft.com/en-us/download/developer-tools.aspx" ms.title="Build_Downloads_MicrosoftDownloadCenter">Microsoft Download Center</a>
+        
+    </li>
+    <li ms.cmpnm="Build_Downloads_Microsoft Azure">
+        <a id="shellmenu_50" href="https://azure.microsoft.com/en-us/downloads/" ms.title="Build_Downloads_Microsoft Azure">Microsoft Azure</a>
+        
+    </li>
+    <li ms.cmpnm="Build_Downloads_VisualStudio">
+        <a id="shellmenu_51" href="https://www.visualstudio.com/downloads/" ms.title="Build_Downloads_VisualStudio">Visual Studio</a>
+        
+    </li>
+    <li ms.cmpnm="Build_Downloads_SDKS">
+        <a id="shellmenu_52" href="https://msdn.microsoft.com/en-us/microsoft-sdks-msdn" ms.title="Build_Downloads_SDKS">SDKs</a>
+        
+    </li>
+    <li ms.cmpnm="Build_Downloads_Windows">
+        <a id="shellmenu_53" href="https://developer.microsoft.com/en-us/windows/downloads " ms.title="Build_Downloads_Windows">Windows</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Build_Samples">
+
+        <button id="Codesamples-navigation" aria-expanded="false" ms.title="Build_Samples" ms.interactiontype="14">Code samples</button>
+        <ul aria-labelledby="Codesamples-navigation" aria-hidden="true">
+    <li ms.cmpnm="CodeSamples_Office">
+        <a id="shellmenu_55" href="https://dev.office.com/code-samples" ms.title="CodeSamples_Office">Office</a>
+        
+    </li>
+    <li ms.cmpnm="CodeSamples_MicrosoftGraph">
+        <a id="shellmenu_56" href="https://graph.microsoft.io/en-us/code-samples-and-sdks" ms.title="CodeSamples_MicrosoftGraph">Microsoft Graph</a>
+        
+    </li>
+    <li ms.cmpnm="CodeSamples_MSDN">
+        <a id="shellmenu_57" href="https://code.msdn.microsoft.com/" ms.title="CodeSamples_MSDN">MSDN</a>
+        
+    </li>
+    <li ms.cmpnm="CodeSamples_Azure">
+        <a id="shellmenu_58" href="https://azure.microsoft.com/en-us/resources/samples/" ms.title="CodeSamples_Azure">Azure</a>
+        
+    </li>
+    <li ms.cmpnm="CodeSamples_Windows">
+        <a id="shellmenu_59" href="https://developer.microsoft.com/en-us/windows/samples" ms.title="CodeSamples_Windows">Windows</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li ms.cmpnm="documentation_powershell_scripts">
+        <a id="shellmenu_60" href="https://technet.microsoft.com/scriptcenter" ms.title="documentation_powershell_scripts">PowerShell scripts</a>
+        
+    </li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="c-uhf-menu js-nav-menu">
+
+                                <button id="Resources-navigation" aria-expanded="false" aria-haspopup="true" ms.title="Resources " ms.interactiontype="14" style="white-space:nowrap">Resources</button>
+                                <ul aria-labelledby="Resources-navigation" aria-hidden="true" ms.cmpnm="Resources ">
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Connect_Blogs">
+
+        <button id="Blogs-navigation" aria-expanded="false" ms.title="Connect_Blogs" ms.interactiontype="14">Blogs</button>
+        <ul aria-labelledby="Blogs-navigation" aria-hidden="true">
+    <li ms.cmpnm="Connect_Blogs_MicrosoftAzure">
+        <a id="shellmenu_63" href="https://azure.microsoft.com/en-us/blog/" ms.title="Connect_Blogs_MicrosoftAzure">Microsoft Azure</a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Blogs_VisualStudio">
+        <a id="shellmenu_64" href="https://blogs.msdn.microsoft.com/visualstudio/" ms.title="Connect_Blogs_VisualStudio">Visual Studio</a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Blogs_VisualStudioTeamServices">
+        <a id="shellmenu_65" href="https://blogs.msdn.microsoft.com/visualstudioalm/" ms.title="Connect_Blogs_VisualStudioTeamServices">Visual Studio Team Services </a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Blogs_DevloperTools">
+        <a id="shellmenu_66" href="https://blogs.msdn.microsoft.com/developer-tools/" ms.title="Connect_Blogs_DevloperTools">Developer tools</a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Blogs_OfficeDevBlog">
+        <a id="shellmenu_67" href="https://dev.office.com/blogs" ms.title="Connect_Blogs_OfficeDevBlog">Office Dev Blog</a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Blogs_ServerandManagement">
+        <a id="shellmenu_68" href="https://blogs.technet.microsoft.com/server-management/" ms.title="Connect_Blogs_ServerandManagement">Server &amp; management</a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Blogs_Windows">
+        <a id="shellmenu_69" href="https://blogs.windows.com/buildingapps/ " ms.title="Connect_Blogs_Windows">Windows</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Resources_CommunityandForums">
+
+        <button id="Community&amp;Forums-navigation" aria-expanded="false" ms.title="Resources_CommunityandForums" ms.interactiontype="14">Community &amp; Forums</button>
+        <ul aria-labelledby="Community&amp;Forums-navigation" aria-hidden="true">
+    <li ms.cmpnm="CommunityandForums_Developers">
+        <a id="shellmenu_71" href="https://social.msdn.microsoft.com/forums/en-us/home" ms.title="CommunityandForums_Developers">Developers</a>
+        
+    </li>
+    <li ms.cmpnm="CommunityandForums_Technet">
+        <a id="shellmenu_72" href="https://social.technet.microsoft.com/forums/en-us/home" ms.title="CommunityandForums_Technet">TechNet</a>
+        
+    </li>
+    <li ms.cmpnm="CommunityandForums_MicrosoftTechCommunity">
+        <a id="shellmenu_73" href="https://techcommunity.microsoft.com/" ms.title="CommunityandForums_MicrosoftTechCommunity">Microsoft Tech Community</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Connect_CommunityandForums">
+
+        <button id="Subscriptions-navigation" aria-expanded="false" ms.title="Connect_CommunityandForums" ms.interactiontype="14">Subscriptions</button>
+        <ul aria-labelledby="Subscriptions-navigation" aria-hidden="true">
+    <li ms.cmpnm="Subscriptions_VisualStudioMSDNSubscriptions">
+        <a id="shellmenu_75" href="https://my.visualstudio.com/benefits?wt.mc_id=o~msft~uhf&amp;campaign=o~msft~uhf" ms.title="Subscriptions_VisualStudioMSDNSubscriptions">Visual Studio (MSDN) subscriptions</a>
+        
+    </li>
+    <li ms.cmpnm="Subscriptions_ITProCloudEssentials">
+        <a id="shellmenu_76" href="https://www.microsoft.com/cloudessentials" ms.title="Subscriptions_ITProCloudEssentials">Microsoft Cloud Essentials</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li class="f-sub-menu js-nav-menu" ms.cmpnm="Resources_Training">
+
+        <button id="Training-navigation" aria-expanded="false" ms.title="Resources_Training" ms.interactiontype="14">Training</button>
+        <ul aria-labelledby="Training-navigation" aria-hidden="true">
+    <li ms.cmpnm="Training_MicrosoftVirtualAcademy">
+        <a id="shellmenu_78" href="https://mva.microsoft.com/" ms.title="Training_MicrosoftVirtualAcademy">Microsoft Virtual Academy </a>
+        
+    </li>
+    <li ms.cmpnm="Training_ITProCareerCenter">
+        <a id="shellmenu_79" href="https://www.microsoft.com/itprocareercenter " ms.title="Training_ITProCareerCenter">IT Pro Career Center</a>
+        
+    </li>
+        </ul>
+        
+    </li>   
+    <li ms.cmpnm="Resources_TechNetEvaluationCenter">
+        <a id="shellmenu_80" href="https://www.microsoft.com/evalcenter/" ms.title="Resources_TechNetEvaluationCenter">TechNet Evaluation Center</a>
+        
+    </li>
+    <li ms.cmpnm="Connect_Channel9">
+        <a id="shellmenu_81" href="https://channel9.msdn.com/" ms.title="Connect_Channel9">Channel 9</a>
+        
+    </li>
+                                    
+                                </ul>
+                            </div>
+                        </li>
+            </ul>
+            
+        </nav>
+
+                <div ms.cmpgrp="Header actions">
+                            <form class="c-search" autocomplete="off" id="searchForm" name="searchForm" role="search" action="https://social.msdn.microsoft.com/search/windows" method="GET" data-seAutoSuggest="" data-seautosuggestapi="https://www.microsoft.com/services/api/v3/suggest" aria-expanded="false">
+            <input id="cli_shellHeaderSearchInput" aria-label="Search Dev Center" role="combobox" aria-autocomplete="list" aria-controls="universal-header-search-auto-suggest-transparent" type="search" name="query" placeholder="Search Dev Center" ms.title="SearchBox" />
+                <input type="hidden" name="Refinement" value="183" ms.title="HiddenInput" />
+            <button id="search" name="search" aria-label="Search" class="c-glyph" ms.title="Search" data-bi-dnt="true"></button>
+            <div class="m-auto-suggest" id="universal-header-search-auto-suggest-transparent" role="group">
+                <ul class="c-menu" aria-hidden="true" data-bi-dnt="true" data-js-auto-suggest-position="default" role="listbox" data-tel="wedcs" ms.cmpgrp="search suggestions"></ul>
+                <ul class="c-menu f-auto-suggest-no-results" aria-hidden="true" data-js-auto-suggest-postion="default" data-js-auto-suggest-position="default" tabindex="0">
+                    <li class="c-menu-item"> <span tabindex="-1">No results</span></li>
+                </ul>
+            </div>
+            
+        </form>
+
+                    
+                    
+                            <div id="meControl" class="c-me" data-signinsettings="{&quot;containerId&quot;:&quot;meControl&quot;,&quot;enabled&quot;:true,&quot;headerHeight&quot;:48,&quot;debug&quot;:false,&quot;extensibleLinks&quot;:[],&quot;userData&quot;:{&quot;idp&quot;:&quot;msa&quot;,&quot;firstName&quot;:&quot;&quot;,&quot;lastName&quot;:&quot;&quot;,&quot;memberName&quot;:&quot;&quot;,&quot;cid&quot;:&quot;&quot;,&quot;authenticatedState&quot;:&quot;3&quot;},&quot;rpData&quot;:{&quot;preferredIdp&quot;:&quot;msa&quot;,&quot;msaInfo&quot;:{&quot;signInUrl&quot;:&quot;/en-us/store/signin&quot;,&quot;signOutUrl&quot;:&quot;/en-us/store/signout&quot;,&quot;meUrl&quot;:&quot;https://login.live.com/me.srf?wa=wsignin1.0&quot;},&quot;aadInfo&quot;:{&quot;signOutUrl&quot;:&quot;/en-us/store/signout&quot;,&quot;appId&quot;:null,&quot;siteUrl&quot;:null,&quot;blockMsaFed&quot;:true}}}" ms.cmpgrp="Me Control">
+            <div class="msame_Header">
+                <div class="msame_Header_name">Sign in</div>
+            </div>
+            
+        </div>
+
+                    
+                </div>
+        </div>
+        
+        
+    </div>
+            <div class="theme-dark brand-neutral js-cat-head" itemprop="brand" itemscope="itemscope" itemtype="http://schema.org/Brand" ms.cmpgrp="UHF category nav">
+
+<div>
+        <a id="uhfCatLogo" class="c-logo" href="https://developer.microsoft.com/en-us/windows" aria-label="Windows Dev Center" itemprop="url" ms.title="Windows Dev Center">
+                <span>Windows Dev Center</span>
+        </a>
+    
+        <a id="dashboard" class="c-uhf-nav-link x-hidden-vp1 x-hidden-vp2" href="https://developer.microsoft.com/en-us/dashboard/apps/overview" ms.title="Dashboard">Dashboard</a>
+<button class="c-action-trigger c-glyph glyph-chevron-left" ms.title="Previous"></button>
+    
+    <button class="c-action-trigger c-glyph glyph-chevron-right" ms.title="Next"></button>
+            <nav id="uhf-c-nav" role="navigation" aria-labelledby="uhfCatLogo">
+
+<a id="windesktop_windowsdesktop" class=" c-uhf-nav-link" href="https://developer.microsoft.com/en-us/windows/desktop" ms.title="WinDesktop_WindowsDesktop">Windows desktop</a><a id="windesktop_getstarted" class=" c-uhf-nav-link" href="https://developer.microsoft.com/en-us/windows/desktop/getstarted" ms.title="WinDesktop_Getstarted">Get started</a><a id="windesktop_design" class=" c-uhf-nav-link" href="https://developer.microsoft.com/en-us/windows/desktop/design " ms.title="WinDesktop_Design">Design</a><a id="windesktop_develop" class=" c-uhf-nav-link" href="https://developer.microsoft.com/en-us/windows/desktop/develop " ms.title="WinDesktop_Develop">Develop</a><a id="windesktop_test" class=" c-uhf-nav-link" href="https://developer.microsoft.com/en-us/windows/desktop/test-deploy " ms.title="WinDesktop_Testdeploy">Test &amp; deploy</a><div class="c-uhf-menu js-nav-menu">
+                    <button id="resources_desktop-resources" aria-expanded="false" aria-haspopup="true" ms.title="winapps_desktop-resources">Resources</button>
+                    <ul class="" aria-labelledby="resources_desktop-resources" aria-hidden="true" ms.cmpnm="winapps_desktop-resources">
+    <li ms.cmpnm="resources_desktop-api-reference">
+        <a id="resources_desktop-api-reference" href="https://msdn.microsoft.com/library/windows/desktop/hh920508.aspx" ms.title="resources_desktop-api-reference">API reference</a>
+        
+    </li>
+    <li ms.cmpnm="winapps_downloads">
+        <a id="resources_downloads" href="https://developer.microsoft.com/en-us/windows/downloads" ms.title="winapps_downloads">Downloads</a>
+        
+    </li>
+    <li ms.cmpnm="winapps_samples">
+        <a id="resources_samples" href="https://developer.microsoft.com/en-us/windows/samples" ms.title="winapps_samples">Samples</a>
+        
+    </li>
+    <li ms.cmpnm="winapps_support">
+        <a id="resources_support" href="https://developer.microsoft.com/en-us/windows/support" ms.title="winapps_support">Support</a>
+        
+    </li>
+                        
+                    </ul>
+                </div><a id="mobile-dashboard" class=" c-uhf-nav-link x-hidden x-visible-vp1-block x-visible-vp2-block" href="https://developer.microsoft.com/en-us/dashboard/apps/overview" ms.title="Dashboard">Dashboard</a>                    </nav>
+
+</div>
+
+
+            
+        </div>
+
+    
+</header>
+
+
+    </div>
+            </div>
+
+    </section>
+
+    </div>
+    <input type="hidden" id="UhfSignInOutLink" value="https://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=13&amp;ct=1504232666&amp;rver=6.7.6640.0&amp;wp=MCMBI&amp;wlcxt=MSDN%24MSDN%24MSDN&amp;wreply=https%3a%2f%2fmsdn.microsoft.com%2fen-us%2flibrary%2fwindows%2fdesktop%2fms632599%2528v%3dvs.85%2529.aspx&amp;lc=1033&amp;id=254354&amp;mkt=en-US" />
+    
+    
+    
+
+
+
+
+
+
+
+
+    <div id="breadcrumbs">
+        <div id="breadcrumbDesktop" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff657751(v=vs.85).aspx" title="Desktop App UI"></a></span>
+                        <span><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632586(v=vs.85).aspx" title="Windows and Messages"><span>Windows and Messages</span></a></span>
+                        <span><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632595(v=vs.85).aspx" title="Windows"><span>Windows</span></a></span>
+                        <span class="breadcrumbDropSmall">
+                            <a id="breadcrumbDropDownButton" href="#" targethref="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632595(v=vs.85).aspx" title="Window Overviews"><span>Window Overviews</span></a>
+                        </span>
+        </div>
+        <div id="breadcrumbDropDownMenu"></div>
+
+        <div id="breadcrumbTablet" class="breadCrumb">
+                        <span class="breadcrumbEllipsis"><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632595(v=vs.85).aspx" title="Windows"></a></span>
+                    <span><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff468924(v=vs.85).aspx" title="Window Overviews"><span>Window Overviews</span></a></span>
+                <span class="breadcrumbDropSmall"><a id="tocDropDownButton" href="#" title="Window Features"><span>Window Features</span></a></span>
+        </div>
+        <div id="tocDropDownMenu"></div>
+        <div id="breadcrumbMobile" class="breadCrumb">
+                <span class="breadcrumbEllipsis"><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ff468924(v=vs.85).aspx" title="Window Overviews"></a></span>
+            <span class="breadcrumbDropSmall"><a id="tocPopupButton" href="#" title="Window Features"><span>Window Features</span></a></span>
+        </div>
+    </div>
+    <div id="tocPopupMenu">
+        <div id="tocPopMenuClose" class="tocCloseLarge"></div>
+        <div id="tocTitle">Window Features</div>
+    </div>
+
+
+        <div id="body" ms.pgarea="body" class="">
+            <span id="tabletView_large"></span>
+            <span id="tabletView_small"></span>
+            <span id="mobileView"></span>
+            
+
+
+
+
+
+
+
+    <div id="leftNav" ms.cmpgrp="left toc" role="navigation" aria-label="left toc">
+
+    
+
+
+<div id="tocnav" class="ArchiveV2">
+    <div class="tocunselected">
+        <div id="tocExpandArea">
+            <span class="toc_empty"></span>
+            <span id="tocExpandButton"><a href="javascript:void(0)" aria-label="expand sibling toc" role="button"></a></span>
+        </div>
+        <div id="tocExpand"></div>
+    </div>
+    <div class="tocselected"></div>
+    <div class="tocunselected">
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632597(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="About Windows">About Windows</a>                </div>
+                <div class="toclevel current" data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Window Features">Window Features</a>                </div>
+                <div class="toclevel " data-toclevel="1">
+<a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632598(v=vs.85).aspx" mtpsaliasid="" mtpsassetid="" mtpsshortid="" title="Using Windows">Using Windows</a>                </div>
+    </div>
+    <a id="tocMenuToggler" href="javascript:void(0)" role="button">
+        <span id="tocMenuTogglerIcon" class="tocMenuCollapse" role="button" aria-expanded="true" aria-label="Table of contents menu"></span>
+        <div id="tocMenuTogglerLabel">TOC</div>
+    </a>
+</div>            <div style="display:none">
+                <div id="CollapseLocalizeString">Collapse the table of content</div>
+                <div id="ExpandLocalizeString">Expand the table of content</div>
+            </div>
+        <div>
+            <a id="isd_archiveControlResponsive" style="display:none;" href="javascript:void(0)" role="button" aria-label="Hide Archived Versions" data-include-archive="Show Archived Versions" data-exclude-archive="Hide Archived Versions">
+            </a>
+            <div id="isd_archiveInstrument" style="display:none">This documentation is archived and is not being maintained.</div>
+        </div>
+    </div>
+     <div id="content" class="content" ms.cmpgrp="content body" role="main">
+
+
+
+
+
+
+
+
+    <div id="archiveDisclaimerText" style="display:none">This documentation is archived and is not being maintained.</div>
+
+
+
+
+<div class="topic" xmlns="http://www.w3.org/1999/xhtml">
+  <h1 class="title">Window Features</h1>
+  
+  <div id="mainSection">
+<div class="clsServerSDKContent">
+
+</div>
+<p>This overview discusses features of windows such as window types, states, size, and position.</p>
+<p>
+</p><ul>
+<li><a href="#types">Window Types</a><ul>
+<li><a href="#overlapped">Overlapped Windows</a></li>
+<li><a href="#popup">Pop-up Windows</a></li>
+<li><a href="#child">Child Windows</a></li>
+<li><a href="#layered">Layered Windows</a></li>
+<li><a href="#message_only">Message-Only Windows</a></li>
+</ul>
+</li>
+<li><a href="#relationships">Window Relationships</a><ul>
+<li><a href="#foreground">Foreground and Background Windows</a></li>
+<li><a href="#owned_windows">Owned Windows</a></li>
+<li><a href="#zorder">Z-Order</a></li>
+</ul>
+</li>
+<li><a href="#show_states">Window Show State</a><ul>
+<li><a href="#active">Active Window</a></li>
+<li><a href="#disabled">Disabled Windows</a></li>
+<li><a href="#visibility">Window Visibility</a></li>
+<li><a href="#min_max">Minimized, Maximized, and Restored Windows</a></li>
+</ul>
+</li>
+<li><a href="#size_position">Window Size and Position</a><ul>
+<li><a href="#default">Default Size and Position</a></li>
+<li><a href="#tracking">Tracking Size</a></li>
+<li><a href="#system_commands">System Commands</a></li>
+<li><a href="#functions">Size and Position Functions</a></li>
+<li><a href="#messages">Size and Position Messages</a></li>
+</ul>
+</li>
+<li><a href="#animation">Window Animation</a></li>
+<li><a href="#layout_mirroring">Window Layout and Mirroring</a><ul>
+<li><a href="#mirroring_boxes">Mirroring Dialog Boxes and Message Boxes</a></li>
+<li><a href="#mirroring_dc">Mirroring Device Contexts Not Associated with a Window</a></li>
+</ul>
+</li>
+<li><a href="#destruction">Window Destruction</a></li>
+</ul>
+
+<h2><a id="types"></a><a id="TYPES"></a>Window Types</h2>
+<p>This section contains the following topics that describe window types.</p>
+<p>
+</p><ul>
+<li><a href="#overlapped">Overlapped Windows</a></li>
+<li><a href="#popup">Pop-up Windows</a></li>
+<li><a href="#child">Child Windows</a></li>
+<li><a href="#layered">Layered Windows</a></li>
+<li><a href="#message_only">Message-Only Windows</a></li>
+</ul>
+
+<h3><a id="overlapped"></a><a id="OVERLAPPED"></a>Overlapped Windows</h3>
+<p>An <em>overlapped window</em> is a top-level window that has a title bar, border, and client area; it is meant to serve as an application's main window. It can also have a window menu, minimize and maximize buttons, and scroll bars. An overlapped window used as a main window typically includes all of these components.</p>
+<p>By specifying the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_OVERLAPPED</strong></a> or <strong>WS_OVERLAPPEDWINDOW</strong> style in the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function, an application creates an overlapped window. If you use the <strong>WS_OVERLAPPED</strong> style, the window has a title bar and border. If you use the <strong>WS_OVERLAPPEDWINDOW</strong> style, the window has a title bar, sizing border, window menu, and minimize and maximize buttons.</p>
+<h3><a id="popup"></a><a id="POPUP"></a>Pop-up Windows</h3>
+<p>A <em>pop-up window</em> is a special type of overlapped window used for dialog boxes, message boxes, and other temporary windows that appear outside an application's main window. Title bars are optional for pop-up windows; otherwise, pop-up windows are the same as overlapped windows of the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_OVERLAPPED</strong></a> style.</p>
+<p>You create a pop-up window by specifying the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_POPUP</strong></a> style in <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a>. To include a title bar, specify the <strong>WS_CAPTION</strong> style. Use the <strong>WS_POPUPWINDOW</strong> style to create a pop-up window that has a border and a window menu. The <strong>WS_CAPTION</strong> style must be combined with the <strong>WS_POPUPWINDOW</strong> style to make the window menu visible.</p>
+<h3><a id="child"></a><a id="CHILD"></a>Child Windows</h3>
+<p>A <em>child window</em> has the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_CHILD</strong></a> style and is confined to the client area of its parent window. An application typically uses child windows to divide the client area of a parent window into functional areas. You create a child window by specifying the <strong>WS_CHILD</strong> style in the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function.</p>
+<p>A child window must have a parent window. The parent window can be an overlapped window, a pop-up window, or even another child window. You specify the parent window when you call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a>. If you specify the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_CHILD</strong></a> style in <strong>CreateWindowEx</strong> but do not specify a parent window, the system does not create the window.</p>
+<p>A child window has a client area but no other features, unless they are explicitly requested. An application can request a title bar, a window menu, minimize and maximize buttons, a border, and scroll bars for a child window, but a child window cannot have a menu. If the application specifies a menu handle, either when it registers the child's window class or creates the child window, the menu handle is ignored. If no border style is specified, the system creates a borderless window. An application can use borderless child windows to divide a parent window's client area while keeping the divisions invisible to the user.</p>
+<p>This section discusses the following:</p>
+<p>
+</p><ul>
+<li><a href="#positioning">Positioning</a></li>
+<li><a href="#Clipping">Clipping</a></li>
+<li><a href="#relationship">Relationship to Parent Window</a></li>
+<li><a href="#Messages">Messages</a></li>
+</ul>
+
+<h3><a id="positioning"></a><a id="POSITIONING"></a>Positioning</h3>
+<p>The system always positions a child window relative to the upper left corner of its parent window's client area. No part of a child window ever appears outside the borders of its parent window. If an application creates a child window that is larger than the parent window or positions a child window so that some or all of the child window extends beyond the borders of the parent, the system clips the child window; that is, the portion outside the parent window's client area is not displayed. Actions that affect the parent window can also affect the child window, as follows.</p>
+<table class="clsStd" Responsive="true" summary="table">
+<tr Responsive="true"><th scope="col">Parent Window</th><th scope="col">Child Window</th></tr>
+<tr><td data-th="Parent Window">Destroyed</td><td data-th="Child Window">Destroyed before the parent window is destroyed.</td></tr>
+<tr><td data-th="Parent Window">Hidden</td><td data-th="Child Window">Hidden before the parent window is hidden. A child window is visible only when the parent window is visible.</td></tr>
+<tr><td data-th="Parent Window">Moved</td><td data-th="Child Window">Moved with the parent window's client area. The child window is responsible for painting its client area after the move.</td></tr>
+<tr><td data-th="Parent Window">Shown</td><td data-th="Child Window">Shown after the parent window is shown.</td></tr>
+</table>
+<p> </p>
+<h3><a id="Clipping"></a><a id="clipping"></a><a id="CLIPPING"></a>Clipping</h3>
+<p>The system does not automatically clip a child window from the parent window's client area. This means the parent window draws over the child window if it carries out any drawing in the same location as the child window. However, the system does clip the child window from the parent window's client area if the parent window has the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_CLIPCHILDREN</strong></a> style. If the child window is clipped, the parent window cannot draw over it.</p>
+<p>A child window can overlap other child windows in the same client area. A child window that shares the same parent window as one or more other child windows is called a <em>sibling window</em>. Sibling windows can draw in each other's client area, unless one of the child windows has the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_CLIPSIBLINGS</strong></a> style. If a child window does have this style, any portion of its sibling window that lies within the child window is clipped.</p>
+<p>If a window has either the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_CLIPCHILDREN</strong></a> or <strong>WS_CLIPSIBLINGS</strong> style, a slight loss in performance occurs. Each window takes up system resources, so an application should not use child windows indiscriminately. For best performance, an application that needs to logically divide its main window should do so in the window procedure of the main window rather than by using child windows.</p>
+<h3><a id="relationship"></a><a id="RELATIONSHIP"></a>Relationship to Parent Window</h3>
+<p>An application can change the parent window of an existing child window by calling the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633541(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetParent</strong></a> function. In this case, the system removes the child window from the client area of the old parent window and moves it to the client area of the new parent window. If <strong>SetParent</strong> specifies a <strong>NULL</strong> handle, the desktop window becomes the new parent window. In this case, the child window is drawn on the desktop, outside the borders of any other window. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633510(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetParent</strong></a> function retrieves a handle to a child window's parent window.</p>
+<p>The parent window relinquishes a portion of its client area to a child window, and the child window receives all input from this area. The window class need not be the same for each of the child windows of the parent window. This means that an application can fill a parent window with child windows that look different and carry out different tasks. For example, a dialog box can contain many types of controls, each one a child window that accepts different types of data from the user.</p>
+<p>A child window has only one parent window, but a parent can have any number of child windows. Each child window, in turn, can have child windows. In this chain of windows, each child window is called a descendant window of the original parent window. An application uses the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633524(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IsChild</strong></a> function to discover whether a given window is a child window or a descendant window of a given parent window.</p>
+<p>The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633494(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">EnumChildWindows</strong></a> function enumerates the child windows of a parent window. Then, <strong>EnumChildWindows</strong> passes the handle to each child window to an application-defined callback function. Descendant windows of the given parent window are also enumerated.</p>
+<h3><a id="Messages"></a><a id="messages"></a><a id="MESSAGES"></a>Messages</h3>
+<p>The system passes a child window's input messages directly to the child window; the messages are not passed through the parent window. The only exception is if the child window has been disabled by the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646291(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">EnableWindow</strong></a> function. In this case, the system passes any input messages that would have gone to the child window to the parent window instead. This permits the parent window to examine the input messages and enable the child window, if necessary.</p>
+<p>A child window can have a unique integer identifier. Child window identifiers are important when working with control windows. An application directs a control's activity by sending it messages. The application uses the control's child window identifier to direct the messages to the control. In addition, a control sends notification messages to its parent window. A notification message includes the control's child window identifier, which the parent uses to identify which control sent the message. An application specifies the child-window identifier for other types of child windows by setting the <em>hMenu</em> parameter of the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function to a value rather than a menu handle.</p>
+<h3><a id="layered"></a><a id="LAYERED"></a>Layered Windows</h3>
+<p>Using a layered window can significantly improve performance and visual effects for a window that has a complex shape, animates its shape, or wishes to use alpha blending effects. The system automatically composes and repaints layered windows and the windows of underlying applications. As a result, layered windows are rendered smoothly, without the flickering typical of complex window regions. In addition, layered windows can be partially translucent, that is, alpha-blended.</p>
+<p>To create a layered window, specify the <strong>WS_EX_LAYERED</strong> extended window style when calling the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function, or call the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowLong</strong></a> function to set <strong>WS_EX_LAYERED</strong> after the window has been created. After the <strong>CreateWindowEx</strong> call, the layered window will not become visible until the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633540(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayeredWindowAttributes</strong></a> or <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633556(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">UpdateLayeredWindow</strong></a> function has been called for this window. </p>
+<div class="alert"><strong>Note</strong>  Beginning with Windows 8, <strong>WS_EX_LAYERED</strong> can be used with child windows and top-level windows. Previous Windows versions support <strong>WS_EX_LAYERED</strong> only for top-level windows. </div>
+<div> </div>
+<p>To set the opacity level or the transparency color key for a given layered window, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633540(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayeredWindowAttributes</strong></a>. After the call, the system may still ask the window to paint when the window is shown or resized. However, because the system stores the image of a layered window, the system will not ask the window to paint if parts of it are revealed as a result of relative window moves on the desktop. Legacy applications do not need to restructure their painting code if they want to add translucency or transparency effects for a window, because the system redirects the painting of windows that called <strong>SetLayeredWindowAttributes</strong> into off-screen memory and recomposes it to achieve the desired effect.</p>
+<p>For faster and more efficient animation or if per-pixel alpha is needed, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633556(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">UpdateLayeredWindow</strong></a>. <strong>UpdateLayeredWindow</strong> should be used primarily when the application must directly supply the shape and content of a layered window, without using the redirection mechanism the system provides through <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633540(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayeredWindowAttributes</strong></a>. In addition, using <strong>UpdateLayeredWindow</strong> directly uses memory more efficiently, because the system does not need the additional memory required for storing the image of the redirected window. For maximum efficiency in animating windows, call <strong>UpdateLayeredWindow</strong> to change the position and the size of a layered window. Please note that after <strong>SetLayeredWindowAttributes</strong> has been called, subsequent <strong>UpdateLayeredWindow</strong> calls will fail until the layering style bit is cleared and set again.</p>
+<p>Hit testing of a layered window is based on the shape and transparency of the window. This means that the areas of the window that are color-keyed or whose alpha value is zero will let the mouse messages through. However, if the layered window has the <strong>WS_EX_TRANSPARENT</strong> extended window style, the shape of the layered window will be ignored and the mouse events will be passed to other windows underneath the layered window.</p>
+<h3><a id="message_only"></a><a id="MESSAGE_ONLY"></a>Message-Only Windows</h3>
+<p>A <em>message-only window</em> enables you to send and receive messages. It is not visible, has no z-order, cannot be enumerated, and does not receive broadcast messages. The window simply dispatches messages.</p>
+<p>To create a message-only window, specify the <a href="#message_only">HWND_MESSAGE</a> constant or a handle to an existing message-only window in the <em>hWndParent</em> parameter of the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function. You can also change an existing window to a message-only window by specifying HWND_MESSAGE in the <em>hWndNewParent</em> parameter of the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633541(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetParent</strong></a> function.</p>
+<p>To find message-only windows, specify <a href="#message_only">HWND_MESSAGE</a> in the <em>hwndParent</em> parameter of the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633500(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">FindWindowEx</strong></a> function. In addition, <strong>FindWindowEx</strong> searches message-only windows as well as top-level windows if both the <em>hwndParent</em> and <em>hwndChildAfter</em> parameters are <strong>NULL</strong>.</p>
+<h2><a id="relationships"></a><a id="RELATIONSHIPS"></a>Window Relationships</h2>
+<p>There are many ways that a window can relate to the user or another window. A window may be an owned window, foreground window, or background window. A window also has a z-order relative to other windows. For more information, see the following topics: </p>
+<p>
+</p><ul>
+<li><a href="#foreground">Foreground and Background Windows</a></li>
+<li><a href="#owned_windows">Owned Windows</a></li>
+<li><a href="#zorder">Z-Order</a></li>
+</ul>
+
+<h3><a id="foreground"></a><a id="FOREGROUND"></a>Foreground and Background Windows</h3>
+<p>Each process can have multiple threads of execution, and each thread can create windows. The thread that created the window with which the user is currently working is called the foreground thread, and the window is called the <em>foreground window</em>. All other threads are background threads, and the windows created by background threads are called <em>background windows</em>.</p>
+<p>Each thread has a priority level that determines the amount of CPU time the thread receives. Although an application can set the priority level of its threads, normally the foreground thread has a slightly higher priority level than the background threads. Because it has a higher priority, the foreground thread receives more CPU time than the background threads. The foreground thread has a normal base priority of 9; a background thread has a normal base priority of 7.</p>
+<p>The user sets the foreground window by clicking a window, or by using the ALT+TAB or ALT+ESC key combination. To retrieve a handle to the foreground window, use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633505(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetForegroundWindow</strong></a> function. To check if your application window is the foreground window, compare the handle returned by <strong>GetForegroundWindow</strong> to that of your application window.</p>
+<p>An application sets the foreground window by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetForegroundWindow</strong></a> function.</p>
+<p> The system restricts which processes can set the foreground window. A process can set the foreground window only if one of the following conditions is true: </p>
+<ul>
+<li>The process is the foreground process. </li>
+<li>The process was started by the foreground process. </li>
+<li>The process received the last input event. </li>
+<li>There is no foreground process. </li>
+<li>The foreground process is being debugged. </li>
+<li>The foreground is not locked (see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633532(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">LockSetForegroundWindow</strong></a>). </li>
+<li>The foreground lock time-out has expired (see <strong>SPI_GETFOREGROUNDLOCKTIMEOUT</strong> in <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724947(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SystemParametersInfo</strong></a>). </li>
+<li> No menus are active. </li>
+</ul>
+<p> A process that can set the foreground window can enable another process to set the foreground window by calling the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632668(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">AllowSetForegroundWindow</strong></a> function, or by calling the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms644932(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">BroadcastSystemMessage</strong></a> function with the <strong>BSF_ALLOWSFW</strong> flag. The foreground process can disable calls to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetForegroundWindow</strong></a> by calling the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633532(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">LockSetForegroundWindow</strong></a> function.</p>
+<h3><a id="owned_windows"></a><a id="OWNED_WINDOWS"></a>Owned Windows</h3>
+<p>An overlapped or pop-up window can be owned by another overlapped or pop-up window. Being owned places several constraints on a window.</p>
+<ul>
+<li>An owned window is always above its owner in the z-order. </li>
+<li>The system automatically destroys an owned window when its owner is destroyed. </li>
+<li>An owned window is hidden when its owner is minimized. </li>
+</ul>
+<p>Only an overlapped or pop-up window can be an owner window; a child window cannot be an owner window. An application creates an owned window by specifying the owner's window handle as the <em>hwndParent</em> parameter of <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> when it creates a window with the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_OVERLAPPED</strong></a> or <strong>WS_POPUP</strong> style. The <em>hwndParent</em> parameter must identify an overlapped or pop-up window. If <em>hwndParent</em> identifies a child window, the system assigns ownership to the top-level parent window of the child window. After creating an owned window, an application cannot transfer ownership of the window to another window.</p>
+<p>Dialog boxes and message boxes are owned windows by default. An application specifies the owner window when calling a function that creates a dialog box or message box.</p>
+<p>An application can use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633515(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetWindow</strong></a> function with the <strong>GW_OWNER</strong> flag to retrieve a handle to a window's owner.</p>
+<h3><a id="zorder"></a><a id="ZORDER"></a>Z-Order</h3>
+<p>The <em>z-order</em> of a window indicates the window's position in a stack of overlapping windows. This window stack is oriented along an imaginary axis, the z-axis, extending outward from the screen. The window at the top of the z-order overlaps all other windows. The window at the bottom of the z-order is overlapped by all other windows.</p>
+<p>The system maintains the z-order in a single list. It adds windows to the z-order based on whether they are topmost windows, top-level windows, or child windows. A <em>topmost window</em> overlaps all other non-topmost windows, regardless of whether it is the active or foreground window. A topmost window has the <strong>WS_EX_TOPMOST</strong> style. All topmost windows appear in the z-order before any non-topmost windows. A child window is grouped with its parent in z-order.</p>
+<p>When an application creates a window, the system puts it at the top of the z-order for windows of the same type. You can use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632673(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">BringWindowToTop</strong></a> function to bring a window to the top of the z-order for windows of the same type. You can rearrange the z-order by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPos</strong></a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632681(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DeferWindowPos</strong></a> functions.</p>
+<p>The user changes the z-order by activating a different window. The system positions the active window at the top of the z-order for windows of the same type. When a window comes to the top of z-order, so do its child windows. You can use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633514(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetTopWindow</strong></a> function to search all child windows of a parent window and return a handle to the child window that is highest in z-order. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633509(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetNextWindow</strong></a> function retrieves a handle to the next or previous window in z-order.</p>
+<h2><a id="show_states"></a><a id="SHOW_STATES"></a>Window Show State</h2>
+<p>At any one given time, a window may be active or inactive; hidden or visible; and minimized, maximized, or restored. These qualities are referred to collectively as the <em>window show state</em>. The following topics discuss the window show state:</p>
+<p>
+</p><ul>
+<li><a href="#active">Active Window</a></li>
+<li><a href="#disabled">Disabled Windows</a></li>
+<li><a href="#visibility">Window Visibility</a></li>
+<li><a href="#min_max">Minimized, Maximized, and Restored Windows</a></li>
+</ul>
+
+<h3><a id="active"></a><a id="ACTIVE"></a>Active Window</h3>
+<p>An <em>active window</em> is the top-level window of the application with which the user is currently working. To allow the user to easily identify the active window, the system places it at the top of the z-order and changes the color of its title bar and border to the system-defined active window colors. Only a top-level window can be an active window. When the user is working with a child window, the system activates the top-level parent window associated with the child window.</p>
+<p>Only one top-level window in the system is active at a time. The user activates a top-level window by clicking it (or one of its child windows), or by using the ALT+ESC or ALT+TAB key combination. An application activates a top-level window by calling the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646311(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetActiveWindow</strong></a> function. Other functions can cause the system to activate a different top-level window, including <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPos</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632681(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DeferWindowPos</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633544(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPlacement</strong></a>, and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DestroyWindow</strong></a>. Although an application can activate a different top-level window at any time, to avoid confusing the user, it should do so only in response to a user action. An application uses the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646292(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetActiveWindow</strong></a> function to retrieve a handle to the active window.</p>
+<p>When the activation changes from a top-level window of one application to the top-level window of another, the system sends a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632614(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_ACTIVATEAPP</strong></a> message to both applications, notifying them of the change. When the activation changes to a different top-level window in the same application, the system sends both windows a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646274(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_ACTIVATE</strong></a> message.</p>
+<h3><a id="disabled"></a><a id="DISABLED"></a>Disabled Windows</h3>
+<p>A window can be disabled. A <em>disabled window</em> receives no keyboard or mouse input from the user, but it can receive messages from other windows, from other applications, and from the system. An application typically disables a window to prevent the user from using the window. For example, an application may disable a push button in a dialog box to prevent the user from choosing it. An application can enable a disabled window at any time; enabling a window restores normal input.</p>
+<p>By default, a window is enabled when created. An application can specify the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_DISABLED</strong></a> style, however, to disable a new window. An application enables or disables an existing window by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646291(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">EnableWindow</strong></a> function. The system sends a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632621(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_ENABLE</strong></a> message to a window when its enabled state is about to change. An application can determine whether a window is enabled by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646303(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IsWindowEnabled</strong></a> function.</p>
+<p>When a child window is disabled, the system passes the child's mouse input messages to the parent window. The parent uses the messages to determine whether to enable the child window. For more information, see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645533(v=vs.85).aspx">Mouse Input</a>.</p>
+<p>Only one window at a time can receive keyboard input; that window is said to have the keyboard focus. If an application uses the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646291(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">EnableWindow</strong></a> function to disable a keyboard-focus window, the window loses the keyboard focus in addition to being disabled. <strong>EnableWindow</strong> then sets the keyboard focus to <strong>NULL</strong>, meaning no window has the focus. If a child window, or other descendant window, has the keyboard focus, the descendant window loses the focus when the parent window is disabled. For more information, see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645530(v=vs.85).aspx">Keyboard Input</a>.</p>
+<h3><a id="visibility"></a><a id="VISIBILITY"></a>Window Visibility</h3>
+<p>A window can be either visible or hidden. The system displays a <em>visible window</em> on the screen. It hides a <em>hidden window</em> by not drawing it. If a window is visible, the user can supply input to the window and view the window's output. If a window is hidden, it is effectively disabled. A hidden window can process messages from the system or from other windows, but it cannot process input from the user or display output. An application sets a window's visibility state when creating the window. Later, the application can change the visibility state.</p>
+<p>A window is visible when the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_VISIBLE</strong></a> style is set for the window. By default, the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function creates a hidden window unless the application specifies the <strong>WS_VISIBLE</strong> style. Typically, an application sets the <strong>WS_VISIBLE</strong> style after it has created a window to keep details of the creation process hidden from the user. For example, an application may keep a new window hidden while it customizes the window's appearance. If the <strong>WS_VISIBLE</strong> style is specified in <strong>CreateWindowEx</strong>, the system sends the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632645(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_SHOWWINDOW</strong></a> message to the window after creating the window, but before displaying it.</p>
+<p>An application can determine whether a window is visible by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633530(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IsWindowVisible</strong></a> function. An application can show (make visible) or hide a window by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ShowWindow</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPos</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632681(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DeferWindowPos</strong></a>, or <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633544(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPlacement</strong></a> or <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowLong</strong></a> function. These functions show or hide a window by setting or removing the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_VISIBLE</strong></a> style for the window. They also send the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632645(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_SHOWWINDOW</strong></a> message to the window before showing or hiding it.</p>
+<p>When an owner window is minimized, the system automatically hides the associated owned windows. Similarly, when an owner window is restored, the system automatically shows the associated owned windows. In both cases, the system sends the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632645(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_SHOWWINDOW</strong></a> message to the owned windows before hiding or showing them. Occasionally, an application may need to hide the owned windows without having to minimize or hide the owner. In this case, the application uses the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633547(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ShowOwnedPopups</strong></a> function. This function sets or removes the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_VISIBLE</strong></a> style for all owned windows and sends the <strong>WM_SHOWWINDOW</strong> message to the owned windows before hiding or showing them. Hiding an owner window has no effect on the visibility state of the owned windows.</p>
+<p>When a parent window is visible, its associated child windows are also visible. Similarly, when the parent window is hidden, its child windows are also hidden. Minimizing the parent window has no effect on the visibility state of the child windows; that is, the child windows are minimized along with the parent, but the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_VISIBLE</strong></a> style is not changed.</p>
+<p>Even if a window has the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_VISIBLE</strong></a> style, the user may not be able to see the window on the screen; other windows may completely overlap it or it may have been moved beyond the edge of the screen. Also, a visible child window is subject to the clipping rules established by its parent-child relationship. If the window's parent window is not visible, it will also not be visible. If the parent window moves beyond the edge of the screen, the child window also moves because a child window is drawn relative to the parent's upper left corner. For example, a user may move the parent window containing the child window far enough off the edge of the screen that the user may not be able to see the child window, even though the child window and its parent window both have the <strong>WS_VISIBLE</strong> style.</p>
+<h3><a id="min_max"></a><a id="MIN_MAX"></a>Minimized, Maximized, and Restored Windows</h3>
+<p>A <em>maximized window</em> is a window that has the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_MAXIMIZE</strong></a> style. By default, the system enlarges a maximized window so that it fills the screen or, in the case of a child window, the parent window's client area. Although a window's size can be set to the same size of a maximized window, a maximized window is slightly different. The system automatically moves the window's title bar to the top of the screen or to the top of the parent window's client area. Also, the system disables the window's sizing border and the window-positioning capability of the title bar (so that the user cannot move the window by dragging the title bar).</p>
+<p>A <em>minimized window</em> is a window that has the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_MINIMIZE</strong></a> style. By default, the system reduces a minimized window to the size of its taskbar button and moves the minimized window to the taskbar. A <em>restored window</em> is a window that has been returned to its previous size and position, that is, the size it was before it was minimized or maximized.</p>
+<p>If an application specifies the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_MAXIMIZE</strong></a> or <strong>WS_MINIMIZE</strong> style in the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> function, the window is initially maximized or minimized. After creating a window, an application can use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632678(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CloseWindow</strong></a> function to minimize the window. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632671(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ArrangeIconicWindows</strong></a> function arranges the icons on the desktop, or it arranges a parent window's minimized child windows in the parent window. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633535(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">OpenIcon</strong></a> function restores a minimized window to its previous size and position.</p>
+<p>The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ShowWindow</strong></a> function can minimize, maximize, or restore a window. It can also set the window's visibility and activation states. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633544(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPlacement</strong></a> function includes the same functionality as <strong>ShowWindow</strong>, but it can override the window's default minimized, maximized, and restored positions.</p>
+<p>The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633531(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IsZoomed</strong></a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633527(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">IsIconic</strong></a> functions determine whether a given window is maximized or minimized, respectively. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633518(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetWindowPlacement</strong></a> function retrieves the minimized, maximized, and restored positions for the window, and also determines the window's show state.</p>
+<p>When the system receives a command to maximize or restore a minimized window, it sends the window a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632640(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_QUERYOPEN</strong></a> message. If the window procedure returns <strong>FALSE</strong>, the system ignores the maximize or restore command.</p>
+<p>The system automatically sets the size and position of a maximized window to the system-defined defaults for a maximized window. To override these defaults, an application can either call the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633544(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPlacement</strong></a> function or process the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632626(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_GETMINMAXINFO</strong></a> message that is received by a window when the system is about to maximize the window. <strong>WM_GETMINMAXINFO</strong> includes a pointer to a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632605(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MINMAXINFO</strong></a> structure containing values the system uses to set the maximized size and position. Replacing these values overrides the defaults.</p>
+<h2><a id="size_position"></a><a id="SIZE_POSITION"></a>Window Size and Position</h2>
+<p>A window's size and position are expressed as a bounding rectangle, given in coordinates relative to the screen or the parent window. The coordinates of a top-level window are relative to the upper left corner of the screen; the coordinates of a child window are relative to the upper left corner of the parent window. An application specifies a window's initial size and position when it creates the window, but it can change the window's size and position at any time. For more information, see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162714(v=vs.85).aspx">Filled Shapes</a>.</p>
+<p>This section contains the following topics:</p>
+<p>
+</p><ul>
+<li><a href="#default">Default Size and Position</a></li>
+<li><a href="#tracking">Tracking Size</a></li>
+<li><a href="#system_commands">System Commands</a></li>
+<li><a href="#functions">Size and Position Functions</a></li>
+<li><a href="#messages">Size and Position Messages</a></li>
+</ul>
+
+<h3><a id="default"></a><a id="DEFAULT"></a>Default Size and Position</h3>
+<p>An application can allow the system to calculate the initial size or position of a top-level window by specifying CW_USEDEFAULT in <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a>. If the application sets the window's coordinates to CW_USEDEFAULT and has created no other top-level windows, the system sets the new window's position relative to the upper left corner of the screen; otherwise, it sets the position relative to the position of the top-level window that the application created most recently. If the width and height parameters are set to CW_USEDEFAULT, the system calculates the size of the new window. If the application has created other top-level windows, the system bases the size of the new window on the size of the application's most recently created top-level window. Specifying CW_USEDEFAULT when creating a child or pop-up window causes the system to set the window's size to the default minimum window size.</p>
+<h3><a id="tracking"></a><a id="TRACKING"></a>Tracking Size</h3>
+<p>The system maintains a minimum and maximum tracking size for a window of the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_THICKFRAME</strong></a> style; a window with this style has a sizing border. The <em>minimum tracking size</em> is the smallest window size you can produce by dragging the window's sizing border. Similarly, the <em>maximum tracking size</em> is the largest window size you can produce by dragging the sizing border.</p>
+<p>A window's minimum and maximum tracking sizes are set to system-defined default values when the system creates the window. An application can discover the defaults and override them by processing the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632626(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_GETMINMAXINFO</strong></a> message. For more information, see <a href="#messages">Size and Position Messages</a>.</p>
+<h3><a id="system_commands"></a><a id="SYSTEM_COMMANDS"></a>System Commands</h3>
+<p>An application that has a window menu can change the size and position of that window by sending system commands. System commands are generated when the user chooses commands from the window menu. An application can emulate the user action by sending a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_SYSCOMMAND</strong></a> message to the window. The following system commands affect the size and position of a window.</p>
+<table class="clsStd" Responsive="true" summary="table">
+<tr Responsive="true"><th scope="col">Command</th><th scope="col">Description</th></tr>
+<tr><td data-th="Command">SC_CLOSE</td><td data-th="Description">Closes the window. This command sends a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632617(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_CLOSE</strong></a> message to the window. The window carries out any steps needed to clean up and destroy itself.</td></tr>
+<tr><td data-th="Command">SC_MAXIMIZE</td><td data-th="Description">Maximizes the window.</td></tr>
+<tr><td data-th="Command">SC_MINIMIZE</td><td data-th="Description">Minimizes the window.</td></tr>
+<tr><td data-th="Command">SC_MOVE</td><td data-th="Description">Moves the window.</td></tr>
+<tr><td data-th="Command">SC_RESTORE</td><td data-th="Description">Restores a minimized or maximized window to its previous size and position.</td></tr>
+<tr><td data-th="Command">SC_SIZE</td><td data-th="Description">Starts a size command. To change the size of the window, use the mouse or keyboard.</td></tr>
+</table>
+<p> </p>
+<h3><a id="functions"></a><a id="FUNCTIONS"></a>Size and Position Functions</h3>
+<p>After creating a window, an application can set the window's size or position by calling one of several different functions, including <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633544(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPlacement</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633534(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MoveWindow</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPos</strong></a>, and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632681(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DeferWindowPos</strong></a>. <strong>SetWindowPlacement</strong> sets a window's minimized position, maximized position, restored size and position, and show state. The <strong>MoveWindow</strong> and <strong>SetWindowPos</strong> functions are similar; both set the size or position of a single application window. The <strong>SetWindowPos</strong> function includes a set of flags that affect the window's show state; <strong>MoveWindow</strong> does not include these flags. Use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632672(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">BeginDeferWindowPos</strong></a>, <strong>DeferWindowPos</strong>, and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633440(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">EndDeferWindowPos</strong></a> functions to simultaneously set the position of a number of windows, including the size, position, position in the z-order, and show state.</p>
+<p>An application can retrieve the coordinates of a window's bounding rectangle by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633519(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetWindowRect</strong></a> function. <strong>GetWindowRect</strong> fills a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162897(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">RECT</strong></a> structure with the coordinates of the window's upper left and lower right corners. The coordinates are relative to the upper left corner of the screen, even for a child window. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162952(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ScreenToClient</strong></a> or <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd145046(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MapWindowPoints</strong></a> function maps the screen coordinates of a child window's bounding rectangle to coordinates relative to the parent window's client area.</p>
+<p>The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633503(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetClientRect</strong></a> function retrieves the coordinates of a window's client area. <strong>GetClientRect</strong> fills a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162897(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">RECT</strong></a> structure with the coordinates of the upper left and lower right corners of the client area, but the coordinates are relative to the client area itself. This means the coordinates of a client area's upper left corner are always (0,0), and the coordinates of the lower right corner are the width and height of the client area.</p>
+<p>The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632674(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CascadeWindows</strong></a> function cascades the windows on the desktop or cascades the child windows of the specified parent window. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633554(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">TileWindows</strong></a> function tiles the windows on the desktop or tiles the child windows of the specified parent window.</p>
+<h3><a id="messages"></a><a id="MESSAGES"></a>Size and Position Messages</h3>
+<p>The system sends the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632626(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_GETMINMAXINFO</strong></a> message to a window whose size or position is about to change. For example, the message is sent when the user clicks <strong>Move</strong> or <strong>Size</strong> from the window menu or clicks the sizing border or title bar; the message is also sent when an application calls <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633545(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowPos</strong></a> to move or size the window. <strong>WM_GETMINMAXINFO</strong> includes a pointer to a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632605(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MINMAXINFO</strong></a> structure containing the default maximized size and position for the window, as well as the default minimum and maximum tracking sizes. An application can override the defaults by processing <strong>WM_GETMINMAXINFO</strong> and setting the appropriate members of <strong>MINMAXINFO</strong>. A window must have the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_THICKFRAME</strong></a> or <strong>WS_CAPTION</strong> style to receive <strong>WM_GETMINMAXINFO</strong>. A window with the <strong>WS_THICKFRAME</strong> style receives this message during the window-creation process, as well as when it is being moved or sized.</p>
+<p>The system sends the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632653(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_WINDOWPOSCHANGING</strong></a> message to a window whose size, position, position in the z-order, or show state is about to change. This message includes a pointer to a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632612(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WINDOWPOS</strong></a> structure that specifies the window's new size, position, position in the z-order, and show state. By setting the members of <strong>WINDOWPOS</strong>, an application can affect the window's new size, position, and appearance.</p>
+<p>After changing a window's size, position, position in the z-order, or show state, the system sends the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632652(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_WINDOWPOSCHANGED</strong></a> message to the window. This message includes a pointer to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632612(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WINDOWPOS</strong></a> that informs the window of its new size, position, position in the z-order, and show state. Setting the members of the <strong>WINDOWPOS</strong> structure that is passed with <strong>WM_WINDOWPOSCHANGED</strong> has no effect on the window. A window that must process <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632646(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_SIZE</strong></a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632631(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_MOVE</strong></a> messages must pass <strong>WM_WINDOWPOSCHANGED</strong> to the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633572(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DefWindowProc</strong></a> function; otherwise, the system does not send <strong>WM_SIZE</strong> and <strong>WM_MOVE</strong> messages to the window.</p>
+<p>The system sends the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632634(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_NCCALCSIZE</strong></a> message to a window when the window is created or sized. The system uses the message to calculate the size of a window's client area and the position of the client area relative to the upper left corner of the window. A window typically passes this message to the default window procedure; however, this message can be useful in applications that customize a window's nonclient area or preserve portions of the client area when the window is sized. For more information, see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162759(v=vs.85).aspx">Painting and Drawing</a>.</p>
+<h2><a id="animation"></a><a id="ANIMATION"></a>Window Animation</h2>
+<p>You can produce special effects when showing or hiding windows by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632669(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">AnimateWindow</strong></a> function. When the window is animated in this manner, the system will either roll, slide, or fade the window, depending on the flags you specify in a call to <strong>AnimateWindow</strong>.</p>
+<p>By default, the system uses <em>roll animation</em>. With this effect, the window appears to roll open (showing the window) or roll closed (hiding the window). You can use the <em>dwFlags</em> parameter to specify whether the window rolls horizontally, vertically, or diagonally.</p>
+<p>When you specify the <strong>AW_SLIDE</strong> flag, the system uses <em>slide animation</em>. With this effect, the window appears to slide into view (showing the window) or slide out of view (hiding the window). You can use the <em>dwFlags</em> parameter to specify whether the window slides horizontally, vertically, or diagonally.</p>
+<p>When you specify the <strong>AW_BLEND</strong> flag, the system uses an <em>alpha-blended fade</em>.</p>
+<p>You can also use the <strong>AW_CENTER</strong> flag to make a window appear to collapse inward or expand outward.</p>
+<h2><a id="layout_mirroring"></a><a id="LAYOUT_MIRRORING"></a>Window Layout and Mirroring</h2>
+<p>The window layout defines how text and Windows Graphics Device Interface (GDI) objects are laid out in a window or device context (DC). Some languages, such as English, French, and German, require a left-to-right (LTR) layout. Other languages, such as Arabic and Hebrew, require right-to-left (RTL) layout. The window layout applies to text but also affects the other GDI elements of the window, including bitmaps, icons, the location of the origin, buttons, cascading tree controls, and whether the horizontal coordinate increases as you go left or right. For example, after an application has set RTL layout, the origin is positioned at the right edge of the window or device, and the number representing the horizontal coordinate increases as you move left. However, not all objects are affected by the layout of a window. For example, the layout for dialog boxes, message boxes, and device contexts that are not associated with a window, such as metafile and printer DCs, must be handled separately. Specifics for these are mentioned later in this topic.</p>
+<p>The window functions allow you to specify or change the window layout in Arabic and Hebrew versions of Windows. Note that changing to a RTL layout (also known as mirroring) is not supported for windows that have the style <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633574(v=vs.85).aspx#class_styles">CS_OWNDC</a> or for a DC with the GM_ADVANCED graphic mode.</p>
+<p>By default, the window layout is left-to-right (LTR). To set the RTL window layout, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632680(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindowEx</strong></a> with the style <strong>WS_EX_LAYOUTRTL</strong>. Also by default, a child window (that is, one created with the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632600(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WS_CHILD</strong></a> style and with a valid parent <em>hWnd</em> parameter in the call to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632679(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">CreateWindow</strong></a> or <strong>CreateWindowEx</strong>) has the same layout as its parent. To disable inheritance of mirroring to all child windows, specify <strong>WS_EX_NOINHERITLAYOUT</strong> in the call to <strong>CreateWindowEx</strong>. Note, mirroring is not inherited by owned windows (those created without the <strong>WS_CHILD</strong> style) or those created with the parent <em>hWnd</em> parameter in <strong>CreateWindowEx</strong> set to <strong>NULL</strong>. To disable inheritance of mirroring for an individual window, process the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632635(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_NCCREATE</strong></a> message with <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633584(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetWindowLong</strong></a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowLong</strong></a> to turn off the <strong>WS_EX_LAYOUTRTL</strong> flag. This processing is in addition to whatever other processing is needed. The following code fragment shows how this is done.</p>
+
+<div id="code-snippet-1" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="Copy to clipboard." href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_1326fa96-6353-497a-9e59-75e54111d957');" ms.cmptyp="CodeSnippet">Copy</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_1326fa96-6353-497a-9e59-75e54111d957" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+
+SetWindowLong (hWnd, 
+               GWL_EXSTYLE, 
+               GetWindowLong(hWnd,GWL_EXSTYLE) &amp; ~WS_EX_LAYOUTRTL))
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+
+<p>You can set the default layout to RTL by calling <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633542(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetProcessDefaultLayout</strong></a>(LAYOUT_RTL). All windows created after the call will be mirrored, but existing windows are not affected. To turn off default mirroring, call <strong>SetProcessDefaultLayout</strong>(0).</p>
+<p>Note, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633542(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetProcessDefaultLayout</strong></a> mirrors the DCs only of mirrored windows. To mirror any DC, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162979(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayout</strong></a>(hdc, LAYOUT_RTL). For more information, see the discussion on mirroring device contexts not associated with windows, which comes later in this topic.</p>
+<p>Bitmaps and icons in a mirrored window are also mirrored by default. However, not all of these should be mirrored. For example, those with text, a business logo, or an analog clock should not be mirrored. To disable mirroring of bitmaps, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162979(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayout</strong></a> with the LAYOUT_BITMAPORIENTATIONPRESERVED bit set in <em>dwLayout</em>. To disable mirroring in a DC, call <strong>SetLayout</strong>(hdc, 0).</p>
+<p>To query the current default layout, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633511(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetProcessDefaultLayout</strong></a>. Upon a successful return, <em>pdwDefaultLayout</em> contains LAYOUT_RTL or 0. To query the layout settings of the device context, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144896(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetLayout</strong></a>. Upon a successful return, <strong>GetLayout</strong> returns a <strong>DWORD</strong> that indicates the layout settings by the settings of the LAYOUT_RTL and the LAYOUT_BITMAPORIENTATIONPRESERVED bits.</p>
+<p>After a window has been created, you change the layout using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms633591(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetWindowLong</strong></a> function. For example, this is necessary when the user changes the user interface language of an existing window from Arabic or Hebrew to German. However, when changing the layout of an existing window, you must invalidate and update the window to ensure that the contents of the window are all drawn on the same layout. The following code example is from sample code that changes the window layout as needed:</p>
+
+<div id="code-snippet-2" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="Copy to clipboard." href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_e5720ac7-7406-400d-b8c8-c1fef9905153');" ms.cmptyp="CodeSnippet">Copy</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_e5720ac7-7406-400d-b8c8-c1fef9905153" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+
+// Using ANSI versions of GetWindowLong and SetWindowLong because Unicode
+// is not needed for these calls
+
+lExStyles = GetWindowLongA(hWnd, GWL_EXSTYLE);
+
+// Check whether new layout is opposite the current layout
+if (!!(pLState -&gt; IsRTLLayout) != !!(lExStyles &amp; WS_EX_LAYOUTRTL))
+{
+    // the following lines will update the window layout
+
+    lExStyles ^= WS_EX_LAYOUTRTL;        // toggle layout
+    SetWindowLongA(hWnd, GWL_EXSTYLE, lExStyles);
+    InvalidateRect(hWnd, NULL, TRUE);    // to update layout in the client area
+}
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+
+<p>In mirroring, you should think in terms of "near" and "far" instead of "left" and "right". Failure to do so can cause problems. One common coding practice that causes problems in a mirrored window occurs when mapping between screen coordinates and client coordinates. For example, applications often use code similar to the following to position a control in a window:</p>
+
+<div id="code-snippet-3" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="Copy to clipboard." href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_46f39a76-a6bb-4b9b-87a7-7b69e258ae55');" ms.cmptyp="CodeSnippet">Copy</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_46f39a76-a6bb-4b9b-87a7-7b69e258ae55" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+
+// DO NOT USE THIS IF APPLICATION MIRRORS THE WINDOW
+
+// get coordinates of the window in screen coordinates
+GetWindowRect(hControl, (LPRECT) &amp;rControlRect);  
+
+// map screen coordinates to client coordinates in dialog
+ScreenToClient(hDialog, (LPPOINT) &amp;rControlRect.left); 
+ScreenToClient(hDialog, (LPPOINT) &amp;rControlRect.right);
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+
+<p>This causes problems in mirroring because the left edge of the rectangle becomes the right edge in a mirrored window, and vice versa. To avoid this problem, replace the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162952(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">ScreenToClient</strong></a> calls with a call to <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd145046(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MapWindowPoints</strong></a> as follows:</p>
+
+<div id="code-snippet-4" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="Copy to clipboard." href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_c8efe0fc-bf30-4d9a-9a2f-882124fe6ba3');" ms.cmptyp="CodeSnippet">Copy</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_c8efe0fc-bf30-4d9a-9a2f-882124fe6ba3" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+
+// USE THIS FOR MIRRORING
+
+GetWindowRect(hControl, (LPRECT) &amp;rControlRect);
+MapWindowPoints(NULL, hDialog, (LPPOINT) &amp;rControlRect, 2)
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+
+<p>This code works because, on platforms that support mirroring, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd145046(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MapWindowPoints</strong></a> is modified to swap the left and right point coordinates when the client window is mirrored. For more information, see the Remarks section of <strong>MapWindowPoints</strong>.</p>
+<p>Another common practice that can cause problems in mirrored windows is positioning objects in a client window using offsets in screen coordinates instead of client coordinates. For example, the following code uses the difference in screen coordinates as the x position in client coordinates to position a control in a dialog box.</p>
+
+<div id="code-snippet-5" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="Copy to clipboard." href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_b6bd8000-b7b7-4138-bacf-a0b5d3c5a65d');" ms.cmptyp="CodeSnippet">Copy</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_b6bd8000-b7b7-4138-bacf-a0b5d3c5a65d" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+
+// OK if LTR layout and mapping mode of client is MM_TEXT,
+// but WRONG for a mirrored dialog 
+
+RECT rdDialog;
+RECT rcControl;
+
+HWND hControl = GetDlgItem(hDlg, IDD_CONTROL);
+GetWindowRect(hDlg, &amp;rcDialog);             // gets rect in screen coordinates
+GetWindowRect(hControl, &amp;rcControl);
+MoveWindow(hControl,
+           rcControl.left - rcDialog.left,  // uses x position in client coords
+           rcControl.top - rcDialog.top,
+           nWidth,
+           nHeight,
+           FALSE);
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+
+<p>This code is fine when the dialog window has left-to-right (LTR) layout and the mapping mode of the client is MM_TEXT, because the new x position in client coordinates corresponds to the difference in left edges of the control and the dialog in screen coordinates. However, in a mirrored dialog, left and right are reversed, so instead you should use <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd145046(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MapWindowPoints</strong></a> as follows:</p>
+
+<div id="code-snippet-6" class="codeSnippetContainer" xmlns="">
+    <div class="codeSnippetContainerTabs">
+        
+    </div>
+    <div class="codeSnippetContainerCodeContainer">
+        <div class="codeSnippetToolBar">
+            <div class="codeSnippetToolBarText">
+                <a name="CodeSnippetCopyLink" style="display: none;" title="Copy to clipboard." href="javascript:if (window.epx.codeSnippet)window.epx.codeSnippet.copyCode('CodeSnippetContainerCode_71a3b4fd-5d21-40b5-9891-2cdb8d12d771');" ms.cmptyp="CodeSnippet">Copy</a>
+            </div>
+        </div>
+        <div id="CodeSnippetContainerCode_71a3b4fd-5d21-40b5-9891-2cdb8d12d771" class="codeSnippetContainerCode" dir="ltr">
+            <div style="color:Black;"><pre>
+
+RECT rcDialog;
+RECT rcControl;
+
+HWND hControl - GetDlgItem(hDlg, IDD_CONTROL);
+GetWindowRect(hControl, &amp;rcControl);
+
+// MapWindowPoints works correctly in both mirrored and non-mirrored windows.
+MapWindowPoints(NULL, hDlg, (LPPOINT) &amp;rcControl, 2);
+
+// Now rcControl is in client coordinates.
+MoveWindow(hControl, rcControl.left, rcControl.top, nWidth, nHeight, FALSE)
+
+</pre></div>
+            
+        </div>
+    </div>
+</div>
+
+<h3><a id="mirroring_boxes"></a><a id="MIRRORING_BOXES"></a>Mirroring Dialog Boxes and Message Boxes</h3>
+<p>Dialog boxes and message boxes do not inherit layout, so you must set the layout explicitly. To mirror a message box, call <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645505(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MessageBox</strong></a> or <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645507(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">MessageBoxEx</strong></a> with the <strong>MB_RTLREADING</strong> option. To layout a dialog box right-to-left, use the extended style WS_EX_LAYOUTRTL in the dialog template structure <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms645398(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DLGTEMPLATEEX</strong></a>. Property sheets are a special case of dialog boxes. Each tab is treated as a separate dialog box, so you need to include the WS_EX_LAYOUTRTL style in every tab that you want mirrored.</p>
+<h3><a id="mirroring_dc"></a><a id="MIRRORING_DC"></a>Mirroring Device Contexts Not Associated with a Window</h3>
+<p>DCs that are not associated with a window, such as metafile or printer DCs, do not inherit layout, so you must set the layout explicitly. To change the device context layout, use the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162979(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayout</strong></a> function.</p>
+<p>The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162979(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayout</strong></a> function is rarely used with windows. Typically, windows receive an associated DC only in processing a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd145213(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_PAINT</strong></a> message. Occasionally, a program creates a DC for a window by calling <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144871(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetDC</strong></a>. Either way, the initial layout for the DC is set by <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd183362(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">BeginPaint</strong></a> or <strong>GetDC</strong> according to the window's WS_EX_LAYOUTRTL flag.</p>
+<p>The values returned by <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144949(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetWindowOrgEx</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144948(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetWindowExtEx</strong></a>, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144946(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetViewportOrgEx</strong></a> and <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144945(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetViewportExtEx</strong></a> are not affected by calling <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162979(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayout</strong></a>.</p>
+<p>When the layout is RTL, <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd144897(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">GetMapMode</strong></a> will return MM_ANISOTROPIC instead of MM_TEXT. Calling <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162980(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetMapMode</strong></a> with MM_TEXT will function correctly; only the return value from <strong>GetMapMode</strong> is affected. Similarly, calling <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/dd162979(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">SetLayout</strong></a>(hdc, LAYOUT_RTL) when the mapping mode is MM_TEXT causes the reported mapping mode to change to MM_ANISOTROPIC.</p>
+<h2><a id="destruction"></a><a id="DESTRUCTION"></a>Window Destruction</h2>
+<p>In general, an application must destroy all the windows it creates. It does this by using the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DestroyWindow</strong></a> function. When a window is destroyed, the system hides the window, if it is visible, and then removes any internal data associated with the window. This invalidates the window handle, which can no longer be used by the application.</p>
+<p>An application destroys many of the windows it creates soon after creating them. For example, an application usually destroys a dialog box window as soon as the application has sufficient input from the user to continue its task. An application eventually destroys the main window of the application (before terminating).</p>
+<p>Before destroying a window, an application should save or remove any data associated with the window, and it should release any system resources allocated for the window. If the application does not release the resources, the system will free any resources not freed by the application.</p>
+<p>Destroying a window does not affect the window class from which the window is created. New windows can still be created using that class, and any existing windows of that class continue to operate. Destroying a window also destroys the window's descendant windows. The <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DestroyWindow</strong></a> function sends a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632620(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_DESTROY</strong></a> message first to the window, then to its child windows and descendant windows. In this way, all descendant windows of the window being destroyed are also destroyed.</p>
+<p>A window with a window menu receives a <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632617(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">WM_CLOSE</strong></a> message when the user clicks <strong>Close</strong>. By processing this message, an application can prompt the user for confirmation before destroying the window. If the user confirms that the window should be destroyed, the application can call the <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632682(v=vs.85).aspx"><strong xmlns="http://www.w3.org/1999/xhtml">DestroyWindow</strong></a> function to destroy the window.</p>
+<p>If the window being destroyed is the active window, both the active and focus states are transferred to another window. The window that becomes the active window is the next window, as determined by the ALT+ESC key combination. The new active window then determines which window receives the keyboard focus.</p>
+<p> </p>
+<p> </p>
+</div>
+</div>
+
+
+
+
+
+
+<div class="libraryMemberFilter">
+    <div class="filterContainer">
+        <span>Show:</span>
+        <label>
+            <input type="checkbox" class="libraryFilterInherited" checked="checked" value="Inherit" />Inherited
+        </label>
+        <label>
+            <input type="checkbox" class="libraryFilterProtected" checked="checked" value="Protected" />Protected
+        </label>
+    </div>
+</div>
+    
+<input type="hidden" id="libraryMemberFilterEmptyWarning" value="There are no members available with your current filter settings." />
+
+
+
+    </div>
+<div id="rightNavigationMenu" ms.cmpgrp="right nav">
+    <div id="mobileButtons">
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(d=printer,v=vs.85).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isd_printABook" href="/en-us/library/export/help/?returnurl=%2fen-us%2flibrary%2fwindows%2fdesktop%2fms632599(v%3dvs.85).aspx">
+                <ins class="export"></ins>Export (<span class="count">0</span>)
+            </a>
+        </div>
+    </div>
+    <div id="navMain">
+        <div id="closeNavigation">
+            <a class="tocCloseSmall" id="closeButton"></a>
+        </div>
+        <div id="navigationButtons">
+            <a id="isd_print" href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms632599(d=printer,v=vs.85).aspx" rel="nofollow"><ins class="print"></ins>Print </a>
+            <a id="isdShare" href="#" role="button" aria-expanded="false">
+                <ins class="share"></ins>Share
+            </a>
+            <div id="socials" style="display: none">
+                <a class="isdFacebook" href="#" aria-label="Share on Facebook">
+                    <ins class="facebook"></ins>
+                </a>
+                <a class="isdTwitter" href="#" aria-label="Share on Twitter">
+                    <ins class="twitter"></ins>
+                </a>
+                <a class="isdGooglePlus" href="#" aria-label="Share on Google+">
+                    <ins class="googlePlus"></ins>
+                </a>
+            </div>
+        </div>
+        <div id="indoc_toc" style="display: none" ms.cmpgrp="indoc toc">
+            <div id="indoc_title">IN THIS ARTICLE</div>
+            <ul id="indoc_toclist"></ul>
+        </div>
+    </div>
+</div>
+<div id="rightNavigationMenuThumbnail" class="rightNavigationMenuThumbnail">
+</div>
+
+
+
+
+
+
+        </div>
+        <div class="clear"></div>
+
+        
+
+<input name="__RequestVerificationToken" type="hidden" value="_gQLz35kXQJrx4lKMm9MRXioRq2Vr7Um_RKrPeWjKjTds5dWiNIX42fKk2VV52wHQBsWudcwfagGFWkd3wk2ogTamUY1" />
+<input id="ratingValueSubmitUrl" type="hidden" value="https://msdn.microsoft.com/en-us/library/feedback/rate/ms632599(v=vs.85).aspx" />
+<input id="ratingAdditionalSubmitUrl" type="hidden" value="https://msdn.microsoft.com/en-us/library/feedback/additional/ms632599(v=vs.85).aspx" />
+<input id="isTopicRated" type="hidden" value="false" />
+
+
+
+    
+
+
+
+        <link rel="stylesheet" type="text/css" href="https://i-msdn.sec.s-msft.com/Areas/Epx/Themes/Windows/Content/UhfFooterResponsive.css?v=636382664018825721" data-do-not-move="true" />
+    
+    <input type="hidden" id="CurrentUrlLocale" value="en-us" />
+    <div id="ux-footer" class="ltr">
+        
+
+
+    <div id="standardRatingBefore" class="clear stdr-container-before"></div>
+    <div id="standardRating" class="stdr-container" ms.pgarea="body">
+        <div class="stdr-close"></div>
+        <div class="stdr-vote stdr-content">
+            <div class="stdr-content">
+                <span class="stdr-votetitle">Is this page helpful?</span>
+                <button class="stdr-yes" aria-label="Yes, this page was helpful">Yes</button>
+                <button class="stdr-no" aria-label="No, this page was not helpful">No</button>
+                <input id="s_ratingValue" type="hidden" value="" />
+            </div>
+        </div>
+        <div class="stdr-feedback" style="display: none">
+            <div class="stdr-form">
+                <div class="stdr-fieldtitle">Additional feedback?</div>
+                <textarea class="stdr-detail" rows="6" maxlength="1500"></textarea>
+                <div>
+                    <span class="stdr-count"><span class="stdr-charcnt">1500</span> characters remaining</span>
+                    <div class="stdr-buttons">
+                        <button class="stdr-provide" aria-label="Submit my additional feedback">Submit</button>
+                        <button class="stdr-skip" aria-label="Skip additional feedback">Skip this</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="stdr-thanks" style="display: none">
+            <div class="stdr-content">
+                <span class="stdr-thankyou">Thank you!</span>
+                <span class="stdr-appreciate">We appreciate your feedback.</span>
+            </div>
+        </div>
+
+        
+        <div id="contentFeedbackQAContainer" style="display: none;"></div>
+    </div>
+    <div id="standardRatingPlaceholder" style="display: none"></div>
+    
+        <div id="footerContainer">
+            <div id="baseFooter">
+                    <section id="footerArea" data-m="{&quot;cN&quot;:&quot;footerArea&quot;,&quot;cT&quot;:&quot;Area_coreuiArea&quot;,&quot;id&quot;:&quot;a2Body&quot;,&quot;sN&quot;:2,&quot;aN&quot;:&quot;Body&quot;}">
+                    <div id="footerRegion" data-region-key="footerregion" data-m="{&quot;cN&quot;:&quot;footerRegion&quot;,&quot;cT&quot;:&quot;Region_coreui-region&quot;,&quot;id&quot;:&quot;r1a2&quot;,&quot;sN&quot;:1,&quot;aN&quot;:&quot;a2&quot;}">
+
+    <div id="footerUniversalFooter" data-m="{&quot;cN&quot;:&quot;footerUniversalFooter&quot;,&quot;cT&quot;:&quot;Module_coreui-universalfooter&quot;,&quot;id&quot;:&quot;m1r1a2&quot;,&quot;sN&quot;:1,&quot;aN&quot;:&quot;r1a2&quot;}" data-module-id="Category|footerRegion|footerRegion|footerUniversalFooter|coreui-universalfooter">
+        
+
+
+
+
+
+<footer id="uhf-footer" class="c-universal-footer context-uhf" data-uhf-greenid="false" data-footer-footprint="en-us/DEV_Windows/win-dev-center-footer" ms.pgarea="Uhf footer">
+        <nav role="navigation" aria-label="Footer" ms.cmpgrp="Footer nav">
+            
+                <div>
+                        <div ms.cmpnm="Popular  ">
+                            <h6 class="c-heading-4">Popular
+
+</h6>
+                            <ul class="c-list f-bare">
+                                        <li>
+                                            <a class="c-hyperlink" href="https://developer.microsoft.com/en-us/windows" ms.title="Popular_WindowsDevCenter">Windows Dev Center</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://azure.microsoft.com/" ms.title="Popular_MicrosoftAzure">Microsoft Azure</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.visualstudio.com/" ms.title="Popular_MicrosoftVisualStudio">Microsoft Visual Studio </a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://dev.office.com/" ms.title="Popular_OfficeDevCenter">Office Dev Center</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.asp.net/" ms.title="Popular_asp.net ">ASP.NET</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.iis.net/" ms.title="Popular_IIS.net">IIS.NET</a>
+                                        </li>
+
+                            </ul>
+                            
+                        </div>
+                        <div ms.cmpnm="Learning Resources">
+                            <h6 class="c-heading-4">Learning Resources</h6>
+                            <ul class="c-list f-bare">
+                                        <li>
+                                            <a class="c-hyperlink" href="https://channel9.msdn.com/" ms.title="LearningResources_Channel9">Channel 9</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://developer.microsoft.com/en-us/windows/develop/app-development-video" ms.title="LearningResources_WindowsDevelopmentVideos">Windows development videos</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://mva.microsoft.com/" ms.title="LearningResources_MicrosoftVirtualAcademy">Microsoft Virtual Academy </a>
+                                        </li>
+
+                            </ul>
+                            
+                        </div>
+                        <div ms.cmpnm="Programs">
+                            <h6 class="c-heading-4">Programs</h6>
+                            <ul class="c-list f-bare">
+                                        <li>
+                                            <a class="c-hyperlink" href="https://developer.microsoft.com/en-us/store/register" ms.title="Programs_AppDeveloperAgreement">Microsoft developer program</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://insider.windows.com/" ms.title="Programs_WindowsInsiderProgram">Windows Insider program</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoftaffiliates.com/" ms.title="Programs_MicrosoftAffliateProgram">Microsoft Affiliate program </a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/bizspark" ms.title="Programs_BizSparkforStartups">BizSpark (for startups) </a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://msdn.microsoft.com/en-us/imagine/imagine-home" ms.title="Programs_MicrosoftImagineforStudents">Microsoft Imagine</a>
+                                        </li>
+
+                            </ul>
+                            
+                        </div>
+                </div>
+                <div>
+                        <div ms.cmpnm="For IT Pros">
+                            <h6 class="c-heading-4">For IT Pros</h6>
+                            <ul class="c-list f-bare">
+                                        <li>
+                                            <a class="c-hyperlink" href="https://powerbi.microsoft.com/en-us" ms.title="ForITPros_MicrosoftPowerBI">Microsoft Power BI</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/server-cloud/products/sql-server/overview.aspx" ms.title="ForITPros_MicrosoftSQLServer">Microsoft SQL Server </a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/server-cloud/internet-of-things/overview.aspx" ms.title="ForITPros_InternetofThings">Internet of Things </a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/server-cloud/operations-management-suite/overview.aspx" ms.title="ForITPros_OperationsManagementSuite">Operations Management Suite </a>
+                                        </li>
+
+                            </ul>
+                            
+                        </div>
+                        <div ms.cmpnm="Values">
+                            <h6 class="c-heading-4">Values</h6>
+                            <ul class="c-list f-bare">
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/diversity/" ms.title="Values_DiversityandInclusion">Diversity and inclusion</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/accessibility/home" ms.title="Values_Accessility">Accessibility</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/education" ms.title="Values_MicrosoftinEducation">Microsoft in education</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/about/philanthropies" ms.title="Values_CorporateCitizenship">Microsoft philanthropies</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/about/csr" ms.title="Values_CorporateSocialResponsibility">Corporate social responsibility</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://privacy.microsoft.com/en-us" ms.title="Values_PrivacyatMicrosoft">Privacy at Microsoft</a>
+                                        </li>
+
+                            </ul>
+                            
+                        </div>
+                        <div ms.cmpnm="Company">
+                            <h6 class="c-heading-4">Company</h6>
+                            <ul class="c-list f-bare">
+                                        <li>
+                                            <a class="c-hyperlink" href="https://careers.microsoft.com/" ms.title="Company_Careers">Careers</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/about" ms.title="Company_AboutMicrosoft">About Microsoft</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://news.microsoft.com/" ms.title="Company_CompanyNews">Company news</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/investor/default.aspx" ms.title="Company_Investors">Investors</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://microsoft.com/research" ms.title="Company_Research">Research</a>
+                                        </li>
+                                        <li>
+                                            <a class="c-hyperlink" href="https://www.microsoft.com/en-us/sitemap.aspx" ms.title="Company_SiteMap">Site map</a>
+                                        </li>
+
+                            </ul>
+                            
+                        </div>
+                </div>
+        </nav>
+    <section>
+                <a id="locale-picker-link" class="c-hyperlink c-glyph glyph-world" href="https://developer.microsoft.com/locale" ms.title="locale_picker(US)">English (United States)</a>
+
+        <ul role="contentinfo" class="c-list f-bare" ms.cmpgrp="Corp links">
+                            <li>
+                    <a class="c-hyperlink" href="https://www.microsoft.com/en-us/sitemap1.aspx" ms.title="Footer_Sitemap">Sitemap</a>
+                </li>
+                <li>
+                    <a class="c-hyperlink" href="https://go.microsoft.com/?linkid=2028325" ms.title="Footer_ContactUs">Contact us</a>
+                </li>
+                <li>
+                    <a class="c-hyperlink" href="https://go.microsoft.com/fwlink/?LinkId=521839" ms.title="Footer_PrivacyandCookies">Privacy &amp; cookies </a>
+                </li>
+                <li>
+                    <a class="c-hyperlink" href="https://go.microsoft.com/fwlink/?LinkID=206977" ms.title="Footer_TermsOfUse">Terms of use</a>
+                </li>
+                <li>
+                    <a class="c-hyperlink" href="https://www.microsoft.com/trademarks" ms.title="Footer_Trademarks">Trademarks</a>
+                </li>
+                <li>
+                    <a class="c-hyperlink" href="https://choice.microsoft.com" ms.title="Footer_AboutourAds">About our ads</a>
+                </li>
+
+            <li>© Microsoft 2017</li>
+            
+        </ul>
+    </section>
+    
+</footer>
+
+
+
+
+
+
+    </div>
+            </div>
+
+    </section>
+
+        
+    
+    <span id="selectLocaleFromPopUp">
+        <div class="locale-selector" style="position: relative">
+            <a class="current-locale" href="javascript:void(0)" aria-label="Change your language" aria-haspopup="true">
+                <span class="text">English</span>
+                <span class="gear"></span>
+            </a>
+            <div class="locale-selection-panel site-flag site-flag-lang" style="top: -245px; display: none;">
+                <div class="content" role="menu">
+                    <table class="all-locales" cellspacing="0" autogeneratecolumns="false" allowpaging="false" allowsorting="false" style="border-collapse: collapse;">
+                        <tbody>
+                            <tr>
+
+
+                                    <td><a title="Deutsch" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=de-de&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">Deutsch</a></td>
+                                    <td><a title="English" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=en-us&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link selected" role="menuitem">English</a></td>
+                                    <td><a title="Español" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=es-es&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">Español</a></td>
+                                    <td><a title="Français" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=fr-fr&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">Français</a></td>
+                                        </tr><tr>
+                                    <td><a title="Italiano" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=it-it&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">Italiano</a></td>
+                                    <td><a title="日本語" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=ja-jp&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">日本語</a></td>
+                                    <td><a title="한국어" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=ko-kr&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">한국어</a></td>
+                                    <td><a title="Português" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=pt-br&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">Português</a></td>
+                                        </tr><tr>
+                                    <td><a title="Pусский" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=ru-ru&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">Pусский</a></td>
+                                    <td><a title="简体中文" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=zh-cn&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">简体中文</a></td>
+                                    <td><a title="繁體中文" href="https://msdn.microsoft.com/en-us/?action=selectlocale&amp;currentlocale=en-us&amp;newlocale=zh-tw&amp;frompage=/en-us/library/windows/desktop/ms632599(v=vs.85).aspx" class="locale-link" role="menuitem">繁體中文</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="arrow">
+                         </div>
+                </div>
+            </div>
+        </div>
+    </span>
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="footerPrintView">
+            <div class="footerCopyrightPrintView">© 2017 Microsoft</div>
+        </div>
+
+        
+        
+        
+        
+
+
+
+        <input id="MtpsDevice" type="hidden" value="Default" />
+
+
+<![CDATA[ Third party scripts and code linked to or referenced from this website are licensed to you by the parties that own such code, not by Microsoft.  See ASP.NET Ajax CDN Terms of Use – http://www.asp.net/ajaxlibrary/CDN.ashx. ]]>
+
+        
+        
+        
+            
+        
+
+<![CDATA[ WebTrends view model not available or IncludeLegacyWebTrendsScriptInGlobal feature flag is off]]>
+
+
+
+
+<div id="globalRequestVerification">
+    <input name="__RequestVerificationToken" type="hidden" value="nlq-YqHQ-qMTiFFVOzq0IJBMqB9LbdhT8upi-SzUp7UWo0tkcj6lWdsyIYyKrJXS424aybt2A0VLo8sG4ofQ8ZJju241" />
+</div>
+
+
+    </div>
+
+    
+    
+
+    
+
+    
+<script type="text/javascript" class="mtps-injected">
+/*<![CDATA[*/
+(function(window,document){"use strict";function preload(scripts){for(var result=[],script,e,i=0;i<scripts.length;i++)script=scripts[i],script.hasOwnProperty("url")&&(e=document.createElement("script"),e.src=script.url,script.throwaway=e),result.push(script);return result}function inject(scripts,index){var script,elem;if(index>=scripts.length){delete mtps.injectScripts;return}script=scripts[index];elem=document.createElement("script");elem.className="mtps-injected";elem.async=!1;var isLoaded=!1,timeoutId=0,injectNextFnName="",injectNext=elem.onerror=function(){isLoaded||(isLoaded=!0,inject(scripts,index+1),window.clearTimeout(timeoutId),elem.onload=elem.onerror=elem.onreadystatechange=null,injectNextFnName&&delete mtps[injectNextFnName],elem.removeEventListener&&elem.removeEventListener("load",injectNext,!1))};elem.addEventListener?elem.addEventListener("load",injectNext,!1):elem.readyState==="uninitialized"?elem.onreadystatechange=function(){(this.readyState==="loaded"||this.readyState==="complete")&&injectNext()}:elem.onload=injectNext;script.hasOwnProperty("url")?(timeoutId=window.setTimeout(injectNext,12e4),elem.src=script.url):(injectNextFnName="_injectNextScript_"+index,mtps[injectNextFnName]=injectNext,timeoutId=window.setTimeout(injectNext,2e3),elem.text="try {\n"+script.txt+"\n} finally { MTPS."+injectNextFnName+" && MTPS."+injectNextFnName+"(); }");parent.appendChild(elem)}var mtps=window.MTPS||(window.MTPS={}),parent=document.getElementsByTagName("head")[0];mtps.injectScripts=function(scripts){inject(preload(scripts),0)}})(window,document);
+MTPS.injectScripts([
+	{ txt: "/**/\r\n(window.MTPS || (window.MTPS = {})).cdnDomains || (window.MTPS.cdnDomains = { \r\n\t\"image\": \"https://i-msdn.sec.s-msft.com\", \r\n\t\"js\": \"https://i2-msdn.sec.s-msft.com\", \r\n\t\"css\": \"https://i-msdn.sec.s-msft.com\", \r\n\t\"ttf\": \"https://i-msdn.sec.s-msft.com\"\r\n});\r\n/**/" },
+	{ txt: "//\n\n        window.appInsightsId = \u00275eb1b2eb-c47a-497a-a7ac-a1c230b2882f\u0027;\n        //" },
+	{ txt: "var isAuthenticated = (false);\n        var aadEnabled= (false);\n\n        var ssoProperties = {\n          signedIn: isAuthenticated,\n          aadEnabled: aadEnabled,\n          signInOutUrl: $(\"#UhfSignInOutLink\").val(),\n        };\n\n        if (isAuthenticated) {\n          ssoProperties.userHasProfile = (false);\n          ssoProperties.profileText = \":ProfileText:\";\n          ssoProperties.createViewProfileText = \":CreateViewMSDNProfileText:\";\n          ssoProperties.createViewProfileLink = \":ProfileLink:\";\n          ssoProperties.MsaMemberName = \":MsaMemberName:\";\n          ssoProperties.MsaFirstName = \":MsaFirstName:\";\n          ssoProperties.MsaLastName = \":MsaLastName:\";\n          ssoProperties.MsaCID = \":MsaCID:\";\n          ssoProperties.AadDisplayName = \":AadDisplayName:\";\n          ssoProperties.AadMemberName = \":AadMemberName:\";\n        }" },
+	{ url: "https://i2-msdn.sec.s-msft.com/Combined.js?resources=0:Utilities,0:Uhf,1:Breadcrumbs,2:LibraryRightNavigationMenu,2:PrintExportButton,3:StandardRating,0:Topic,1:ResponsiveSupport,0:AppInsightsPerf,1:ResponsiveToc,0:ABTestControl,2:WEDCS,4:UhfHeader,4:TocDropDown,1:LibraryMemberFilter,0:Toc_Fixed,4:UhfFooter,5:SelectLocaleFromPopUp,0:CodeSnippet,0:TopicNotInScope,0:VersionSelector,0:SurveyBroker;/Areas/Epx/Content/Scripts:0,/Areas/Library/Content:1,/Areas/Library/Themes/Base/Content:2,/Areas/Global/Content:3,/Areas/Epx/Themes/Windows/Content:4,/Areas/Epx/Themes/Base/Content:5\u0026amp;hashKey=6C99E18E814AF72A08F8369451C371C7\u0026amp;v=9E1DC9641A8FF1EA31281E9B7A87200E" },
+	{ txt: "$(document).ready(function() {\n        try {\n            var token = $(\"#globalRequestVerification input[name=\u0027__RequestVerificationToken\u0027]\").clone();\n            $(\"#siteFeedbackForm\").append(token);\n        } catch(err) {\n            \n        }\n    });" }
+]);
+
+/*]]>*/
+</script></body>
+</html>
