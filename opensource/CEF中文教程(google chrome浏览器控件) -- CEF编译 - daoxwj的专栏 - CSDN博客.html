@@ -1,0 +1,1328 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>  
+            <link rel="canonical" href="http://blog.csdn.net/daoxwj/article/details/8786911"/> 
+
+   
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848"> 
+       
+    <title>CEF中文教程(google chrome浏览器控件) -- CEF编译 - daoxwj的专栏
+        - CSDN博客</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="这部分讲解CEF的分支信息并介绍下载编译和打包源代码背景:&#160; &#160; &#160; CEF项目是做为Chromium的扩展项目而存在的，CEF跟Chromium一样地维护两个版本，开发版和发布版。CEF源代码既可以手动编译，也可以用工具自动编译发展:&#160; &#160; &#160;CEF项目在不断的发展中，你可以从这里看到整个项目的文件trunk,因为当前的版本紧跟Chromium,所以不推荐拿当前的版本来开" />
+
+    <meta name="keywords" content="" />
+
+   
+    <script src="http://static.blog.csdn.net/scripts/blog_static_head.min.js" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/daoxwj/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+
+    <link href="http://c.csdnimg.cn/blog/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet" />
+     
+         <link rel="stylesheet" href="http://static.blog.csdn.net/css/csdn_blog_detail.min.css" />
+
+  
+
+
+    <!-- 请置于所有广告位代码之前 --> 
+            <script src="http://dup.baidustatic.com/js/ds.js"></script>
+
+</head>
+
+
+<body>
+     
+        <div class="tracking-ad" data-view="true" data-mod="ad_popu_72"  data-mtp="62" data-order="40" data-con="ad_content_2072" >
+                     <script id="popuLayer_js_q" src="http://ads.csdn.net/js/popuLayer.js" defer="defer"  type="text/javascript"></script>
+                <div id="layerd" style="position: fixed;bottom:0px;right:0px;line-height:0px;z-index:1000">
+    	                <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"></div></div>
+                <script>  document.getElementById("popuLayer_js_q").onload = function () { var styObjd = styObj = { width: "300px", "height": parseInt(250) + 28 }; window.CSDN.Layer.PopuLayer("#layerd", { storageName: "layerd", styleObj: styObjd, total: 50, expoire: 1000 * 60 }); }</script><!-- 投放代码 --><script type="text/javascript">                    /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({ id: "u2895327" });  </script>  <script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script>
+     
+        </div>
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/daoxwj">daoxwj的专栏</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/daoxwj?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/daoxwj?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/daoxwj/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "daoxwj";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/daoxwj";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "cnheike";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/epubit17/article/details/76811996">
+<font color=red><strong>赠书 | 异步2周年,技术图书免费选</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+
+<a href="http://blog.csdn.net/broadview2006/article/details/77312555">
+<font color=blue><strong>每周荐书：渗透测试、K8s、架构（评论送书）</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+
+<a href="http://gitee.com/enterprises?csdn-sq">
+<font color=red><strong>项目管理+代码托管+文档协作，开发更流畅</strong></font></a>
+
+</div>                        </div>
+
+                        
+
+
+
+  
+
+
+
+
+
+
+<script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+      var isBole = false; 
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=CEF%e4%b8%ad%e6%96%87%e6%95%99%e7%a8%8b(google+chrome%e6%b5%8f%e8%a7%88%e5%99%a8%e6%8e%a7%e4%bb%b6)+--+CEF%e7%bc%96%e8%af%91&u=http://blog.csdn.net/daoxwj/article/details/8786911"
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Translated"></span>
+
+    <h1>
+        <span class="link_title"><a href="/daoxwj/article/details/8786911">
+        CEF中文教程(google chrome浏览器控件) -- CEF编译        
+           
+        </a>
+        </span>
+
+         
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_r">
+            <span class="link_postdate">2013-04-11 10:47</span>
+            <span class="link_view" title="阅读次数">22221人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(14)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('CEF%e4%b8%ad%e6%96%87%e6%95%99%e7%a8%8b(google+chrome%e6%b5%8f%e8%a7%88%e5%99%a8%e6%8e%a7%e4%bb%b6)+--+CEF%e7%bc%96%e8%af%91','8786911');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(8786911,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('1389739','daoxwj','top','8786911');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">CEF<em>（2）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/daoxwj/article/category/1389739"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1389739">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+
+  
+
+  
+  
+     
+
+
+<div id="article_content" class="article_content tracking-ad" data-mod=popu_307  data-dsm = "post" >
+
+<address><br>
+</address>
+<p>&nbsp; &nbsp; 这部分讲解CEF的分支信息并介绍下载编译和打包源代码</p>
+<h3>背景:</h3>
+<div>&nbsp; &nbsp; &nbsp; CEF项目是做为Chromium的扩展项目而存在的，CEF跟Chromium一样地维护两个版本，开发版和发布版。CEF源代码既可以手动编译，也可以用工具自动编译</div>
+<div><br>
+</div>
+<h3>发展:</h3>
+<div>&nbsp; &nbsp; &nbsp;CEF项目在不断的发展中，你可以从这里看到整个项目的文件<a href="http://code.google.com/p/chromiumembedded/source/browse/#svn%2Ftrunk">trunk</a>,因为当前的版本紧跟Chromium,所以不推荐拿当前的版本来开发发布版的产品。下面的链接可以用来下载CEF的开发版源码:</div>
+<div>&nbsp; &nbsp; &nbsp;CEF1-&nbsp;<a href="http://chromiumembedded.googlecode.com/svn/trunk/cef1">http://chromiumembedded.googlecode.com/svn/trunk/cef1</a></div>
+<div>&nbsp; &nbsp; &nbsp;CEF3-&nbsp;<a href="http://chromiumembedded.googlecode.com/svn/trunk/cef3">http://chromiumembedded.googlecode.com/svn/trunk/cef3</a></div>
+<div>&nbsp; &nbsp; &nbsp;remind:你点开上面的链接时，你会发现这是一个svn工程的目录，如果以前是用VSS的，你可能觉得svn很陌生，不要尝试一个一个地去下载里面的文件。这里有个简单的方法可以下载整个文件夹：先下载一个TortoiseSVN,下完后安装，但是你不会看到有什么的TortoiseSVN的运行程序，因为它是内嵌到Windows里面的，你应该在任意的盘符下面创建一个空的文件夹，右键点击这个文件夹，点击菜单项【TortoiseSVN】-&gt;【export】,在URL文件框里面输入上面的链接后点确定，然后现在个工程文件都会下下来。</div>
+<h3>发布版:</h3>
+<div>&nbsp; &nbsp; &nbsp;CEF随着Chromium发布版也提供一个最新的发布版，推荐用户用发布版本做为开发产品的环境，原因有如下几点:</div>
+<div>&nbsp; &nbsp; &nbsp;1.二进制的CEF是用特定的Chromium发布版编译出来的</div>
+<div>&nbsp; &nbsp; &nbsp; 2.发布版的CEF/Chromium经过了更好的测试，而且更加适合开发发布版的应用程序</div>
+<div>&nbsp; &nbsp; &nbsp; 3.发布版更加稳定</div>
+<div>&nbsp; &nbsp; &nbsp; 4.CEF发布版可以包含必要的Chromium/WebKit版本</div>
+<div>&nbsp; &nbsp; &nbsp; 5.CEF以后的更新不会干扰用户的发布计划</div>
+<div><br>
+</div>
+<div>CEF版本号有如下形式:X.Y.Z,其中X是CEF主版本号，Y是发布版版本号，而Z是CEF校对号，有关CEF和Chromium版本更详细的内容，你可以去include/cef_version.h里面找到，下面的表&#26684;列出当前的CEF发布版本:</div>
+<div>&nbsp; &nbsp; &nbsp;&nbsp;
+<table border="1" width="500" cellspacing="1" cellpadding="1">
+<tbody>
+<tr>
+<td>发布版本</td>
+<td>Chromium版本</td>
+<td>CEF1支持性</td>
+<td>CEF3支持性</td>
+</tr>
+<tr>
+<td>963</td>
+<td>17</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>1025<span style="white-space:pre"> </span></td>
+<td>18</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>1084</td>
+<td>19</td>
+<td>是</td>
+<td>否</td>
+</tr>
+<tr>
+<td>1180</td>
+<td>21</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>1271</td>
+<td>23</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>1364</td>
+<td>25</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>1453</td>
+<td>26</td>
+<td>是</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<br>
+</div>
+<div>你可以在下面的链接中下载发布版的CEF, 其中YYYY是发布版的版本号:</div>
+<div>&nbsp; &nbsp; CEF1 -&nbsp;<a href="http://chromiumembedded.googlecode.com/svn/branches/YYYY/cef1">http://chromiumembedded.googlecode.com/svn/branches/YYYY/cef1</a></div>
+<div>&nbsp; &nbsp; CEF3 -&nbsp;<a href="http://chromiumembedded.googlecode.com/svn/branches/YYYY/cef3">http://chromiumembedded.googlecode.com/svn/branches/YYYY/cef3</a></div>
+<div><br>
+</div>
+<div>这里&#20540;得注意的是版本963和1025是只包含有CEF1的源代码，要想了解CEF发布版的版本号怎么来的，你可以点击旁边这个链接:&nbsp;<a href="https://code.google.com/p/chromiumembedded/issues/detail?id=325">here</a></div>
+<div><br>
+</div>
+<h3>编译源代码:</h3>
+<div>&nbsp; &nbsp; 当前支持在Windows,Mac OS-X和Linux环境下编译源代码，而要想编译成功，你的电脑必须至少有4GB的系统内存（因为我用的Windows，所以在Mac或Linux环境下的要求我就没有翻译了）。</div>
+<div>&nbsp; &nbsp; 在编译Chromium和CEF源码之前，你必须配置好你的编译环境:</div>
+<h4>1.为你的操作系统和开发环境安装必要的包:</h4>
+<div>&nbsp; &nbsp; Windows环境下点击右边的链接:&nbsp;<a href="http://www.chromium.org/developers/how-tos/build-instructions-windows">http://www.chromium.org/developers/how-tos/build-instructions-windows</a>(这个我将在下一章中给出译文)</div>
+<div>&nbsp; &nbsp; 配置好操作系统和编译环境以后，还要用旁边的链接去下载TortoiseSVN工具:&nbsp;<a href="http://sourceforge.net/projects/tortoisesvn/files/1.6.16/Application/">http://sourceforge.net/projects/tortoisesvn/files/1.6.16/Application/</a></div>
+<h4>2.配置环境可以影响GYP</h4>
+<div>&nbsp; &nbsp;CEF目前还不支持组件开发</div>
+<div>&nbsp; &nbsp;Windows - 如果你的操作系统里面安装了多个Virual Studio,你可以设置环境变量GYP_MSVS_VERSION为一个适当的&#20540;，如果你想用VS2008来编译工作，你应该把这个&#20540;设成2008,如果你想用Vs2010 Express来编译工程，那你就应该把这个环境变量设成2010e, 如果是别的Visual Studio版本，那你就要去Chomium帮助文档去查找更详细的信息，但是估计也应该是同一个套路，假如你是vs2005,那肯定就是设成2005了。</div>
+<div><br>
+</div>
+<h3>自动的方法:</h3>
+<div>&nbsp; &nbsp;CEF提供工具，用来自动下载、编译、打包Chromium和CEF源代码，这个方法对开发版和发布版是同样有用，你可以按下面的步骤来完成自动操作:</div>
+<div><br>
+</div>
+<h4>1.下载自动工具 automate.py:</h4>
+<div>&nbsp; &nbsp;用SVN checkout下面的URL:&nbsp;
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">http</span><span class="pun" style="color:rgb(102,102,0)">:</span><span class="com" style="color:rgb(136,0,0)">//chromiumembedded.googlecode.com/svn/trunk/cef1/tools/automate /path/to/automate</span></pre>
+</div>
+<h4>2.运行automate.py脚本:</h4>
+<div>&nbsp; &nbsp;在任何合适的时间，你可以运行automate.py这个脚本（如每周每天每次CEF提交的时间），并使用你想要的CEF版本。</div>
+<div>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">python </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">automate</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">automate</span><span class="pun" style="color:rgb(102,102,0)">.</span><span class="pln">py </span><span class="pun" style="color:rgb(102,102,0)">--</span><span class="pln">download</span><span class="pun" style="color:rgb(102,102,0)">-</span><span class="pln">dir</span><span class="pun" style="color:rgb(102,102,0)">=</span><span class="str" style="color:rgb(0,136,0)">/path/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">download </span><span class="pun" style="color:rgb(102,102,0)">--</span><span class="pln">url</span><span class="pun" style="color:rgb(102,102,0)">=</span><span class="pln">http</span><span class="pun" style="color:rgb(102,102,0)">:</span><span class="com" style="color:rgb(136,0,0)">//chromiumembedded.googlecode.com/svn/branches/1084/cef1</span></pre>
+</div>
+<div><br>
+</div>
+<div>&nbsp; &nbsp; 如果这个操作成功了，一个二进制形式的包会被创建在 &nbsp;<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">/path/to/download/chromium/src/cef/binary_distrib</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">如果你要想查找完整的使用介绍，点下面的链接:&nbsp;<a href="https://code.google.com/p/chromiumembedded/source/browse/trunk/cef1/tools/automate/automate.README.txt"> automate.README.txt</a>&nbsp;</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp;这个方法也被完美地整合到了一些自动编译系统如 TeamCity</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">（译完这段我感到浑身冷汗，因为什么TeamCity、TortioseSVN...全都一无所知，想想从业也三四年了，却离it这条路越走越远，在上个公司呆的两年多完全是封闭的两年多，天天整些CAD，用写好的API，做些重复的工作，什么新的技术都没学到，反而把老本都蚀完了，现在是时候奋起直追了。但转念一想，我还能再追几年，以我的年纪我还能追几年?
+ 学什么走哪块，才能让我虽不说蒸蒸日上但却能有口盒饭吃呢？）</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"><br>
+</span></div>
+<h2><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">手动下载:</span></span></h2>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px"><br>
+</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp; Chromium和CEF可以手动下载和编译，但这更加复杂，所以不向所有用户推荐。</span></div>
+<h4><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">开发版:</span></h4>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; 下面这些下载的介绍仅适合CEF1&amp;CEF3开发版。</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; &nbsp;1.安装depot_tools并且下载Chromium源代码，你可以按照这个链接的内容来做<a href="http://dev.chromium.org/developers/how-tos/get-the-code">http://dev.chromium.org/developers/how-tos/get-the-code</a>，也可以按照下面的四个步骤来做，但是为了避免一些潜在的问题，你最好设置chromium和depot_tools的下载目录尽可能的短，并且不要包含空&#26684;和特殊字符。</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; &nbsp;A. &nbsp;装一个1.6.x版本的SVN端,并且加到你的PATH里面去</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; &nbsp;B. 通过SVN来下载depot_tools</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px"></span></span>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">  svn co http</span><span class="pun" style="color:rgb(102,102,0)">:</span><span class="com" style="color:rgb(136,0,0)">//src.chromium.org/svn/trunk/tools/depot_tools</span></pre>
+&nbsp; &nbsp; &nbsp;C. 增加<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">depot_tools的目录到你的PATH,在Windows下depot_tools的路径应该要放在TortoiseSVN的前面</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px"><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp; D. 创建一个Chromium签出目录（例如，<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">/path/to/chromium），并且配置gclient如下:</span></span></span></span></div>
+<div>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">cd </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">chromium
+gclient config http</span><span class="pun" style="color:rgb(102,102,0)">:</span><span class="com" style="color:rgb(136,0,0)">//src.chromium.org/chrome/trunk/src</span></pre>
+&nbsp; &nbsp; &nbsp;remind: &nbsp;上面这段你只要复制到cmd里面去运行就可以了</div>
+<div><br>
+</div>
+<div>&nbsp; &nbsp; 2. 在CEF的顶层目录下查看<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">CHROMIUM_BUILD_COMPATIBILITY.txt，并找到你需要的Chromium版本，这可能会发生改变，因为CEF是随着最新版本的Chromium改变而改变的</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp;3. 更新Chromium到合适的版本</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"></span>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">cd </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">chromium
+gclient sync </span><span class="pun" style="color:rgb(102,102,0)">--</span><span class="pln">revision src@chromium_revision </span><span class="pun" style="color:rgb(102,102,0)">--</span><span class="pln">jobs </span><span class="lit" style="color:rgb(0,102,102)">8</span><span class="pln"> </span><span class="pun" style="color:rgb(102,102,0)">--</span><span class="pln">force</span></pre>
+&nbsp; &nbsp;4. 下载CEF源代码到&quot;cef&quot;文件夹，而且这个文件夹必须包含在Chromium的&quot;src&quot;文件夹目录下，你最好只下载CEF1或CEF3而不要两者都下，假设你的Chromium源代码下载在<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&quot;/path/to/chromium/src&quot;，那么你的CEF源代码就应该放在<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&quot;/path/to/chromium/src/cef&quot;。注意不管你下的是CEF1或CEF3，文件夹名都必须命名为&quot;cef&quot;</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"></span></span></span>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">cd </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">chromium</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">src
+svn co http</span><span class="pun" style="color:rgb(102,102,0)">:</span><span class="com" style="color:rgb(136,0,0)">//chromiumembedded.googlecode.com/svn/trunk/cef1 cef</span></pre>
+<br>
+</div>
+<h4><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">发布版:</span></h4>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp; &nbsp;发布版和开发版基本的操作是一样的，只不过是把有Debug的地方改成Release而已。具体的你可以查看原文链接。</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"><br>
+</span></div>
+<h3><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">手动编译:</span></span></h3>
+<h4><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; 1.运行cef_create_project脚本(windows下用.bat, OS-X和linux下用.sh)去产生一个在GYP配置下的编译文件</span></span></h4>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px"></span></span>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">cd </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">chromium</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">src</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">cef
+</span><span class="pun" style="color:rgb(102,102,0)">./</span><span class="pln">cef_create_projects</span><span class="pun" style="color:rgb(102,102,0)">.</span><span class="pln">sh</span></pre>
+<h4><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; 2.编译CEF</span></span></h4>
+</div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">&nbsp; &nbsp; windows下你可以直接用Visual Studio 的.sln文件编译，做为替代的方法，你也可以在命令行下运行脚本<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">build_projects</span>来编译整个工程，</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px"></span></span>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">cd </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">chromium</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">src</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">cef</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">tools
+build_projects</span><span class="pun" style="color:rgb(102,102,0)">.</span><span class="pln">sh </span><span class="typ" style="color:rgb(102,0,102)">Debug</span></pre>
+<br>
+</div>
+<h3><span style="font-family:arial,sans-serif; font-size:12px"><span style="line-height:16.390625px">手动打包:</span></span></h3>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp; &nbsp;当编译好开发版和发布版后，你可以用make_distrib工具(windows用.bat,OS-X和Linux用.sh)去创建一个二进制分发包。</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"></span>
+<pre class="prettyprint" style="padding:0.5em; overflow:auto; font-family:Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono','Lucida Console',monospace; max-width:70em; background-color:rgb(238,238,238)"><span class="pln">cd </span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">path</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">to</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">chromium</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">src</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">cef</span><span class="pun" style="color:rgb(102,102,0)">/</span><span class="pln">tools
+make_distrib</span><span class="pun" style="color:rgb(102,102,0)">.</span><span class="pln">sh</span></pre>
+&nbsp; &nbsp; &nbsp;如果这个过程成功了，一个二进制的分发包会生成在<span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">/path/to/chromium/src/cef/binary_distrib目录中。</span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px">&nbsp; &nbsp; &nbsp;你可以去make_distrib.py脚本下看到更多的使用信息。</span></span></div>
+<div><span style="font-family:arial,sans-serif; font-size:13px; line-height:16.390625px"><br>
+</span></div>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+<!--172.16.140.13-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" ArticleId="8786911" >
+            <dl id="btnDigg" class="digg digg_enable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>1</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_enable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+        function btndigga() {
+            $(".tracking-ad[data-mod='popu_222'] a").click();
+        }
+        function btnburya() {
+            $(".tracking-ad[data-mod='popu_223'] a").click();
+        }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='http://blog.csdn.net/daoxwj/article/details/8783629';">上一篇</span><a href="http://blog.csdn.net/daoxwj/article/details/8783629" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">CEF中文教程(google chrome浏览器控件)  -- CEF简介</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='http://blog.csdn.net/daoxwj/article/details/8809024';">下一篇</span><a href="http://blog.csdn.net/daoxwj/article/details/8809024" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article"   >
+                    <h4></h4>
+                    <div class="similar_c"style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36"  style="max-height:250px">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/daoxwj/article/details/8809024" title="CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium" strategy="BlogCommendFromBaidu_0" target="_blank">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/huiyiCourse/series_detail/52?utm_source=blog7" title="【直播】计算机视觉原理及实战—屈教授" strategy="undefined" target="_blank">【直播】计算机视觉原理及实战—屈教授</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/foruok/article/details/50573612" title="CEF中JavaScript与C++交互" strategy="BlogCommendFromBaidu_1" target="_blank">CEF中JavaScript与C++交互</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/combo/detail/29?utm_source=blog7" title="【套餐】Spark+Scala课程包--陈超" strategy="undefined" target="_blank">【套餐】Spark+Scala课程包--陈超</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/daoxwj/article/details/8783629" title="CEF中文教程(google chrome浏览器控件)  -- CEF简介" strategy="BlogCommendFromBaidu_2" target="_blank">CEF中文教程(google chrome浏览器控件)  -- CEF简介</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/combo/detail/177?utm_source=blog7" title="【套餐】Linux应用和网络编程实战套餐--朱有鹏" strategy="undefined" target="_blank">【套餐】Linux应用和网络编程实战套餐--朱有鹏</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/mfcing/article/details/43953433" title="Windows上使用CEF嵌入基于chrome内核浏览器小例" strategy="BlogCommendFromBaidu_3" target="_blank">Windows上使用CEF嵌入基于chrome内核浏览器小例</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/huiyiCourse/series_detail/54?utm_source=blog7" title="【直播】机器学习&amp;数据挖掘7周实训--韦玮" strategy="undefined" target="_blank">【直播】机器学习&amp;数据挖掘7周实训--韦玮</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/foruok/article/details/50485461" title="VS2013编译最简单的PPAPI插件" strategy="BlogCommendFromBaidu_4" target="_blank">VS2013编译最简单的PPAPI插件</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/combo/detail/39?utm_source=blog7" title="【套餐】从0蜕变为自动化测试工程师--李晓鹏" strategy="undefined" target="_blank">【套餐】从0蜕变为自动化测试工程师--李晓鹏</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/cqclark/article/details/49121027" title="CEF研究(二）" strategy="BlogCommendFromBaidu_5" target="_blank">CEF研究(二）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/huiyiCourse/detail/495?utm_source=blog7" title="【直播】广义线性模型及其应用——李科" strategy="undefined" target="_blank">【直播】广义线性模型及其应用——李科</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/foruok/article/details/50485448" title="CEF加载PPAPI插件" strategy="BlogCommendFromBaidu_6" target="_blank">CEF加载PPAPI插件</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/foruok/article/details/50526110" title="在PPAPI插件中使用Skia绘图" strategy="BlogCommendFromBaidu_7" target="_blank">在PPAPI插件中使用Skia绘图</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/foruok/article/details/50494061" title="PPAPI插件与浏览器的交互过程" strategy="BlogCommendFromBaidu_8" target="_blank">PPAPI插件与浏览器的交互过程</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/foruok/article/details/50799518" title="CEF中访问修改HTML DOM元素" strategy="BlogCommendFromBaidu_9" target="_blank">CEF中访问修改HTML DOM元素</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+       
+                           
+            <!-- 广告位：PC端-博客内容页-banner1-960*90 --> 
+            <script> 
+                (function() { 
+                    var s = "_" + Math.random().toString(36).slice(2); 
+                    document.write('<div id="' + s + '"></div>'); 
+                    (window.slotbydup=window.slotbydup || []).push({ 
+                        id: '4228013', 
+                        container: s, 
+                        size: '0,0', 
+                        display: 'inlay-fix' 
+                    }); 
+                })(); 
+            </script>
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/daoxwj/svc/GetSuggestContent/8786911",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+
+            
+                                    
+            
+                                    
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '8786911';
+    var commentscount = 14;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='CEF中文教程(google chrome浏览器控件) -- CEF编译';
+
+</script>
+
+
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/daoxwj" target="_blank">
+    <img src="http://avatar.csdn.net/2/0/E/1_daoxwj.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/daoxwj" class="user_name" target="_blank">daoxwj</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=daoxwj','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>146346次</span></li>
+    <li>积分：<span>1273</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog4.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：1273 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>17篇</span></li>
+    <li>转载：<span>1篇</span></li>
+    <li>译文：<span>17篇</span></li>
+    <li>评论：<span>26条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body" class="form_search">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank"  data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/daoxwj/article/category/1368112" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Design Pattern</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1372815" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Webkit</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1378405" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">MFC</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1382362" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">IE内核</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1389739" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">CEF</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1397463" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">USB</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1400716" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">WinSocket</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1405945" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">C/C++</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1415143" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">adroid debug bridge</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1432221" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">cocos2d-x + lua</a><span>(13)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1434657" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">utility</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/daoxwj/article/category/1859349" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">Java</a><span>(1)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/daoxwj/article/month/2014/10">2014年10月</a><span>(1)</span></li><li><a href="/daoxwj/article/month/2014/01">2014年01月</a><span>(1)</span></li><li><a href="/daoxwj/article/month/2013/11">2013年11月</a><span>(1)</span></li><li><a href="/daoxwj/article/month/2013/10">2013年10月</a><span>(4)</span></li><li><a href="/daoxwj/article/month/2013/09">2013年09月</a><span>(2)</span></li><li><a href="/daoxwj/article/month/2013/07">2013年07月</a><span>(4)</span></li><li><a href="/daoxwj/article/month/2013/06">2013年06月</a><span>(2)</span></li><li><a href="/daoxwj/article/month/2013/05">2013年05月</a><span>(7)</span></li><li><a href="/daoxwj/article/month/2013/04">2013年04月</a><span>(7)</span></li><li><a href="/daoxwj/article/month/2013/03">2013年03月</a><span>(6)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel tracking-ad" data-mod="popu_340">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/daoxwj/article/details/8783629" title="CEF中文教程(google chrome浏览器控件)  -- CEF简介">CEF中文教程(google chrome浏览器控件)  -- CEF简介</a><span>(72401)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8786911" title="CEF中文教程(google chrome浏览器控件) -- CEF编译">CEF中文教程(google chrome浏览器控件) -- CEF编译</a><span>(22213)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8809024" title="CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a><span>(9621)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8819784" title="Detecting Hardware Insertion and/or Removal">Detecting Hardware Insertion and/or Removal</a><span>(3048)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/9244065" title="在VS2010下cocos2d-x与Lua的交互">在VS2010下cocos2d-x与Lua的交互</a><span>(2988)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8757028" title="webbrowser控件事件">webbrowser控件事件</a><span>(2823)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/40454041" title="cocos2d-x实现node圆弧运动 (附源代码)">cocos2d-x实现node圆弧运动 (附源代码)</a><span>(2432)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/11781171" title="数据持久化">数据持久化</a><span>(1561)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8737109" title="MiniBrowserLauncher代码分析">MiniBrowserLauncher代码分析</a><span>(1478)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8725189" title="CygWin的使用">CygWin的使用</a><span>(1388)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel tracking-ad" data-mod="popu_341">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/daoxwj/article/details/8786911" title="CEF中文教程(google chrome浏览器控件) -- CEF编译">CEF中文教程(google chrome浏览器控件) -- CEF编译</a><span>(14)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8783629" title="CEF中文教程(google chrome浏览器控件)  -- CEF简介">CEF中文教程(google chrome浏览器控件)  -- CEF简介</a><span>(5)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8809024" title="CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a><span>(4)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/18350613" title="c++转学java的笔记">c++转学java的笔记</a><span>(2)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8725189" title="CygWin的使用">CygWin的使用</a><span>(1)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8757028" title="webbrowser控件事件">webbrowser控件事件</a><span>(0)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8737109" title="MiniBrowserLauncher代码分析">MiniBrowserLauncher代码分析</a><span>(0)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8732173" title="注册表编程">注册表编程</a><span>(0)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/8724099" title="(翻译)Building WebKit on Windows 7 with VS2010">(翻译)Building WebKit on Windows 7 with VS2010</a><span>(0)</span>
+</li>
+<li>
+<a href="/daoxwj/article/details/40454041" title="cocos2d-x实现node圆弧运动 (附源代码)">cocos2d-x实现node圆弧运动 (附源代码)</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/77341027" target="_blank">* CSDN日报20170817——《如果不从事编程，我可以做什么？》</a></li>
+<li><a href="http://blog.csdn.net/carson_ho/article/details/77179764" 
+target="_blank">* Android自定义EditText：你需要一款简单实用的SuperEditText(一键删除&自定义样式)</a></li>
+<li><a href="http://blog.csdn.net/wangyangzhizhou/article/details/77196626"target="_blank">* 从JDK源码角度看Integer</a></li>
+<li><a href="http://blog.csdn.net/happycxz/article/details/75432928" 
+target="_blank">* 微信小程序——智能小秘“遥知之”源码分享（语义理解基于olami）</a></li>
+<li><a href="http://blog.csdn.net/pangpang123654/article/details/77336383" 
+target="_blank">* 多线程中断机制</a></li>
+<li><a href="http://blog.csdn.net/foruok/article/details/76566015" 
+target="_blank">* 做自由职业者是怎样的体验</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/daoxwj/article/details/8809024#comments">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a>
+    <p style="margin:0px;"><a href="/tongsui9353" class="user_name">tongsui9353</a>:
+....这是啥？隐形的嘛？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8809024#comments">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a>
+    <p style="margin:0px;"><a href="/laocui172" class="user_name">laocui172</a>:
+请问原文的链接是什么？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8783629#comments">CEF中文教程(google chrome浏览器控件)  -- CEF简介</a>
+    <p style="margin:0px;"><a href="/yaolixing01" class="user_name">yaolixing01</a>:
+他山界面开发框架(OHUI),内嵌Gecko22.0，使用DX执行绘制，运行效率流畅。html(5)...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8783629#comments">CEF中文教程(google chrome浏览器控件)  -- CEF简介</a>
+    <p style="margin:0px;"><a href="/stream1990" class="user_name">stream1990</a>:
+怎么样取httponly的cookie?
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8783629#comments">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a>
+    <p style="margin:0px;"><a href="/daoxwj" class="user_name">daoxwj</a>:
+@dragonwarrior_95:好久不搞这块了
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8783629#comments">CEF中文教程(google chrome浏览器控件) -- Windows下编译Chromium</a>
+    <p style="margin:0px;"><a href="/dragonwarrior_95" class="user_name">dragonwarrior_95</a>:
+文章怎么没有内容？？？
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8786911#comments">CEF中文教程(google chrome浏览器控件) -- CEF编译</a>
+    <p style="margin:0px;"><a href="/chunyou128" class="user_name">chunyou128</a>:
+这可能是原文链接：https://code.google.com/p/chromiumembedde...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/8786911#comments">CEF中文教程(google chrome浏览器控件) -- CEF编译</a>
+    <p style="margin:0px;"><a href="/chunyou128" class="user_name">chunyou128</a>:
+原文链接：http://chromiumembedded.googlecode.com/svn-hi...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/18350613#comments">c++转学java的笔记</a>
+    <p style="margin:0px;"><a href="/daoxwj" class="user_name">daoxwj</a>:
+@cym827307173:因为要用到c++跟java交互，所以学下java没说不做c++了^-^
+    </p>
+    </li>
+    <li>
+   
+         <a href="/daoxwj/article/details/18350613#comments">c++转学java的笔记</a>
+    <p style="margin:0px;"><a href="/cym827307173" class="user_name">cym827307173</a>:
+为什么C++不做了,搞java?
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+                   <!-- 广告位开始 -->                    <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true"  data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 500px;">
+                         <div id="nav_show_top_stop" style="width: 200px;height: 500px;z-index:1000"><div id="cpro_u2734128"></div>
+                             <div id="cpro_u3031287"></div></div>
+                   </div>
+                <script type="text/javascript">
+                    setTimeout(function () {
+                        var naviga_offsetTop = 0;
+                        function naviga_stay_top() { var scrollTop = jQuery(document).scrollTop(); if (scrollTop > naviga_offsetTop) { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": "0px" }); } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); } }
+                        function onload_function() { naviga_offsetTop = jQuery("#nav_show_top_stop").position().top; jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top); jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top); } jQuery(document).ready(onload_function);
+
+                    }, 200);
+                </script>                    
+<script type="text/javascript">(window.cproArray = window.cproArray || []).push({ id: "u2734128" });  </script> 
+                    <script src="http://cpro.baidustatic.com/cpro/ui/c.js" type="text/javascript"></script> 
+                   <script type="text/javascript">
+                       /*PC端-博客内容页左侧Button2-200*200-2017/7/10*/
+                       (window.cproArray = window.cproArray || []).push({ id: "u3031287" });
+</script>
+<script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+   
+     <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+    
+    <script src="http://static.blog.csdn.net/scripts/csdn_blog_detail.min.js" type="text/javascript"></script>
+        
+    <script type="text/javascript" src="http://c.csdnimg.cn/blog/csdn_public_blog_detail.min.js?20170719001"></script>
+
+    <script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=364987"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" ></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            //$(".toc a[target='_blank']").attr("target", "");
+
+            setTimeout(function () {
+                $(".toc a[target='_blank']").attr("target", "");
+            }, 500);
+
+        </script>
+
+</body>
+</html>   

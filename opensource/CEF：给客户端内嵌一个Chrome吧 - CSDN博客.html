@@ -1,0 +1,1007 @@
+
+<link rel="stylesheet" href="http://static.blog.csdn.net/code/prettify.css" />
+<script type="text/javascript" src="http://static.blog.csdn.net/code/prettify.js"></script>
+
+<script type="text/javascript">
+    var username = "jiftlixu";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/jiftlixu";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "cnheike";  
+
+    var fileName = '18220743';
+    var commentscount = 2;
+    var islock = false
+
+    
+
+   window.quickReplyflag = true;
+            
+             var isBole = false;
+    
+    
+
+            
+            var isDigg = false;
+    
+    
+      
+      var isExpert=false;
+        
+
+</script>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script src="http://c.csdnimg.cn/public/common/libs/jquery/jquery-1.9.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="http://static.csdn.net/public/common/toolbar/css/index.css">
+    <link rel="stylesheet" href="http://c.csdnimg.cn/public/common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://c.csdnimg.cn/public/static/css/avatar.css">
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+    <link rel="stylesheet" href="http://static.blog.csdn.net/Skin/skin3-template/css/style.css">
+    <script type="text/javascript" src="http://static.blog.csdn.net/Skin/skin3-template/fonts/iconfont.js"></script>
+    <script src="//csdnimg.cn/rabbit/tracking-ad/main.js"></script>
+    <script type="text/javascript" src="http://csdnimg.cn/pubfooter/js/tracking.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        // Traffic Stats of the entire Web site By baidu
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6bcd52f51e9b3dce32bec4a3997715ac";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        // Traffic Stats of the entire Web site By baidu end
+        
+        
+
+    </script>
+    <meta name="description" content="原文：http://yogurtcat.com/posts/cef/hello-cef.html
+发表于:&#160;2013-03-31 20:20&#160;&#160;&#160;|&#160;&#160;更多相关文章：&#160;browser&#160;CEF&#160;Chrome&#160;OSR&#160;Webkit
+
+
+CEF是什么
+
+CEF是Chromium Embedded Framework的缩写，是个基于Google Chromium项目的开源Web browser" />
+    <meta name="keywords" content="" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848">
+
+
+    <title>CEF：给客户端内嵌一个Chrome吧 - CSDN博客</title>
+</head>
+<body>
+<header class="clearfix">
+    <nav class="clearfix tracking-ad"  data-mod="popu_366">
+        <ul>
+            <li><a href="http://blog.csdn.net" target="_blank">CSDN博客</a></li>
+
+            
+            <li><a href="http://blog.csdn.net/mobile/newarticle.html" target="_blank">移动开发</a></li>
+            
+            <li><a href="http://blog.csdn.net/web/newarticle.html" target="_blank">Web前端</a></li>
+            
+            <li><a href="http://blog.csdn.net/enterprise/newarticle.html" target="_blank">架构设计</a></li>
+            
+            <li><a href="http://blog.csdn.net/code/newarticle.html" target="_blank">编程语言</a></li>
+            
+            <li><a href="http://blog.csdn.net/www/newarticle.html" target="_blank">互联网</a></li>
+            
+
+            <li>
+                <div class="dropdown">
+                    <a href="#" target="_self" id="dLabel" data-target="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">更多</a>
+                    <ul class="dropdown-menu" aria-labelledby="dLabel">
+                        
+                        <li><a href="http://blog.csdn.net/database/newarticle.html" target="_blank">数据库</a></li>
+                        
+                        <li><a href="http://blog.csdn.net/cloud/newarticle.html" target="_blank">云计算</a></li>
+                        
+                        <li><a href="http://blog.csdn.net/software/newarticle.html" target="_blank">研发管理</a></li>
+                        
+                        <li><a href="http://blog.csdn.net/other/newarticle.html" target="_blank">综合</a></li>
+                        
+                        <li class="arr_top"> </li>
+                    </ul>
+                </div>
+            </li>
+
+        </ul>
+        <div class="right">
+            <div class="search tracking-ad" data-mod="popu_369">
+                <input type="text" class="btn btn-small btn-gray">
+                <a href="" class="sub_search"><i class="icon iconfont icon-sousuo"></i></a>
+            </div>
+            <span class="tracking-ad" data-mod="popu_370"><a href="http://write.blog.csdn.net/postedit" target="_blank" class="btn btn-small btn-red">写博客</a></span>
+            <div class="notLogin">
+                <a href="https://passport.csdn.net/account/login?ref=toolbar">登录</a> <span>|</span>
+                <a href="http://passport.csdn.net/account/mobileregister?ref=toolbar&action=mobileRegister">注册</a>
+            </div>
+            <dl class="alrLogin">
+                <dt class="trackgin-ad" data-mod="popu_368">
+                    <a href="http://blog.csdn.net/" target="_blank"><img src="" class="user_img"></a>
+                </dt>
+                <dd class="trackgin-ad" data-mod="popu_367"><a href="http://blog.csdn.net/" target="_blank"></a><span>|</span><a class="icon-signout" href="https://passport.csdn.net/account/logout?ref=toolbar">退出</a> </dd>
+            </dl>
+        </div>
+    </nav>
+    
+    <div class="topbox clearfix  tracking-ad" data-mod="popu_371">
+        <div class="text">
+            <a href="http://blog.csdn.net/pk.html?id=9948" target="_blank">【第22期】观点：IT 行业加班，到底有没有价值？</a>
+        </div>
+        <img src="http://img.blog.csdn.net/20170811134344074" alt="【第22期】观点：IT 行业加班，到底有没有价值？" title="【第22期】观点：IT 行业加班，到底有没有价值？" class="con">
+    </div>
+    
+</header>
+<div class="container clearfix">
+    <main>
+        <article>
+            <h1 class="csdn_top">CEF：给客户端内嵌一个Chrome吧</h1>
+            <div class="article_bar clearfix">
+                <div class="artical_tag">
+                    <span class="original">转载</span>
+                    <span class="time">2014年01月13日 14:23:12</span>
+                </div>
+                <ul class="right_bar">
+                    <li><button class="btn-noborder"><i class="icon iconfont icon-yuedu"></i><span class="txt">23492</span></button></li>
+                    <li><button class="btn-noborder but-comment-topicon"><i class="icon iconfont icon-pinglun"></i><span class="txt">2</span></button></li>
+                    <li><button class="btn-noborder btn-like"><i  class="icon iconfont icon-xihuan-"></i><span class="txt">4</span></button></li>
+                    <!--<li><button class="btn-noborder"><i class="icon iconfont icon-dashang-"></i><span class="txt">0</span></button></li>-->
+
+                    <li class="edit">
+                        <a class="btn-noborder" href="" >
+                            <i class="icon iconfont icon-bianji"></i><span class="txt">编辑</span>
+                        </a>
+                    </li>
+                    <li class="del">
+                        <a class="btn-noborder" onclick="javascript:deleteArticle(fileName);return false;">
+                            <i class="icon iconfont icon-shanchu"></i><span class="txt">删除</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+                
+<h1 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); padding-top:40px">
+<span style="font-size:14px">原文：<a target="_blank" href="http://yogurtcat.com/posts/cef/hello-cef.html">http://yogurtcat.com/posts/cef/hello-cef.html</a></span></h1>
+<small style="font-size:12px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; line-height:20px">发表于:&nbsp;2013-03-31 20:20&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;更多相关文章：&nbsp;<a target="_blank" class="tag" href="http://yogurtcat.com/categories/browser.html" style="color:rgb(47,164,231); text-decoration:none"><span class="badge badge-info" style="display:inline-block; padding:2px 9px; font-size:11.844px; font-weight:bold; line-height:14px; color:rgb(255,255,255); vertical-align:baseline; white-space:nowrap; background-color:rgb(129,123,88)">browser</span></a>&nbsp;<a target="_blank" class="tag" href="http://yogurtcat.com/categories/cef.html" style="color:rgb(47,164,231); text-decoration:none"><span class="badge badge-info" style="display:inline-block; padding:2px 9px; font-size:11.844px; font-weight:bold; line-height:14px; color:rgb(255,255,255); vertical-align:baseline; white-space:nowrap; background-color:rgb(129,123,88)">CEF</span></a>&nbsp;<a target="_blank" class="tag" href="http://yogurtcat.com/categories/chrome.html" style="color:rgb(47,164,231); text-decoration:none"><span class="badge badge-info" style="display:inline-block; padding:2px 9px; font-size:11.844px; font-weight:bold; line-height:14px; color:rgb(255,255,255); vertical-align:baseline; white-space:nowrap; background-color:rgb(129,123,88)">Chrome</span></a>&nbsp;<a target="_blank" class="tag" href="http://yogurtcat.com/categories/osr.html" style="color:rgb(47,164,231); text-decoration:none"><span class="badge badge-info" style="display:inline-block; padding:2px 9px; font-size:11.844px; font-weight:bold; line-height:14px; color:rgb(255,255,255); vertical-align:baseline; white-space:nowrap; background-color:rgb(129,123,88)">OSR</span></a>&nbsp;<a target="_blank" class="tag" href="http://yogurtcat.com/categories/webkit.html" style="color:rgb(47,164,231); text-decoration:none"><span class="badge badge-info" style="display:inline-block; padding:2px 9px; font-size:11.844px; font-weight:bold; line-height:14px; color:rgb(255,255,255); vertical-align:baseline; white-space:nowrap; background-color:rgb(129,123,88)">Webkit</span></a></small><span style="color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px"></span>
+<hr style="margin:20px 0px; border-right-width:0px; border-left-width:0px; border-top-style:solid; border-top-color:rgb(245,245,245); border-bottom-style:solid; border-bottom-color:rgb(255,255,255); color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+<h3 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); font-size:24.5px; padding-top:40px">
+CEF是什么</h3>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+CEF是<a target="_blank" href="http://code.google.com/p/chromiumembedded/" target="_blank" style="color:rgb(47,164,231); text-decoration:none">Chromium Embedded Framework</a>的缩写，是个基于Google Chromium项目的开源Web browser控件，支持Windows, Linux, Max平台。除了提供C/C&#43;&#43;接口外，也有其他语言的移植版。</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+因为基于Chromium，所以CEF支持Webkit &amp; Chrome中实现的HTML5的特性，并且在性能上面，也比较接近Chrome。</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+CEF还提供的如下特性：自定义插件、自定义协议、自定义JavaScript对象和扩展；可控制的resource loading, navigation, context menus等等。</p>
+<h3 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); font-size:24.5px; padding-top:40px">
+谁在用CEF</h3>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+让我们通过一些实战中的例子，来说明大家都使用CEF做了什么：</p>
+<ul style="padding:0px; margin:0px 0px 10px 25px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+<li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+各种浏览器</h5>
+<p style="margin-top:0px; margin-bottom:10px">早期的双核浏览器(IE &#43; Webkit)，有些使用了CEF来作为Webkit内核浏览器控件。</p>
+<p style="margin-top:0px; margin-bottom:10px">不过对于浏览器来说，直接在Chrome上面扩展，其实才是王道，大家现在都这么做了（各种极速浏览器）。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+Evernote Client (on Windows)</h5>
+<p style="margin-top:0px; margin-bottom:10px">Evernote允许用户将网页粘贴到笔记中，还提供了插件用来将网页保存为笔记。</p>
+<p style="margin-top:0px; margin-bottom:10px">那肯定是需要在Client上面可以正确的渲染页面咯，这个任务就交给了CEF。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+GitHub Client (on Windows)</h5>
+<p style="margin-top:0px; margin-bottom:10px">GitHub也打包了libcef.dll，从表现上面看，用来展示项目的ReadMe页面的，肯定是CEF，其他地方的UI，可能部分也是用页面来实现的。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+QQ</h5>
+<p style="margin-top:0px; margin-bottom:10px">QQ很早之前就通过内嵌IE来实现一些功能和界面。从去年开始，QQ引入了CEF，对一些之前用IE的地方进行了替换，这样就可以使用一些基于Webkit的新特性，同时也获得了速度、稳定性、兼容性方面的优势。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+Adobe Edge Animate &amp; Adobe Edge Reflow</h5>
+<p style="margin-top:0px; margin-bottom:10px">Adobe推出了一整套制作现代网页(或者说HTML5?)的工具，取名<a target="_blank" href="http://html.adobe.com/edge/" target="_blank" style="color:rgb(47,164,231); text-decoration:none">Edge</a>。</p>
+<ul style="padding:0px; margin:0px 0px 0px 25px">
+<li>
+<p style="margin-top:0px; margin-bottom:10px">Adobe Edge Animate，做动画用的，可以通过编辑时间线，创建原件(Edge Animate里面叫做symbol)，来实现复杂的动画。</p>
+</li><li>
+<p style="margin-top:0px; margin-bottom:10px">Edge Reflow则是Design the responsive web. 有人翻译为响应式，其实就是自适应了。</p>
+</li></ul>
+<p style="margin-top:0px; margin-bottom:10px">上面两款软件，其基本面向的是Webkit内核的浏览器，那么内嵌一个Webkit内核，来提供所见即所得的预览、编辑界面就是必须的了。他们都使用了CEF。（后面会介绍CEF和纯Webkit的差别）</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+Q&#43;</h5>
+<p style="margin-top:0px; margin-bottom:10px">Q&#43;在Web App的概念下，为Web页面提供了一个运行环境(简单来说就是：Client的一个框和一些可用的API)，支持IE和Webkit内核。</p>
+<p style="margin-top:0px; margin-bottom:10px">对Web开发同学来说，我们引入的Webkit内核（实际上是CEF），无需考虑IE的版本兼容问题，既提高了开发效率，又可以利用一些新的HTML5特性。当时Q&#43;的应用市场、消息中心、壁纸、音乐Widget等应用都是基于Webkit内核开发的。</p>
+<p style="margin-top:0px; margin-bottom:10px">Q&#43;项目可以说对CEF进行了比较多的尝试，比如：</p>
+<ul style="padding:0px; margin:0px 0px 0px 25px">
+<li>
+<p style="margin-top:0px; margin-bottom:10px">开发的音乐Widget，就使用了HTML5的audio标签；</p>
+</li><li>
+<p style="margin-top:0px; margin-bottom:10px">一些应用使用了HTML5的离线功能（就是配个manifest文件那个），当然其中也遇到些曲折，收获了不少经验。</p>
+</li><li>
+<p style="margin-top:0px; margin-bottom:10px">打包的Webkit调试工具（Dev Tools）。</p>
+</li><li>
+<p style="margin-top:0px; margin-bottom:10px">自定义协议：比如对qplus://协议的访问，可以重定向到某个特殊文件夹之类的功能。</p>
+</li><li>
+<p style="margin-top:0px; margin-bottom:10px">Off Screen Rendering（OSR，离屏渲染）：通过离屏渲染 &#43; Windows的Layered Window，就制作了不规则的网页窗口（网页不透明区域是什么形状，窗口就是什么形状）</p>
+</li></ul>
+</li></ul>
+<h3 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); font-size:24.5px; padding-top:40px">
+为什么要给客户端内嵌CEF？</h3>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+举了那么多例子之后，这个问题说起来就容易多了：</p>
+<ul style="padding:0px; margin:0px 0px 10px 25px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+<li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+用来展示Web页面，使用各种Web Service；</h5>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+用Web页面来做UI；</h5>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+使用HTML5的特性，比如audio、canvas等，包括CSS3特性等。</h5>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+Off Screen Rendering（OSR，离屏渲染）：</h5>
+<p style="margin-top:0px; margin-bottom:10px">所谓的OSR，就是不创建真窗口，将整个页面渲染到一张位图上面。当然不只是渲染，还有一系列的API来处理鼠标、键盘事件，处理输入法事件等。</p>
+<p style="margin-top:0px; margin-bottom:10px">这个特性在不能使用真窗口的时候特别有用，比如Layered Window上面，或者是游戏中渲染到Texture上。</p>
+<p style="margin-top:0px; margin-bottom:10px">利用OSR特性，可以做出一些有趣的效果，比如：</p>
+<p style="margin-top:0px; margin-bottom:10px">AlloyTeam做出了<a target="_blank" href="http://yogurtcat.com/posts/cef/webtop.alloyteam.com" target="_blank" style="color:rgb(47,164,231); text-decoration:none">Webtop</a>，里面用OSR做了纯网页实现的浏览器、播放器等。</p>
+<p style="margin-top:0px; margin-bottom:10px">有一个Awesomium项目，也是支持OSR，已经有游戏项目用Awesomium来在游戏中渲染网页了。 （看Awesomium的输出文件，应该和CEF的实现方式差不多，都是对Chromium的封装，Awesomium能做的CEF应该也可以做）</p>
+<p style="margin-top:0px; margin-bottom:10px">我业余时间做了一个<a target="_blank" href="https://github.com/zhaojunmeng/BIG" target="_blank" style="color:rgb(47,164,231); text-decoration:none">demo</a>，用CEF将网页渲染到了OpenGL的Texture上面，也算是将CEF应用在游戏中的一小步尝试，如图：</p>
+<p style="margin-top:0px; margin-bottom:10px"><img alt="in-game browser demo" src="http://yogurtcat.com/assets/image/cef/cef-in-game-demo.jpg" title="in-game browser demo" style="max-width:90%; height:auto; vertical-align:middle; border:0px"></p>
+</li></ul>
+<h3 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); font-size:24.5px; padding-top:40px">
+Why CEF?（CEF vs 其他可选方案）</h3>
+<h4 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:20px; color:rgb(49,126,172); font-size:17.5px; padding-top:40px">
+IE</h4>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+IE作为内嵌的浏览器控件已经有很久的历史了，准确的说是现在我们有了很多可以替代IE的方案。</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+CEF vs IE：</p>
+<ul style="padding:0px; margin:0px 0px 10px 25px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+<li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+兼容性：</h5>
+<p style="margin-top:0px; margin-bottom:10px">IE：内核随着操作系统不同，版本从6到10，Web开发对这些版本的兼容工作量不可小视。</p>
+<p style="margin-top:0px; margin-bottom:10px">CEF：使用的是Webkit内核，从特性上看，一个CEF版本，可以对应一个Chrome的版本号，这样Web开发就有了明确的特性集合，免去了考虑兼容性的工作量。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+HTML5标准 &amp; 新特性：</h5>
+<p style="margin-top:0px; margin-bottom:10px">IE：当然旧版本的IE也不支持最新的HTML特性和标准。</p>
+<p style="margin-top:0px; margin-bottom:10px">CEF：毫无疑问，在对新特性的支持上Webkit和Chrome都是走在前沿的。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+开源 &amp; 跨平台：</h5>
+<p style="margin-top:0px; margin-bottom:10px">IE：不开源，限Windows平台</p>
+<p style="margin-top:0px; margin-bottom:10px">CEF：开源，使用的Webkit, Chromium都是开源的，开源就意味着更多可定制的可能；且跨Windows, Mac, Linux3个平台。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+离屏渲染（OSR）：</h5>
+<p style="margin-top:0px; margin-bottom:10px">IE：可以通过一些hack的方法来实现离屏渲染，但是工作量不小，而且不是官方支持的。</p>
+<p style="margin-top:0px; margin-bottom:10px">CEF：有专门的离屏渲染模式和对应的API。</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+普及率：</h5>
+<p style="margin-top:0px; margin-bottom:10px">IE：所有Windows用户都有IE，这是IE的优势（不过有些用户的IE设置不正缺，会导致无法使用，比如jscript.dll未注册，导致无法使用JavaScript）</p>
+<p style="margin-top:0px; margin-bottom:10px">CEF：要自己更安装包打包</p>
+</li></ul>
+<h4 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:20px; color:rgb(49,126,172); font-size:17.5px; padding-top:40px">
+Webkit</h4>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+为什么要特意将CEF和Webkit做对比呢？</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+最近看了一篇很好的文章，讲了Webkit到底是什么，不是什么，以及为什么要有那么多的Webkit port：<a target="_blank" href="http://www.infoq.com/cn/articles/webkit-for-developers" target="_blank" style="color:rgb(47,164,231); text-decoration:none">《开发者需要了解的WebKit》</a></p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+这里大概总结一下：</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+Webkit是网页的解析和排布引擎，是所有基于Webkit的浏览器共享的。默认的Webkit port是Safari，就是下载下来Webkit源码编译的版本。 除此之外还有其他的Webkit port，包括Chromium, QtWebkit等，在2D绘图、GPU加速、JavaScript引擎、audio/video解码等，都有不同的实现。</p>
+<ul style="padding:0px; margin:0px 0px 10px 25px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+<li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+CEF vs webkit（其实可以说是Chromium vs Webkit）</h5>
+<p style="margin-top:0px; margin-bottom:10px">V8引擎，skia的2D渲染，Chromium的GPU加速的实现，等等，借助Chromium的优秀实现，使CEF也成为了一个优秀的Webkit port。</p>
+</li></ul>
+<h3 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); font-size:24.5px; padding-top:40px">
+CEF缺点：</h3>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+做人要厚道，CEF也有自己的缺点和局限，也不能只提优点，这里我把CEF的缺点、劣势介绍一下：</p>
+<ul style="padding:0px; margin:0px 0px 10px 25px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+<li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+体积：</h5>
+<p style="margin-top:0px; margin-bottom:10px">最新版的CEF，所有DLL体积加起来，应该接近40M了，压缩之后估计也要10M&#43;。 如果你的项目本身安装包体积就不大，并且也无法接收这体积，那CEF不适合你。</p>
+<p style="margin-top:0px; margin-bottom:10px">当然对于现在按G来计算的游戏的话，这个体积应该还是可以接受的。</p>
+<p style="margin-top:0px; margin-bottom:10px">普通的Client项目，就看项目本身需要使用CEF实现的特性，是否&#20540;得让产品的安装包增大这么多。 当然这里也有一些实现上的妥协，比如做安装后下载（个人认为这个意义不大，毕竟安装包用户还可以选择用下载软件来加速）</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+缓存：</h5>
+<p style="margin-top:0px; margin-bottom:10px">Chrome的缓存设计成只能有一个进程读写，CEF自然也是如此。</p>
+<p style="margin-top:0px; margin-bottom:10px">对于需要多开的Client，目前只能每个进程实例指定一个不同的缓存文件夹。但是这无疑增加了硬盘占用，也使某些本来被缓存的文件被下载了多次（比如A进程缓存了jQuery.js，B进程由于缓存不同目录，还得去请求、缓存一次jQueyr.js）</p>
+</li><li>
+<h5 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; color:rgb(49,126,172); font-size:14px; padding-top:40px">
+OSR：</h5>
+<p style="margin-top:0px; margin-bottom:10px">OSR目前不像真窗口模式那样，可以使用GPU加速，OSR目前还只能使用软件渲染，也就是说一些CSS 3D的效果无法支持。</p>
+<p style="margin-top:0px; margin-bottom:10px">不过OSR的特性还在不停完善中，个人认为还是&#20540;得期待。</p>
+</li></ul>
+<h3 style="margin:-40px 0px 10px; font-family:Telex,sans-serif; line-height:40px; color:rgb(49,126,172); font-size:24.5px; padding-top:40px">
+后续要分享的内容</h3>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+写了这么多，算是一个CEF的简介吧，后续要写点儿干货，即如何使用CEF，包括：</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+CEF代码获取，编译，嵌入，处理页面和Client的API调用，OSR离屏渲染，缓存，自定义协议，CEF1 &amp; CEF3等。</p>
+<p style="margin-top:0px; margin-bottom:10px; color:rgb(85,85,85); font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-size:14px; line-height:20px">
+嗯，今天就到这里吧。</p>
+<link rel="stylesheet" href="http://static.blog.csdn.net/public/res-min/markdown_views.css?v=1.0" />
+            </div>
+        </article>
+        <div class="readall_box tracking-ad" data-mod="popu_376">
+            <a class="btn btn-large btn-gray-fred read_more_btn" target="_self">阅读全文</a>
+        </div>
+        <div class="article_copyright">
+            
+            <span class="r_ico"><i class="icon iconfont icon-jubao"></i><span class="txt" id="reportBtn">举报</span></span>
+        </div>
+        <!--  <div class="reward_box">
+            <div class="tit">
+              <button class="btn_reward"><i class="icon iconfont icon-dashang-"></i></button>
+            </div>
+            <dl class="clearfix">
+              <dt><a href="#" target="_blank">近期打赏</a></dt>
+              <dd><a href="#" target="_blank"><img src="http://avatar.csdn.net/9/3/2/2_nzf_001.jpg" alt="聂兆芳" title="聂兆芳"></a></dd>
+              <dd><a href="#" target="_blank"><img src="http://avatar.csdn.net/9/3/2/2_nzf_001.jpg" alt="聂兆芳" title="聂兆芳"></a></dd>
+              <dd><a href="#" target="_blank"><img src="http://avatar.csdn.net/9/3/2/2_nzf_001.jpg" alt="聂兆芳" title="聂兆芳"></a></dd>
+              <dd><a href="#" target="_blank"><img src="http://avatar.csdn.net/9/3/2/2_nzf_001.jpg" alt="聂兆芳" title="聂兆芳"></a></dd>
+              <dd><a href="#" target="_blank"><img src="http://avatar.csdn.net/9/3/2/2_nzf_001.jpg" alt="聂兆芳" title="聂兆芳"></a></dd>
+            </dl>
+          </div>-->
+        <ul class="article_tags clearfix tracking-ad" data-mod="popu_377">
+            <li class="tit">标签：</li>
+            
+        </ul>
+        <ul class="article_collect clearfix tracking-ad"  data-mod="popu_378">
+            <li class="tit">本文已收录于以下专栏：</li>
+            
+        </ul>
+        <div class="comment_box clearfix">
+            <div id="comment_form">
+                <div id="commentsbmitarear">
+                    <h6><span>2</span>条评论</h6>
+                    <dl class="clearfix" id="commentbox">
+                        <dt>
+                            <a href="http://my.csdn.net/"><img src="" ></a>
+                        </dt>
+                        <dd>
+                            <a href="http://my.csdn.net/" target="_blank"></a>
+                        </dd>
+                        <dd class="txt_tip"><span id="tip_comment" class="tip"></span></dd>
+                    </dl>
+                    <div class="comment_area clearfix">
+                        <form action="/jiftlixu/comment/submit?id=18220743" method="post" onsubmit="return subform(this);" id="commentform">
+                            <textarea class="comment_content" name="comment_content" id="comment_content"></textarea>
+                            <div class="bot_bar clearfix">
+                                <div id="ubbtools" class="add_code">
+                                    <a href="#insertcode" code="code" target="_self"><i class="icon iconfont icon-daima"></i></a>
+                                </div>
+
+                                <input type="hidden" id="comment_replyId" name="comment_replyId">
+                                <input type="hidden" id="comment_userId" name="comment_userId" value="">
+                                <input type="hidden" id="commentId" name="commentId" value="">
+                                <input type="submit" class="btn btn-redborder" value="发表评论">
+                                <div style="display: none;" class="tracking-ad" data-mod="popu_384"><a href="#" target="_blank" class="comment_area_btn">发表评论</a></div>
+
+                                <div id="lang_list" code="code">
+                                    <a href="#html" style="width:95px;" class="long_name" target="_self">HTML/XML</a>
+                                    <a href="#objc" style="width:95px;" class="long_name" target="_self">objective-c</a>
+                                    <a href="#delphi" style="width:58px;" class="zhong_name" target="_self">Delphi</a>
+                                    <a href="#ruby" class="zhong_name" target="_self">Ruby</a>
+                                    <a href="#php" target="_self">PHP</a>
+                                    <a href="#csharp" class="duan_name" target="_self">C#</a>
+                                    <a style=" border-right: none;" href="#cpp" class="duan_name" target="_self">C++</a>
+                                    <a style=" border-bottom:none;width:95px;" href="#javascript" class="long_name" target="_self">JavaScript</a>
+                                    <a style=" border-bottom:none;width:95px;" href="#vb" class="long_name" target="_self">Visual Basic</a>
+                                    <a style=" border-bottom:none;" href="#python" class="zhong_name" target="_self">Python</a>
+                                    <a style=" border-bottom:none;" href="#java" class="zhong_name" target="_self">Java</a>
+                                    <a style="border-bottom:none;" href="#css" class="duan_name" target="_self">CSS</a>
+                                    <a style="border-bottom:none;" href="#sql" class="duan_name" target="_self">SQL</a>
+                                    <a style="border:none; " href="#plain" class="duan_name" target="_self">其它</a>
+                                    <span class="arrb"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comment_li_outbox">
+            <div id="comment_list"></div>
+        </div>
+
+        <div class="more_comment">
+            <div id="comment_bar" class="trackgin-ad" data-mod="popu_385"></div>
+        </div>
+
+        <h3 class="recommend_tit">相关文章推荐</h3>
+        <div class="recommend_list clearfix">
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/kuerjinjin/article/details/49331003"  target="_blank" strategy="BlogCommendFromBaidu_0">Chromium for Android (2015)</a></h2>
+                    <div class="summary">
+                        Chromium for Android (2015)Chromium for Android 2015
+前提
+获取代码签出并安装 depot_tools 包
+创建一个文件夹存放源码并开始获取源代码
+...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/Kuerjinjin" target="_blank" strategy="BlogCommendFromBaidu_0"><img src="http://avatar.csdn.net/1/9/9/2_kuerjinjin.jpg" alt="Kuerjinjin" title="Kuerjinjin"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/Kuerjinjin">Kuerjinjin</a></li>
+                        <li class="time">2015-10-22 11:19</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>3584</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/luoshengyang/article/details/48417255"  target="_blank" strategy="BlogCommendFromBaidu_1">Chromium的Plugin进程启动过程分析</a></h2>
+                    <div class="summary">
+                        前面我们分析了Chromium的Render进程和GPU进程的启动过程，它们都是由Browser进程启动的。在Chromium中，还有一类进程是由Browser进程启动的，它们就是Plugin进程。顾...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/Luoshengyang" target="_blank" strategy="BlogCommendFromBaidu_1"><img src="http://avatar.csdn.net/5/6/E/2_luoshengyang.jpg" alt="Luoshengyang" title="Luoshengyang"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/Luoshengyang">Luoshengyang</a></li>
+                        <li class="time">2015-09-21 01:00</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>12501</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_393">
+                <dt><a href="http://edu.csdn.net/huiyiCourse/detail/491?utm_source=blog10" target="_blank"><img class="maxwidth" src="http://img.blog.csdn.net/20170821172007352" alt="" title=""></a></dt>
+                <dd>
+                    <div class="summary">
+                        <h2>程序员升职加薪指南！还缺一个“证”！</h2>  <div class="summary">CSDN出品，立即查看！ </div> 
+                    </div>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/mfcing/article/details/43953433"  target="_blank" strategy="BlogCommendFromBaidu_2">Windows上使用CEF嵌入基于chrome内核浏览器小例</a></h2>
+                    <div class="summary">
+                        CEF出来很久了，使用的也很广泛的，QQ里面很多地方都是嵌入的CEF浏览器（个人资料、微博、查找……），网上的资料也挺多的，大家可以搜搜看。
+首先是下载CEF代码编译，通过里面的那两个例子你也可以依葫...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/mfcing" target="_blank" strategy="BlogCommendFromBaidu_2"><img src="http://avatar.csdn.net/6/6/B/2_mfcing.jpg" alt="mfcing" title="mfcing"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/mfcing">mfcing</a></li>
+                        <li class="time">2015-02-26 15:40</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>47533</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/bqw2008/article/details/52016542"  target="_blank" strategy="BlogCommendFromBaidu_3">Chromium Embedded Framework 中文文档（简介）</a></h2>
+                    <div class="summary">
+                        简介
+
+
+Chromium Embedded Framework (CEF)是由 Marshall Greenblatt 在2008年创办的开源项目，致力于基于Google Chromium项目...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/bqw2008" target="_blank" strategy="BlogCommendFromBaidu_3"><img src="http://avatar.csdn.net/C/F/D/2_bqw2008.jpg" alt="bqw2008" title="bqw2008"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/bqw2008">bqw2008</a></li>
+                        <li class="time">2016-07-24 21:53</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>1444</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/hideforever/article/details/38435873"  target="_blank" strategy="BlogCommendFromBaidu_4">如何将Chromium Embedded Framework (CEF) 嵌入到你自己的程序中</a></h2>
+                    <div class="summary">
+                        关于CEF
+近期由于工作需要开始
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/hideforever" target="_blank" strategy="BlogCommendFromBaidu_4"><img src="http://avatar.csdn.net/6/7/6/2_hideforever.jpg" alt="hideforever" title="hideforever"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/hideforever">hideforever</a></li>
+                        <li class="time">2014-08-08 10:41</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>21861</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/bamboolsu/article/details/43051235"  target="_blank" strategy="BlogCommendFromBaidu_5">CEF Chromium Embedded Framework</a></h2>
+                    <div class="summary">
+                        CEF Chromium Embedded Framework
+
+
+
+I just came across this site http://code.google.com/p/chromiu...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/bamboolsu" target="_blank" strategy="BlogCommendFromBaidu_5"><img src="http://avatar.csdn.net/0/C/7/2_bamboolsu.jpg" alt="bamboolsu" title="bamboolsu"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/bamboolsu">bamboolsu</a></li>
+                        <li class="time">2015-01-23 09:13</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>1121</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/u013022222/article/details/51707352"  target="_blank" strategy="BlogCommendFromBaidu_6">网易云音乐API 分析</a></h2>
+                    <div class="summary">
+                        这几天一直在做一个仿QQ音乐的APP，但是苦于资金问题，一直没能解决服务器问题，所以打算使用第三方的服务。我这里的第三方就是网易云。在此之前，我有分析过多家的api，大部分都不太好实现。其技术难点就在...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/u013022222" target="_blank" strategy="BlogCommendFromBaidu_6"><img src="http://avatar.csdn.net/9/1/6/2_u013022222.jpg" alt="u013022222" title="u013022222"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/u013022222">u013022222</a></li>
+                        <li class="time">2016-06-18 21:55</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>16766</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/gong_hui2000/article/details/48155113"  target="_blank" strategy="BlogCommendFromBaidu_7">基于Cef的简易浏览器开发(CefSharp)</a></h2>
+                    <div class="summary">
+                        CEF(Chromium Embedded Framework， 嵌入式Chromium框架)
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/gong_hui2000" target="_blank" strategy="BlogCommendFromBaidu_7"><img src="http://avatar.csdn.net/9/C/C/2_gong_hui2000.jpg" alt="gong_hui2000" title="gong_hui2000"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/gong_hui2000">gong_hui2000</a></li>
+                        <li class="time">2015-09-01 10:59</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>14023</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/x844010689/article/details/18713113"  target="_blank" strategy="BlogCommendFromBaidu_8">CEF：给客户端内嵌一个Chrome吧</a></h2>
+                    <div class="summary">
+                        CEF是什么
+
+CEF是Chromium Embedded Framework的缩写，是个基于Google Chromium项目的开源Web browser控件，支持Windows, Linux, M...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/x844010689" target="_blank" strategy="BlogCommendFromBaidu_8"><img src="http://avatar.csdn.net/7/4/3/2_x844010689.jpg" alt="x844010689" title="x844010689"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/x844010689">x844010689</a></li>
+                        <li class="time">2014-01-23 20:02</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>13961</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+            <dl class="clearfix tracking-ad" data-mod="popu_387">
+                <dd>
+                    <h2><a href="/mfcing/article/details/48596025"  target="_blank" strategy="BlogCommendFromBaidu_9">使用Libcef+Duilib创建自己的Chrome内核浏览器</a></h2>
+                    <div class="summary">
+                        前言：
+编译Chrome开源代码是一件很恐怖的事情，代码庞大，还需要各种工具配合。在windows上快速开发chrome内核网页程序，Libcef是一个很好的选择。最近趁空闲时间，写了一个简单的浏览...
+                    </div>
+                    <ul>
+                        <li class="avatar_img"><a href="http://blog.csdn.net/mfcing" target="_blank" strategy="BlogCommendFromBaidu_9"><img src="http://avatar.csdn.net/6/6/B/2_mfcing.jpg" alt="mfcing" title="mfcing"></a></li>
+                        <li class="user_name"><a href="http://blog.csdn.net/mfcing">mfcing</a></li>
+                        <li class="time">2015-09-20 12:43</li>
+                        <li class="visited_num"><i class="icon iconfont icon-yuedu"></i><span>7378</span></li>
+                    </ul>
+                </dd>
+            </dl>
+            
+
+            
+
+            
+        </div>
+    </main>
+    <aside>
+        <div class="right_box user_info">
+            <dl class="inf_bar clearfix">
+                <dt class="tracking-ad" data-mod="popu_381">
+                    <a href="http://blog.csdn.net/jiftlixu" target="_blank">
+                        <img src="http://avatar.csdn.net/8/E/3/1_jiftlixu.jpg" class="avatar_pic">
+                    </a>
+                    <span class="medals" title="博客专家">
+                <svg class="icon" aria-hidden="true">
+                    
+                </svg>
+              </span>
+                </dt>
+                <dd>
+                    <h3 class="tracking-ad"  data-mod="popu_380"><a href="http://blog.csdn.net/jiftlixu" target="_blank">迷茫的小莱</a></h3>
+                    <span  class="tracking-ad" data-mod="popu_379"><a class="btn btn-redborder-small "  id="span_add_follow" target="_self">＋关注</a></span>
+                </dd>
+            </dl>
+            <div class="inf_number_box clearfix">
+                <dl>
+                    <dt>原创</dt>
+                    <dd>200</dd>
+                </dl>
+                <dl>
+                    <dt>粉丝</dt>
+                    <dd>41</dd>
+                </dl>
+                <dl>
+                    <dt>喜欢</dt>
+                    <dd>0</dd>
+                </dl>
+            </div>
+            <ul class="inf_list clearfix tracking-ad" data-mod="popu_382">
+                
+                <li class="clearfix">
+                    <span><i class="icon iconfont icon-youjiantou"></i></span>
+                    <a href="/jiftlixu/article/details/73730767" target="_blank">喜马拉雅音频下载工具</a>
+                </li>
+                
+                <li class="clearfix">
+                    <span><i class="icon iconfont icon-youjiantou"></i></span>
+                    <a href="/jiftlixu/article/details/54575742" target="_blank">统计每日单量MySQL语句</a>
+                </li>
+                
+                <li class="clearfix">
+                    <span><i class="icon iconfont icon-youjiantou"></i></span>
+                    <a href="/jiftlixu/article/details/54574857" target="_blank">python 查看帮助</a>
+                </li>
+                
+                <li class="clearfix">
+                    <span><i class="icon iconfont icon-youjiantou"></i></span>
+                    <a href="/jiftlixu/article/details/54572542" target="_blank">python数据分析入门学习笔记儿</a>
+                </li>
+                
+            </ul>
+            <div class="public_signal clearfix tracking-ad" data-mod="popu_383">
+                <!--<a href="#" target="_blank" class="left"><i></i><span>作者公众号</span></a>-->
+                <a href="http://blog.csdn.net/jiftlixu" target="_blank" class="more"><span>更多文章</span></a>
+            </div>
+        </div>
+        <div class="extension_other tracking-ad" data-mod="popu_389">
+            <script type="text/javascript">
+                /*PC端-博客内容页-右侧视窗1（新皮肤）-2017/7/11*/
+                var cpro_id = "u3032528";
+            </script>
+            <script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+        </div>
+        
+        <div class="right_box padb0 tracking-ad" data-mod="popu_391">
+            <h3 class="tit"><span><em>在线课程</em></span></h3>
+            <dl class="edu_li clearfix">
+                
+                <dd>
+                    <a href="http://edu.csdn.net/huiyiCourse/series_detail/48?utm_source=blog7" target="_blank">
+                        <img src="http://img.bss.csdn.net/201708211658047672.jpg" alt="【直播】机器学习之凸优化--马博士" title="【直播】机器学习之凸优化--马博士">
+                    </a>
+                </dd>
+                <dt><a href="http://edu.csdn.net/huiyiCourse/series_detail/48?utm_source=blog7" target="_blank">【直播】机器学习之凸优化--马博士</a></dt>
+                
+                <dd>
+                    <a href="http://edu.csdn.net/huiyiCourse/series_detail/52?utm_source=blog7" target="_blank">
+                        <img src="http://img.bss.csdn.net/201708211655376700.gif" alt="【直播】计算机视觉原理及实战--屈教授" title="【直播】计算机视觉原理及实战--屈教授">
+                    </a>
+                </dd>
+                <dt><a href="http://edu.csdn.net/huiyiCourse/series_detail/52?utm_source=blog7" target="_blank">【直播】计算机视觉原理及实战--屈教授</a></dt>
+                
+            </dl>
+        </div>
+        <div class="extension_other tracking-ad bottom_baidubox " data-mod="popu_395">
+            <script type="text/javascript">
+                /*PC端-博客内容页-右侧视窗2（新皮肤）-2017/7/11*/
+                var cpro_id = "u3032529";
+            </script>
+            <script type="text/javascript" src="http://cpro.baidustatic.com/cpro/ui/c.js"></script>
+        </div>
+    </aside>
+</div>
+
+<div class="left_fixed">
+    <ul class="left_menu">
+        <li id="blog_artical_directory">
+            <button class="left-fixed-btn left_menu_btn tracking-ad" data-mod="popu_372" target="_self">
+                <span class="iconbox border_black"><i class="icon iconfont icon-mulu"></i></span>
+                <span class="txt">目录</span>
+            </button>
+        </li>
+        <li class="menu_con">
+            <div class="list_father">
+                <div class="arr_box">
+                    <button class="btn-noborder arr-btn scroll-down  left_scroll_down"><i class="icon iconfont icon-xiajiantou"></i></button>
+                    <button class="btn-noborder arr-btn scroll-up left_scroll_top"><i class="icon iconfont icon-shangjiantou"></i></button>
+                </div>
+                <div class="arr"></div>
+                <div id="csdnBlogDir"></div>
+            </div>
+        </li>
+        <li>
+            <button class="left-fixed-btn btn-like tracking-ad" data-mod="popu_373" target="_self">
+                <span class="iconbox border_red"><i class="icon iconfont icon-xihuan-"></i></span>
+                <span class="txt">喜欢</span>
+                <span class="untxt">取消喜欢</span>
+            </button>
+        </li>
+        <li>
+            <button class="left-fixed-btn tracking-ad" data-mod="popu_374"  id="com-quick-collect" target="_self">
+                <span class="iconbox border_purple"><i class="icon iconfont icon-shoucang"></i></span>
+                <a class="txt" title="收藏">收藏</a>
+            </button>
+        </li>
+        <li id="share_box">
+            <button class="left-fixed-btn  tracking-ad"  data-mod="popu_375" target="_self">
+                <span class="iconbox border_orange"><i class="icon iconfont icon-fenxiang"></i></span>
+                <span class="txt">分享</span>
+            </button>
+            <div class="bdsharebuttonbox tracking-ad" data-mod="popu_172">
+                <div class="outside">
+                    <span class="iconbox border_red2"><i class="icon iconfont icon-xinlang"></i></span>
+                    <span class="text">微博</span>
+                    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"> </a>
+                </div>
+                <div class="outside">
+                    <span class="iconbox border_green"><i class="icon iconfont icon-pinglun"></i></span>
+                    <span class="text">微信</span>
+                    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"> </a>
+                </div>
+                <div class="outside">
+                    <span class="iconbox border_blue"><i class="icon iconfont icon-QQ"></i></span>
+                    <span class="text">QQ</span>
+                    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"> </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div id="pop_win"></div>
+<div id="popup_mask"></div>
+<div class="pop_CA_cover" ></div>
+<div class="pop pop_CA" >
+    <div class="CA_header">
+        收藏助手
+        <span class="cancel_icon"  id="fapancle" ></span>
+    </div>
+    <iframe src="" id="collectIframe" frameborder="0" width="100%" height="360"  scrolling="no" ></iframe>
+</div>
+<!--举报-->
+<div id="report_dialog" style="top: 250px; left: 343.5px;"><div id="panel_report">
+    <div class="panel_head">不良信息举报</div>
+    <form method="post" id="frmReport" class="panel_body">
+        <table border="0" cellpadding="0" cellspacing="4" class="pop_table">
+            <tbody><tr><td colspan="2">您举报文章：<a href="http://blog.csdn.net/raintungli/article/details/76583070" target="_blank">深度学习：神经网络中的前向传播和反向传播算法推导</a></td></tr>
+            <tr>
+                <th style="width:60px;">举报原因：</th>
+                <td id="panel_reporttype">
+                    <label><input type="radio" class="report_type" id="report_sex" name="report_type" value="1">色情</label>
+                    <label><input type="radio" class="report_type" id="report_Politics" name="report_type" value="2">政治</label>
+                    <label><input type="radio" class="report_type" id="report_copy" name="report_type" value="3">抄袭</label>
+                    <label><input type="radio" class="report_type" id="report_ad" name="report_type" value="4">广告</label>
+                    <label><input type="radio" class="report_type" id="report_want" name="report_type" value="5">招聘</label>
+                    <label><input type="radio" class="report_type" id="report_call" name="report_type" value="6">骂人</label>
+                    <br>
+                    <label><input type="radio" class="report_type" id="report_other" name="report_type" value="7">其他</label>
+                    <input type="text" name="report_other_content" id="report_other_content" maxlength="30" style="display: none;">
+                </td>
+            </tr>
+            <tr id="panel_originalurl" style="display: none;">
+                <th>原文地址：</th>
+                <td>
+                    <input id="originalurl" value="http://" name="originalurl" type="text" style="width: 90%;">
+                </td>
+            </tr>
+            <tr>
+                <th id="sp_reason">原因补充：</th>
+                <td>
+                    <textarea id="report_description" style="width: 300px;" rows="3" name="report_description"></textarea>
+                    <p id="sp_n" style="color:#999;margin:0px;padding:0px;">(最多只允许输入30个字)</p>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input id="btnSubmitReport" name="submit" type="image" align="middle" class="btn_1" src="http://static.blog.csdn.net/images/btn_submit.jpg">
+                    <span style="padding-left:20px;"></span>
+                    <img id="btnCloseReportDialog" src="http://static.blog.csdn.net/images/btn_cancel.jpg" align="middle">
+                    <div id="error" style="color: Red">
+                    </div>
+                </td>
+            </tr>
+            </tbody></table>
+    </form>
+</div>
+    <script language="javascript" type="text/javascript">
+        var isComment=0;
+        //显示隐藏地址
+        $(function () {
+            if(isComment){
+                $("#report_description").attr("disabled",true);
+                $("#sp_n").hide();
+                $("#sp_reason").html("评论内容：");
+            }
+            $(".report_type").click(function () {
+                $("#panel_originalurl,#report_other_content").hide();
+                switch ($(this).val()) {
+                    case '3':
+                        $("#panel_originalurl").show();
+                        $("#originalurl").focus();
+                        break;
+                    case '7':
+                        if(isComment){
+                            $("#report_other_content").show().focus();
+                        }
+                        break;
+                }
+
+            });
+
+            $("#frmReport").submit(function () {
+                if (!currentUserName) {
+
+                    if (confirm("您的操作必须登录，是否登录？")) {
+                        location.href = "http://passport.csdn.net/account/login?from=" + encodeURIComponent(location.href);
+                        return false;
+                    }
+                    return false;
+                }
+
+                var reportType = $("input[name=report_type]:checked").val();
+                if(!reportType){
+                    alert("请选择举报原因！");
+                    return false;
+                }
+                var otherInfo = "";
+                switch (reportType) {
+                    case '3':
+                        otherInfo = $("#originalurl").val();
+                        if (otherInfo == ""||otherInfo=="http://") {
+                            alert("举报抄袭必须提供原创文章地址！");
+                            $("#originalurl").focus();
+                            return false;
+                        } else if(!checkeURL(otherInfo)) {
+                            alert("请输入正确的原创文章地址！");
+                            $("#originalurl").focus();
+                            return false;
+                        }
+                        break;
+                    case '7':
+                        otherInfo = $("#report_other_content").val();
+                        if (isComment && !otherInfo) {
+                            alert("请填写举报的具体原因！");
+                            $("#report_other_content").focus();
+                            return false;
+                        }
+                        if(!isComment){
+                            if(!$("#report_description").val()){
+                                alert("请填写举报的具体原因！");
+                                $("#report_description").focus();
+                                return false;
+                            }
+                        }
+                        break;
+                }
+                if(!isComment){
+                    if($("#report_description").val().length>30){
+                        alert("举报原因最多只允许输入30个字！");
+                        return false;
+                    }
+                }
+
+                var data = {
+                    articleId: 76583070,
+                    commentId: 0,
+                    reportType: reportType,
+                    originalurl: $("#originalurl").val(),
+                    report_other_content: $("#report_other_content").val(),
+                    report_description: $("#report_description").val(),
+                    currentUserName: currentUserName,
+                    updatetime: "2017/8/8 16:54:12",
+                    blogUser: "raintungli"
+                };
+                if(!isComment){//如果是举报文章
+                    data.report_other_content = data.report_description;
+                    data.report_description = "1. 神经网络这是一个常见的神经网络的图：这是一个常见的三层神经网络的基本构成，Layer L1是输入层，Layer L2是隐含层";
+                }
+
+                $.post(blog_address + "/common/report?id=76583070&t=2", data, function (data) {
+                    if (data.result == 1){
+                        SetError("感谢您的举报，我们会尽快审核！");
+                    }else{
+                        if (data.content) alert(data.content);
+                    }
+
+                });
+                return false;
+            });
+
+            $("#btnCloseReportDialog").click(function () {
+                CloseDiv();
+            });
+
+        });
+
+        //提示后关闭方法
+        function SetError(error) {
+            $("#btnCloseReportDialog").trigger("click");
+            alert(error);
+            CloseDiv();
+        }
+
+        //关闭方法
+        function CloseDiv() {
+
+            $.removeMask();
+            $("#report_dialog").hide().html("");
+            return false;
+        }
+
+        //验证url
+        function checkeURL(url){
+            return /^http(s)?:\/\/([\w-]+\.)+[\w-]+/i.test(url);
+        }
+    </script>
+</div>
+
+<script src="http://c.csdnimg.cn/public/common/libs/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+
+<script type="text/javascript" src="http://static.blog.csdn.net/Skin/skin3-template/js/blog_ver.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/Skin/skin3-template/js/skin2017.js"></script>
+<script type="text/javascript" src="http://static.blog.csdn.net/scripts/cnick.js"></script>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<script type="text/javascript" >
+	  if($(".article_collect li").length==1){$(".article_collect").hide();}
+	    if($(".article_tags li").length==1){$(".article_tags").hide();}
+	$(".edit a").attr("href","http://write.blog.csdn.net/postedit/"+fileName);
+	$.each($(".edu_li a"),function(){$(this).attr("href",$(this).attr("href").replace("blog7","blog9"))});
+</script>
+</body>
+</html>
+
+<script  type="text/javascript">
+    var fromjs=$("#fromjs");
+    if(fromjs.length>0)
+    {                  
+        $("#fromjs .markdown_views pre").addClass("prettyprint");       
+        prettyPrint();
+
+        $('pre.prettyprint code').each(function () {
+            var lines = $(this).text().split('\n').length;
+            var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+            $(this).addClass('has-numbering').parent().append($numbering);
+            for (i = 1; i <= lines; i++) {
+                $numbering.append($('<li/>').text(i));
+            };
+            $numbering.fadeIn(1700);
+        });
+
+        $('.pre-numbering li').css("color","#999");             
+    }
+
+    $(function(){
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },500);         
+       
+
+    });
+
+    setTimeout(function () {
+        $(".toc a[target='_blank']").attr("target", "");
+    }, 500);
+
+</script>
+
