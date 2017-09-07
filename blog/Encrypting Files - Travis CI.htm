@@ -1,0 +1,487 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Encrypting Files - Travis CI</title>
+<link rel="stylesheet" href="/assets/stylesheets/main.css">
+<link rel="alternate" type="application/rss+xml" title="Travis CI Build Environment Updates" href="http://docs.travis-ci.com/feed.build-env-updates.xml">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" defer></script>
+<script src="/assets/javascripts/site.js" type="text/javascript" charset="utf-8" defer></script>
+<script src="/assets/javascripts/main.js" type="text/javascript" charset="utf-8" defer></script>
+<script src="/assets/javascripts/prism.js" type="text/javascript" charset="utf-8" defer></script>
+
+
+
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24868285-6']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+  </head>
+  <body>
+    <div class="wrapper">
+
+      <header class="top">
+  <div class="row topbar">
+    <h1 id="logo" class="logo">
+  <a href="http://travis-ci.org/" title="Travis CI">Travis</a>
+</h1>
+    <nav>
+      <ul id="navigation" class="navigation">
+        <li><a href="http://blog.travis-ci.com">Blog</a></li>
+        <li><a href="/">Docs</a></li>
+        <li class="toggle"><button type="button" id="toggle-menu" class="button--teal">Menu</button></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+
+      <div id="content" class="row">
+
+        <div id="sidebar" class="sidebar">
+  <div>
+    <!-- <h2>Search</h2> -->
+    <div class="searchbox">
+      <form>
+        <input type="text" id="st-search-input" class="searchbox-input" placeholder="Search the docs" />
+      </form>
+      <script type="text/javascript">
+      var Swiftype = window.Swiftype || {};
+        (function() {
+          Swiftype.key = 'tXvDDzd4fNTBnLvxfEyx';
+
+      Swiftype.searchSearchFields = {
+            "page": ["title, body, tags"]
+          };
+          Swiftype.autocompleteSearchFields = {
+            "page": ["title, body, tags"]
+          };
+          /** DO NOT EDIT BELOW THIS LINE **/
+          var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+          script.src = "//swiftype.com/embed.js";
+          var entry = document.getElementsByTagName('script')[0];
+          document.getElementsByTagName('script')[0].parentNode.insertBefore(script, entry);
+        }());
+      </script>
+    </div>
+  </div>
+
+  <section class="sidebar-navigation">
+    <nav>
+      <h3>Getting Started</h3>
+      <ul>
+        <li><a href="/user/getting-started/">Getting started</a></li>
+        <li><a href="/user/customizing-the-build/">Customizing Your Build</a></li>
+        <li><a href="/user/common-build-problems/">Common Build Problems</a></li>
+        <li><a href="/user/speeding-up-the-build/">Speeding up the Build</a></li>
+        <li><a href="/user/docker/">Using Docker in your Build</a></li>
+        <li><a href="/user/gui-and-headless-browsers/">Headless Testing with Browsers</a></li>
+        <li><a href="/user/pull-requests/">Building Pull Requests</a></li>
+        <li><a href="/user/cron-jobs/">Cron Jobs</a></li>
+        <li><a href="/user/travis-pro/">Travis CI for Private Projects</a></li>
+        <li><a href="https://github.com/travis-ci/travis#readme">Command Line Client</a></li>
+        <li><a href="/user/travis-lint/">Validating .travis.yml files</a></li>
+      </ul>
+      <h3>Installing Dependencies</h3>
+      <ul>
+        <li><a href="/user/installing-dependencies/">Installing Dependencies</a></li>
+        <li><a href="/user/private-dependencies/">Private Dependencies</a></li>
+        <li><a href="/user/database-setup/">Setting up Services and Databases</a></li>
+        <li><a href="/user/caching/">Caching Dependencies</a></li>
+        <li><a href="/user/ssh-known-hosts/">Adding to SSH Known Hosts</a></li>
+
+      </ul>
+      <h3>Programming Languages</h3>
+      <ul>
+      
+        <li><a href="/user/languages/android/">Android</a></li>
+      
+        <li><a href="/user/languages/c/">C</a></li>
+      
+        <li><a href="/user/languages/csharp/">C#</a></li>
+      
+        <li><a href="/user/languages/cpp/">C++</a></li>
+      
+        <li><a href="/user/languages/clojure/">Clojure</a></li>
+      
+        <li><a href="/user/languages/crystal/">Crystal</a></li>
+      
+        <li><a href="/user/languages/d/">D</a></li>
+      
+        <li><a href="/user/languages/dart/">Dart</a></li>
+      
+        <li><a href="/user/languages/erlang/">Erlang</a></li>
+      
+        <li><a href="/user/languages/elixir/">Elixir</a></li>
+      
+        <li><a href="/user/languages/csharp/">F#</a></li>
+      
+        <li><a href="/user/languages/go/">Go</a></li>
+      
+        <li><a href="/user/languages/groovy/">Groovy</a></li>
+      
+        <li><a href="/user/languages/haskell/">Haskell</a></li>
+      
+        <li><a href="/user/languages/haxe/">Haxe</a></li>
+      
+        <li><a href="/user/languages/java/">Java</a></li>
+      
+        <li><a href="/user/languages/javascript-with-nodejs/">JavaScript <small>(with Node.js)</small></a></li>
+      
+        <li><a href="/user/languages/julia/">Julia</a></li>
+      
+        <li><a href="/user/languages/objective-c/">Objective-C</a></li>
+      
+        <li><a href="/user/languages/perl/">Perl</a></li>
+      
+        <li><a href="/user/languages/perl6/">Perl6</a></li>
+      
+        <li><a href="/user/languages/php/">PHP</a></li>
+      
+        <li><a href="/user/languages/python/">Python</a></li>
+      
+        <li><a href="/user/languages/r/">R</a></li>
+      
+        <li><a href="/user/languages/ruby/">Ruby</a></li>
+      
+        <li><a href="/user/languages/rust/">Rust</a></li>
+      
+        <li><a href="/user/languages/scala/">Scala</a></li>
+      
+        <li><a href="/user/languages/smalltalk/">Smalltalk</a></li>
+      
+        <li><a href="/user/languages/csharp/">Visual Basic</a></li>
+      
+      </ul>
+      <h3>Deployments and Uploads</h3>
+      <ul>
+        <li class="is-overview"><a href="/user/deployment/">Overview</a></li>
+        
+          <li><a href="/user/deployment/anynines/">anynines</a></li>
+        
+          <li><a href="/user/deployment/appfog/">Appfog</a></li>
+        
+          <li><a href="/user/deployment/atlas/">Atlas</a></li>
+        
+          <li><a href="/user/deployment/codedeploy/">AWS CodeDeploy</a></li>
+        
+          <li><a href="/user/deployment/opsworks/">AWS OpsWorks</a></li>
+        
+          <li><a href="/user/deployment/azure-web-apps/">Azure Web Apps</a></li>
+        
+          <li><a href="/user/deployment/bintray/">bintray</a></li>
+        
+          <li><a href="/user/deployment/boxfuse/">Boxfuse</a></li>
+        
+          <li><a href="/user/deployment/cloud66/">Cloud 66</a></li>
+        
+          <li><a href="/user/deployment/cloudfoundry/">CloudFoundry</a></li>
+        
+          <li><a href="/user/deployment/deis/">Deis</a></li>
+        
+          <li><a href="/user/deployment/engineyard/">Engine Yard</a></li>
+        
+          <li><a href="/user/deployment/exoscale/">ExoScale</a></li>
+        
+          <li><a href="/user/deployment/releases/">GitHub Releases</a></li>
+        
+          <li><a href="/user/deployment/google-app-engine/">Google App Engine</a></li>
+        
+          <li><a href="/user/deployment/gcs/">Google Cloud Storage</a></li>
+        
+          <li><a href="/user/deployment/hackage/">Hackage</a></li>
+        
+          <li><a href="/user/deployment/heroku/">Heroku</a></li>
+        
+          <li><a href="/user/deployment/launchpad/">Launchpad</a></li>
+        
+          <li><a href="/user/deployment/modulus/">Modulus</a></li>
+        
+          <li><a href="/user/deployment/npm/">npm</a></li>
+        
+          <li><a href="/user/deployment/openshift/">OpenShift</a></li>
+        
+          <li><a href="/user/deployment/packagecloud/">packagecloud.io</a></li>
+        
+          <li><a href="/user/deployment/pypi/">PyPI</a></li>
+        
+          <li><a href="/user/deployment/cloudfiles/">Rackspace Cloud Files</a></li>
+        
+          <li><a href="/user/deployment/rubygems/">RubyGems</a></li>
+        
+          <li><a href="/user/deployment/script/">Script</a></li>
+        
+          <li><a href="/user/deployment/surge/">Surge.sh</a></li>
+        
+          <li><a href="/user/deployment/s3/">S3</a></li>
+        
+          <li><a href="/user/deployment/testfairy/">TestFairy</a></li>
+        
+      <li><a href="/user/uploading-artifacts/">Uploading Build Artifacts</a></li>
+    </ul>
+      <h3>CI Environment Reference</h3>
+      <ul>
+      <li><a href="/user/ci-environment/">CI Environment Reference</a></li>
+      <li><a href="/user/osx-ci-environment/">OSX CI Environment Reference</a></li>
+      <li><a href="/user/trusty-ci-environment/">Trusty CI Environment</a><li>
+      <li><a href="/user/environment-variables/">Environment Variables</a></li>
+      <li><a href="/user/multi-os/">Building on Multiple Operating Systems</a></li>
+          <li><a href="/user/migrating-from-legacy/">Migrating to Container-Based Infrastructure</a></li>
+          <li><a href="/user/build-environment-updates/">Build Environment Updates (December 2014 and later)</a></li>
+    </ul>
+    <h3>Encrypting Files and Data</h3>
+    <ul>
+      <li><a href="/user/encryption-keys/">Encrypting Sensitive Data</a></li>
+      <li><a href="/user/encrypting-files/">Encrypting Files</a></li>
+      <li><a href="/user/github-oauth-scopes/">GitHub Permissions used by Travis CI</a></li>
+
+    </ul>
+      <h3>Integrations and Notifications</h3>
+      <ul>
+        <li><a href="/user/notifications/">Configuring Notifications</a></li>
+        <li><a href="/user/status-images/">Showing Build Status Images</a></li>
+        <li><a href="/user/code-climate/">Code Climate</a></li>
+        <li><a href="/user/coveralls/">Coveralls</a></li>
+        <li><a href="/user/browserstack/">BrowserStack</a></li>
+        <li><a href="/user/sauce-connect/">Sauce Labs</a></li>
+        <li><a href="/user/sonarqube/">SonarQube.com</a></li>
+        <li><a href="/user/sourceclear/">SourceClear</a></li>
+        <li><a href="/user/build-feeds/">Atom Feeds</a></li>
+        <li><a href="/user/cc-menu/">CCMenu / CCTray Feeds</a></li>
+        <li><a href="/user/integration/platformio/">Embedded Builds with PlatformIO</a></li>
+      </ul>
+
+      <h3>Developer Program</h3>
+      <ul>
+        <li><a href="/api">The API</a></li>
+        <li><a href="https://github.com/travis-ci/travis#ruby-library">The Ruby Library</a></li>
+        <li><a href="/user/triggering-builds/">Triggering Builds through the API</a></li>
+      </ul>
+      <h3>3rd Party Tools and Resources</h3>
+      <ul>
+        <li><a href="/user/apps/">Apps, Clients and Tools</a></li>
+        <li><a href="/user/resources/">Links and Resources</a></li>
+        <li><a href="https://scan.coverity.com/travis_ci">Coverity Scan</a></li>
+      </ul>
+    </nav>
+  </section>
+
+  <section class="sidebar-notice">
+    <p>This documentation site is open source.
+      The <a href="https://github.com/travis-ci/docs-travis-ci-com">README in our Git repository</a> explains how to contribute.</p>
+  </section>
+
+</div><!-- /#sidebar -->
+
+
+        <main id="main" class="main" data-swiftype-index='true'>
+          
+            <h1 class="title">Encrypting Files</h1>
+          
+          <p><strong>Please note that encrypted files are not available for <a href="/user/pull-requests#Pull-Requests-and-Security-Restrictions">pull requests from forks</a>.</strong></p>
+
+<div id="toc"></div>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>Before following the examples in this guide, make sure you have already</p>
+
+<ul>
+  <li>installed the Travis CI <a href="https://github.com/travis-ci/travis.rb#readme">Command Line Client</a> by running <code class="highlighter-rouge">$ gem install travis</code></li>
+  <li><a href="https://github.com/travis-ci/travis.rb#login">logged in</a> to Travis CI
+using <code class="highlighter-rouge">$ travis login</code> or <code class="highlighter-rouge">$ travis login --pro</code></li>
+</ul>
+
+<p>See the Command Line Client <a href="https://github.com/travis-ci/travis.rb#installation">installation instructions</a> for more information on system required versions of Ruby and operating systems.</p>
+
+<h2 id="automated-encryption">Automated Encryption</h2>
+
+<p>Assumptions:</p>
+
+<ul>
+  <li>The repository is set up on Travis CI</li>
+  <li>You have version <strong>1.7.0</strong> or later of the Travis CI Command Line Client installed and setup up (you are logged in)</li>
+  <li>You have a local copy of the repository and a terminal open where your current working directory is said copy</li>
+  <li>In the repository is a file, called super_secret.txt, that you need on Travis CI but you don’t want to publish its content on GitHub.</li>
+</ul>
+
+<p>The <code class="highlighter-rouge">travis encrypt-file</code> command will encrypt a file for you using a symmetric encryption (AES-256), and it will store the secret in a secure variable. It will output the command you can use in your build script to decrypt the file.</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>travis encrypt-file super_secret.txt
+encrypting super_secret.txt <span class="k">for </span>rkh/travis-encrypt-file-example
+storing result as super_secret.txt.enc
+storing secure env variables <span class="k">for </span>decryption
+</code></pre>
+</div>
+
+<p>Please add the following to your build script (before_install stage in your .travis.yml, for instance):</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code>openssl aes-256-cbc -K <span class="nv">$encrypted_0a6446eb3ae3_key</span> -iv <span class="nv">$encrypted_0a6446eb3ae3_key</span> -in super_secret.txt.enc -out super_secret.txt -d
+</code></pre>
+</div>
+
+<p>Pro Tip: You can add it automatically by running with –add.</p>
+
+<p>Make sure to add super_secret.txt.enc to the git repository.
+Make sure not to add super_secret.txt to the git repository.
+Commit all changes to your .travis.yml.</p>
+
+<p>You can also use <code class="highlighter-rouge">--add</code> to have it automatically add the decrypt command to your <code class="highlighter-rouge">.travis.yml</code></p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>travis encrypt-file super_secret.txt --add
+encrypting super_secret.txt <span class="k">for </span>rkh/travis-encrypt-file-example
+storing result as super_secret.txt.enc
+storing secure env variables <span class="k">for </span>decryption
+
+Make sure to add super_secret.txt.enc to the git repository.
+Make sure not to add super_secret.txt to the git repository.
+Commit all changes to your .travis.yml.
+</code></pre>
+</div>
+
+<h3 id="encrypting-multiple-files">Encrypting multiple files</h3>
+
+<p>The Command Line Client <a href="https://github.com/travis-ci/travis.rb/issues/239">overrides encrypted entries</a> if you use it to encrypt multiple files.</p>
+
+<p>If you need to encrypt multiple files, first create an archive of sensitive files, then decrypt and expand it during the build.</p>
+
+<p>Suppose we have sensitive files <code class="highlighter-rouge">foo</code> and <code class="highlighter-rouge">bar</code>, run the following commands:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>tar cvf secrets.tar foo bar
+<span class="gp">$ </span>travis encrypt-file secrets.tar
+<span class="gp">$ </span>vi .travis.yml
+<span class="gp">$ </span>git add secrets.tar.enc .travis.yml
+<span class="gp">$ </span>git commit -m <span class="s1">'use secret archive'</span>
+<span class="gp">$ </span>git push
+</code></pre>
+</div>
+
+<p>And add the decryption step to your <code class="highlighter-rouge">.travis.yml</code>, adjusting <code class="highlighter-rouge">$*_key</code> and <code class="highlighter-rouge">$*_iv</code> according to your needs:</p>
+
+<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">before_install</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">openssl aes-256-cbc -K $encrypted_5880cf525281_key -iv $encrypted_5880cf525281_iv -in secrets.tar.enc -out secrets.tar -d</span>
+  <span class="pi">-</span> <span class="s">tar xvf secrets.tar</span>
+</code></pre>
+</div>
+
+<h3 id="caveat">Caveat</h3>
+
+<p>There is a report of this function not working on a local Windows machine. Please use a Linux or OS X machine.</p>
+
+<h2 id="manual-encryption">Manual Encryption</h2>
+
+<p>Assumptions:</p>
+
+<ul>
+  <li>The repository is set up on Travis CI</li>
+  <li>You have the recent version of the Travis CI Command Line Client installed and setup up (you are logged in)</li>
+  <li>You have a local copy of the repository and a terminal open where your current working directory is said copy</li>
+  <li>In the repository is a file, called super_secret.txt, that you need on Travis CI but you don’t want to publish its content on GitHub.</li>
+</ul>
+
+<p>The file might be too large to encrypt it directly via the <code class="highlighter-rouge">travis encrypt</code> command. However, you can encrypt the file using a passphrase and then encrypt the passphrase. On Travis CI, you can use the passphrase to decrypt the file again.</p>
+
+<p>The set up process looks like this:</p>
+
+<ol>
+  <li><strong>Come up with a password.</strong> First, you need a password. We recommend generating a random password using a tool like pwgen or 1password. In our example we will use <code class="highlighter-rouge">ahduQu9ushou0Roh</code>.</li>
+  <li><strong>Encrypt the password and add it to your .travis.yml.</strong> Here we can use the <code class="highlighter-rouge">encrypt</code> command: <code class="highlighter-rouge">travis encrypt super_secret_password=ahduQu9ushou0Roh --add</code> - note that if you set this up multiple times for multiple files, you will have to use different variable names so the passwords don’t override each other.</li>
+  <li><strong>Encrypt the file locally.</strong> Using a tool that you have installed locally and that is also installed on Travis CI (see below).</li>
+  <li><strong>Set up decryption command.</strong> You should add the command for decrypting the file to the <code class="highlighter-rouge">before_install</code> section of your <code class="highlighter-rouge">.travis.yml</code> (see below).</li>
+</ol>
+
+<p>Be sure to add <code class="highlighter-rouge">super_secret.txt</code> to your <code class="highlighter-rouge">.gitignore</code> list, and to commit both the encrypted file and your <code class="highlighter-rouge">.travis.yml</code> changes.</p>
+
+<h3 id="using-gpg">Using GPG</h3>
+
+<p>Set up:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>travis encrypt <span class="nv">super_secret_password</span><span class="o">=</span>ahduQu9ushou0Roh --add
+<span class="gp">$ </span>gpg -c super_secret.txt
+<span class="o">(</span>will prompt you <span class="k">for </span>the password twice, use the same value as <span class="k">for </span>super_secret_password above<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>Contents of the <code class="highlighter-rouge">.travis.yml</code> (besides whatever else you might have in there):</p>
+
+<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">env</span><span class="pi">:</span>
+  <span class="s">global</span><span class="pi">:</span>
+    <span class="s">secure</span><span class="pi">:</span> <span class="s">... encoded secret ...</span>
+<span class="s">before_install</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">echo $super_secret_password | gpg --passphrase-fd 0 super_secret.txt.gpg</span>
+</code></pre>
+</div>
+
+<p>The encrypted file is called <code class="highlighter-rouge">super_secret.txt.gpg</code> and has to be committed to the repository.</p>
+
+<h4 id="using-openssl">Using OpenSSL</h4>
+
+<p>Set up:</p>
+
+<div class="language-bash highlighter-rouge"><pre class="highlight"><code><span class="gp">$ </span>travis encrypt <span class="nv">super_secret_password</span><span class="o">=</span>ahduQu9ushou0Roh --add
+<span class="gp">$ </span>openssl aes-256-cbc -k <span class="s2">"ahduQu9ushou0Roh"</span> -in super_secret.txt -out super_secret.txt.enc
+<span class="o">(</span>keep <span class="k">in </span>mind to replace the password with the proper value<span class="o">)</span>
+</code></pre>
+</div>
+
+<p>Contents of the <code class="highlighter-rouge">.travis.yml</code> (besides whatever else you might have in there):</p>
+
+<div class="language-yaml highlighter-rouge"><pre class="highlight"><code><span class="s">env</span><span class="pi">:</span>
+  <span class="s">global</span><span class="pi">:</span>
+    <span class="s">secure</span><span class="pi">:</span> <span class="s">... encoded secret ...</span>
+<span class="s">before_install</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="s">openssl aes-256-cbc -k "$super_secret_password" -in super_secret.txt.enc -out super_secret.txt -d</span>
+</code></pre>
+</div>
+
+<p>The encrypted file is called <code class="highlighter-rouge">super_secret.txt.enc</code> and has to be committed to the repository.</p>
+
+        </main>
+      </div><!-- /#content -->
+
+      <footer>
+  <div class="row">
+    <div class="small-6 medium-6 large-6 columns">
+      <img alt="The Travis CI logo" src="/images/ui/footer-logo.svg">
+    </div>
+    <div class="small-6 medium-2 large-2 columns">
+      <h3>&copy;Travis CI, GmbH</h3>
+      <p>Rigaer Straße 8<br>10247 Berlin, Germany</p>
+      <ul>
+        <li><a href="/imprint.html">Imprint</a></li>
+      </ul>
+    </div>
+
+    <div class="small-6 medium-2 large-2 columns">
+      <h3>Help</h3>
+      <ul>
+        <li><a href="http://docs.travis-ci.com/">Documentation</a></li>
+        <li><a href="http://blog.travis-ci.com/">Blog</a></li>
+        <li><a href="mailto:support@travis-ci.com">Email</a></li>
+        <li><a href="https://twitter.com/travisci">Twitter</a></li>
+        <li><a href="http://github.com/travis-ci">GitHub</a></li>
+      </ul>
+    </div>
+    <div class="small-6 medium-2 large-2 columns">
+      <h3>Travis CI Status</h3>
+      <ul>
+        <li><div class="status-circle status">Status:</div>
+          <a href="http://www.traviscistatus.com/">Travis CI Status</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+    </div><!-- /.wrapper -->
+  </body>
+</html>
