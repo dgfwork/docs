@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Git如何永久删除文件(包括历史记录) - shines77 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=-wBWg2jMfLNV0-ScpDNxGkoH_gCbdW1yTVJLHzPL7HE1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/SimpleBlue/bundle-SimpleBlue.css?v=jJERBFSojhmgst84aaRDal9S3q1WoO-WcNudmMzGJS81"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/SimpleBlue/bundle-SimpleBlue-mobile.css?v=z0BacpCfWeLlXDCM0C158kTP_DMqMbGBapID4f-QztI1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/shines77/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/shines77/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/shines77/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'shines77', cb_enable_mathjax=true;var isLogined=false;</script>
+<script src="/bundles/blog-common.js?v=zLAewHCaOmEYGOn3iyM1yprOSNEWA2FkU2TsbgxrSSg1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+		
+<!--done-->
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/shines77/">shines77</a></div>
+<div class="subtitle">非淡泊无以明志，非宁静无以致远。－－郭子</div>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li id="nav_myhome"><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/shines77/">首页</a></li>
+<li id="nav_newpost"><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li id="nav_contact"><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/shines77">联系</a></li>
+<li id="nav_rss"><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/shines77/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/shines77/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li id="nav_admin"><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔-54&nbsp;
+文章-0&nbsp;
+评论-210&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class = "post">
+		<h1 class = "postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/shines77/p/3460274.html">Git如何永久删除文件(包括历史记录)</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>有些时候不小心上传了一些敏感文件(例如密码), 或者不想上传的文件(没及时或忘了加到.gitignore里的),</p>
+<p>而且上传的文件又特别大的时候, 这将导致别人clone你的代码或下载zip包的时候也必须更新或下载这些无用的文件,</p>
+<p><span style="font-size: 16px;">因此, 我们需要一个方法, 永久的删除这些文件(包括该文件的历史记录).<br /></span></p>
+<p><span style="font-size: 15px;">首先, 可以参考 github 的帮助:</span></p>
+<p><a title="https://help.github.com/articles/remove-sensitive-data" href="https://help.github.com/articles/remove-sensitive-data" target="_blank">https://help.github.com/articles/remove-sensitive-data</a></p>
+<h3><strong>步骤一: <span id="result_box" class="short_text" lang="zh-CN">从你的资料库中清除文件</span></strong></h3>
+<p><span class="short_text" lang="zh-CN"><span>以Windows下为例(Linux类似), 打开项目的Git Bash,使用命令: <br /></span></span></p>
+<div class="cnblogs_code">
+<pre>git filter-branch --force --index-filter <span style="color: #800000;">'</span><span style="color: #800000;">git rm --cached --ignore-unmatch path-to-your-remove-file</span><span style="color: #800000;">'</span> --prune-empty --tag-name-filter <span style="color: #0000ff;">cat</span> -- --all</pre>
+</div>
+<p>其中, <span style="color: #800000;">path-to-your-remove-file</span> 就是你要删除的文件的相对路径(相对于git仓库的跟目录), 替换成你要删除的文件即可.</p>
+<p>如果你要删除的文件很多, 可以写进一个.sh文件批量执行, 如果文件或路径里有中文, 由于MinGW或CygWin对中文路径设置比较麻烦, 你可以使用通配符*号, 例如: sound/music_*.mp3, 这样就把sound目录下以music_开头的mp3文件都删除了.</p>
+<p>例如这样, <span style="color: #0000ff;">del-music-mp3.sh</span>:</p>
+<div class="cnblogs_code">
+<pre>#!/bin/<span style="color: #000000;">bash
+
+# git filter</span>-branch --force --index-filter <span style="color: #800000;">'</span><span style="color: #800000;">git rm --cached --ignore-unmatch projects/Moon.mp3</span><span style="color: #800000;">'</span> --prune-empty --tag-name-filter <span style="color: #0000ff;">cat</span> -- --<span style="color: #000000;">all
+# git filter</span>-branch --force --index-filter <span style="color: #800000;">'</span><span style="color: #800000;">git rm --cached --ignore-unmatch sound/Music_*.mp3</span><span style="color: #800000;">'</span> --prune-empty --tag-name-filter <span style="color: #0000ff;">cat</span> -- --all</pre>
+</div>
+<p>&nbsp;如果你看到类似下面这样的, 就说明删除成功了:</p>
+<div class="cnblogs_code">
+<pre>Rewrite 48dc599c80e20527ed902928085e7861e6b3cbe6 (<span style="color: #800080;">266</span>/<span style="color: #800080;">266</span><span style="color: #000000;">)
+# Ref </span><span style="color: #800000;">'</span><span style="color: #800000;">refs/heads/master</span><span style="color: #800000;">'</span> was rewritten</pre>
+</div>
+<p>如果显示 xxxxx unchanged, 说明repo里没有找到该文件, 请检查路径和文件名是否正确.</p>
+<p>注意: <span style="color: #ff0000;">补充一点, 如果你想以后也不会再上传这个文件或文件夹, 请把这个文件或文件夹添加到<span style="color: #0000ff;">.gitignore</span>文件里, 然后再<span style="color: #0000ff;">push</span>你的repo. </span></p>
+<h3><strong>步骤二: 推送我们修改后的repo</strong></h3>
+<p>以强制覆盖的方式推送你的repo, 命令如下:</p>
+<div class="cnblogs_code">
+<pre>git push origin master --force</pre>
+</div>
+<p>这个过程其实是重新上传我们的repo, 比较耗时, 虽然跟删掉重新建一个repo有些类似, 但是好处是保留了原有的更新记录, 所以还是有些不同的. 如果你实在不在意这些更新记录, 也可以删掉重建, 两者也差不太多, 也许后者还更直观些.</p>
+<p>执行结果类似下面:</p>
+<div class="cnblogs_code">
+<pre>Counting objects: <span style="color: #800080;">4669</span>, <span style="color: #0000ff;">done</span><span style="color: #000000;">.
+Delta compression using up to </span><span style="color: #800080;">4</span><span style="color: #000000;"> threads.
+Compressing objects: </span><span style="color: #800080;">100</span>% (<span style="color: #800080;">4352</span>/<span style="color: #800080;">4352</span>), <span style="color: #0000ff;">done</span><span style="color: #000000;">.
+Writing objects: </span><span style="color: #800080;">100</span>% (<span style="color: #800080;">4666</span>/<span style="color: #800080;">4666</span>), <span style="color: #800080;">35.16</span> MiB | <span style="color: #800080;">51</span> KiB/s, <span style="color: #0000ff;">done</span><span style="color: #000000;">.
+Total </span><span style="color: #800080;">4666</span> (delta <span style="color: #800080;">1361</span>), reused <span style="color: #800080;">0</span> (delta <span style="color: #800080;">0</span><span style="color: #000000;">)
+To https:</span><span style="color: #008000;">//github.com/defunkt/github-gem.git</span>
+ + beb839d...81f21f3 master -&gt; master (forced update)</pre>
+</div>
+<h3>&nbsp;<strong>步骤三: <span id="result_box" class="short_text" lang="zh-CN">清理和回收空间</span></strong></h3>
+<p><span class="short_text" lang="zh-CN"><span>虽然上面我们已经删除了文件, 但是我们的repo里面仍然保留了这些objects, 等待垃圾回收(GC), 所以我们要用命令彻底清除它, 并收回空间.<br /></span></span></p>
+<p><span class="short_text" lang="zh-CN"><span>命令如下:</span></span></p>
+<div class="cnblogs_code">
+<pre class="command-line"><span style="color: #0000ff;">rm</span> -rf .git/refs/original/<span style="color: #000000;">
+
+git reflog expire </span>--expire=now --<span style="color: #000000;">all
+
+git gc </span>--prune=<span style="color: #000000;">now</span></pre>
+<pre class="command-line"><span style="color: #008000;"><span class="output">Counting objects: 2437, done.</span>
+<span class="output"># Delta compression using up to 4 threads.</span>
+<span class="output"># Compressing objects: 100% (1378/1378), done.</span>
+<span class="output"># Writing objects: 100% (2437/2437), done.</span>
+<span class="output"># Total 2437 (delta 1461), reused 1802 (delta 1048)<br /></span></span></pre>
+<pre><span style="color: #000000;">git gc </span>--aggressive --prune=now</pre>
+<pre class="command-line"><span style="color: #008000;"><span class="output">Counting objects: 2437, done.</span>
+<span class="output"># Delta compression using up to 4 threads.</span>
+<span class="output"># Compressing objects: 100% (2426/2426), done.</span>
+<span class="output"># Writing objects: 100% (2437/2437), done.</span>
+<span class="output"># Total 2437 (delta 1483), reused 0 (delta 0)</span></span></pre>
+</div>
+<p>注: <span style="color: #0000ff;">绿色字部分是命令执行后的结果</span>.</p>
+<p>&nbsp;</p>
+<p>现在你再看看你的.git目录文件大小是不是变小了.</p>
+<p>&nbsp;</p>
+<p>参考自:</p>
+<p><a title="http://whoop.sinaapp.com/blog/article/21" href="http://whoop.sinaapp.com/blog/article/21" target="_blank">http://whoop.sinaapp.com/blog/article/21</a></p>
+<p><a title="http://blog.csdn.net/meteor1113/article/details/4407209" href="http://blog.csdn.net/meteor1113/article/details/4407209" target="_blank">http://blog.csdn.net/meteor1113/article/details/4407209</a></p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<div class = "postDesc">posted @ <span id="post-date">2013-12-05 20:14</span> <a href='http://www.cnblogs.com/shines77/'>shines77</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=3460274" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(3460274);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=144314,cb_entryId=3460274,cb_blogApp=currentBlogApp,cb_blogUserGuid='f6526958-c116-e011-ac81-842b2b196315',cb_entryCreatedDate='2013/12/5 20:14:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='cnblogs_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='cnblogs_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright &copy;2017 shines77
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+<!--PageEndHtml Block Begin-->
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"博客园","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"slide":{"type":"slide","bdImg":"2","bdPos":"right","bdTop":"250"},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+<!--PageEndHtml Block End-->
+</body>
+</html>
