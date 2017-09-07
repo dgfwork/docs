@@ -1,0 +1,533 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>也谈如何获取真实正确的 Windows 系统版本号 - 贾可 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="/bundles/blog-common.css?v=Rdf1BBttS5_qVaET1myrajVTd62BSCCoJA9fZxGv1ZM1"/>
+<link id="MainCss" type="text/css" rel="stylesheet" href="/skins/AnotherEon001/bundle-AnotherEon001.css?v=dNz80TfH9-81kuLR86t4JWgT2tb_J0B779DQM4kw0WU1"/>
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="/skins/AnotherEon001/bundle-AnotherEon001-mobile.css?v=2AVDoHmv7lUzd79evVNYSQurhspvqJ8jlO4NeEuiBNk1"/>
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/jiake/rss"/>
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/jiake/rsd.xml"/>
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/jiake/wlwmanifest.xml"/>
+<script src="//common.cnblogs.com/script/jquery.js" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'jiake', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="/bundles/blog-common.js?v=hH1lCMV8WaIu271Nx7jPuv36TENW9-RsSxziLxUpjtc1" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="wrapper">
+<div id="header">
+
+<div id="top">
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/jiake/">Jacky</a></h1>
+<div id="subtitle"></div>
+</div>
+<div id="sub"><div id="blog_stats">
+<div class="BlogStats">随笔 - 3, 文章 - 0, 评论 - 2, 引用 - 0</div>
+</div></div>
+
+
+
+</div>
+<div id="main_container">
+<div id="main_content">
+<div id="content">
+	
+<div id="post_detail">
+	<div class="post">
+		<h2>
+			<a id="cb_post_title_url" href="http://www.cnblogs.com/jiake/p/6093780.html">也谈如何获取真实正确的 Windows 系统版本号</a>
+		</h2>
+		<div class="postbody">
+		<div id="cnblogs_post_body"><ul>
+<li>
+<p style="text-align: justify; font-family: Arial">关于 GetVersion 系列接口</p>
+<p style="text-align: justify; font-family: Arial">关于如何获取 Windows 系统版本号的话题，网上已经有了太多的帖子。但个人觉得总结的都不尽全面，或者没有给出比较稳定的解决方案。</p>
+<p style="text-align: justify; font-family: Arial">众所周知，获取 Windows 系统版本的 API 是 <a href="http://msdn.microsoft.com/en-us/library/ms724439.aspx" target="_blank">GetVersion</a> 和 <a href="http://msdn.microsoft.com/en-us/library/ms724451.aspx" target="_blank">GetVersionEx</a>。这两个 API 的使用也都相当简单，一直被广泛使用 (下文中，我们将这两个统称为 GetVersion 系列)。后来在 Windows XP 中微软引入了应用程序兼容模式，可以选择兼容之前老的系统。可能很多人并不知道其具体的实现原理，以及能造成如何影响，微软官网开始也未对此详细说明。但直到后来，随着 Windows Vista、Windows 7 等发布，开始有人在网上反映这个 API 并不能获取到真正的系统版本号，我也尝试过测试各种获取系统版本信息的 API，才慢慢发现应用兼容性设置其中一个影响就是获取到错误的系统版本号。即，将程序设置为兼容旧的操作系统，则 GetVersion 系列接口获取到的版本就是该兼容系统的版本，也就是与当前系统实际版本不符，是错误的。</p>
+<p style="text-align: justify; font-family: Arial">与此同时，Windows XP 中也引入了主题，引入了 manifest 文件 (Visual Studio 中称之为清单文件) 的概念。关于这个清单文件，我在这篇文章中讨论程序执行权限也提到过，此文暂不详述。清单文件中的设置会影响到程序的某些行为，比如是否使用主题、是否以管理员权限执行、程序支持的操作系统列表、是否受 DPI 缩放影响等。这里我们只讨论其中“支持的操作系统列表”这部分，因为这部分现在也会影响到在新版操作系统中调用 GetVersion 系列的结果。</p>
+<p style="text-align: justify; font-family: Arial">虽然微软的官网对于该系列 API 的行为进行了说明，但毕竟实践才是唯一标准。为了搞清楚各个系统版本的 GetVersion 系列接口结果行为有何不同，我详细测试后，将其整理如下：</p>
+<div style="font-family: Arial">
+<table border="1">
+<tbody>
+<tr>
+<td>是否嵌入清单</td>
+<td colspan="2">程序无清单文件或清单未指定支持当前系统</td>
+<td colspan="2">程序有清单文件且清单指定支持当前系统</td>
+</tr>
+<tr>
+<td>兼容模式设置</td>
+<td>未设置兼容模式</td>
+<td>设置兼容模式</td>
+<td>未设置兼容模式</td>
+<td>设置兼容模式</td>
+</tr>
+<tr>
+<td>Windows 2000</td>
+<td>5.0</td>
+<td>5.0<sup>[1]</sup></td>
+<td>5.0<sup>[2]</sup></td>
+<td>5.0<sup>[2]</sup></td>
+</tr>
+<tr>
+<td>Windows XP (x86)</td>
+<td>5.1</td>
+<td>兼容模式设置的兼容系统版本</td>
+<td>5.1<sup>[3]</sup></td>
+<td>5.1<sup>[3]</sup></td>
+</tr>
+<tr>
+<td>Windows XP (x64)</td>
+<td>5.2</td>
+<td>兼容模式设置的兼容系统版本</td>
+<td>5.2<sup>[3]</sup></td>
+<td>5.2<sup>[3]</sup></td>
+</tr>
+<tr>
+<td>Windows Vista</td>
+<td>6.0</td>
+<td>兼容模式设置的兼容系统版本</td>
+<td>6.0</td>
+<td>兼容模式设置的兼容系统版本</td>
+</tr>
+<tr>
+<td>Windows 7</td>
+<td>6.1</td>
+<td>兼容模式设置的兼容系统版本</td>
+<td>6.1</td>
+<td>兼容模式设置的兼容系统版本</td>
+</tr>
+<tr>
+<td>Windows 8</td>
+<td>6.2</td>
+<td>兼容模式设置的兼容系统版本，最高 6.2。</td>
+<td>6.2</td>
+<td>兼容模式设置的兼容系统版本，最高 6.2。</td>
+</tr>
+<tr>
+<td>Windows 8.1</td>
+<td>6.2</td>
+<td>兼容模式设置的兼容系统版本，最高 6.2。</td>
+<td>6.3</td>
+<td>兼容模式设置的兼容系统版本，最高 6.3。</td>
+</tr>
+<tr>
+<td>Windows 10</td>
+<td>6.2</td>
+<td>兼容模式设置的兼容系统版本，最高 6.2。</td>
+<td>10.0</td>
+<td>兼容模式设置的兼容系统版本，最高 10.0。</td>
+</tr>
+<tr>
+<td colspan="5">[1] Windows 2000 不支持兼容模式，因此结果不受影响。<br>
+[2] Windows 2000 不支持清单文件，因此结果不受影响。<br>
+[3] Windows XP 不支持清单文件中指定的支持操作系统列表。</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+<p style="text-align: justify; font-family: Arial">可以看得出来，结果惨不忍睹，这还怎么能让人放心使用？实际上 GetVersion 系列接口的行为变更从 XP 时代就有了，然而微软开始并没有在 MSDN 上给出相关提示，也没有多少人留意。起初微软是为了设置应用程序以兼容模式运行，将其 hook 并返回错误的结果，这个反而带来了更大的麻烦，再加上 manifest 的引入，使得这个 API 完全被微软玩坏。到 Windows 8 时代，该页面才注明该 API 已被废弃，并且给出其他的解决方案。只能说，这两个 API 走到今天这条路，微软也是没办法，这个行为一开始被修改就注定了今天被抛弃的结果。</p>
+
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial">官方推荐的备用方案</p>
+<p style="text-align: justify; font-family: Arial">此外，微软也提供其他的几个 API 用来判断 (不能获取) 系统版本是否为特定版本，只是鲜为人知，使用频率较低。从 GetVersion 系列被抛弃开始，这些 API 才在 MSDN 被列出在 GetVersionEx 的说明页面，作为其他的备选方案。</p>
+<ul>
+<li>
+<p style="text-align: justify; font-family: Arial"><a href="http://msdn.microsoft.com/en-us/library/bb773795.aspx" target="_blank">IsOS</a></p>
+<p style="text-align: justify; font-family: Arial">这个 API 是判断特定版本的，但是最高支持也就到 Windows 2003。此后，微软 MSDN 页面未对参数进行更新。</p>
+
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial"><a href="http://msdn.microsoft.com/en-us/library/ms725492.aspx" target="_blank">VerifyVersionInfo</a></p>
+<p style="text-align: justify; font-family: Arial">该 API 要求配合 <a href="http://msdn.microsoft.com/en-us/library/ms725493.aspx" target="_blank">VerSetConditionMask</a> 使用，才能进行后续判断。微软已经将 VerifyVersionInfo 封装为更易使用的函数。使用这些函数需包含 <a href="http://msdn.microsoft.com/en-us/library/dn424972.aspx" target="_blank">VersionHelpers.h</a> 头文件，只有较新版本的 Visual Studio 支持。</p>
+<ul>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424968.aspx" target="_blank">IsWindowsXPOrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424969.aspx" target="_blank">IsWindowsXPSP1OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424970.aspx" target="_blank">IsWindowsXPSP2OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424971.aspx" target="_blank">IsWindowsXPSP3OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424965.aspx" target="_blank">IsWindowsVistaOrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424966.aspx" target="_blank">IsWindowsVistaSP1OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424967.aspx" target="_blank">IsWindowsVistaSP2OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424959.aspx" target="_blank">IsWindows7OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424960.aspx" target="_blank">IsWindows7SP1OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424961.aspx" target="_blank">IsWindows8OrGreater</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424962.aspx" target="_blank">IsWindows8Point1OrGreater</a><br>要求程序已嵌入清单文件且清单指定支持 Windows 8.1 及更高版本系统，否则返回 false。</li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn905474.aspx" target="_blank">IsWindows10OrGreater</a><br>要求程序已嵌入清单文件且清单指定支持 Windows 10 及更高版本系统，否则返回 false。</li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424963.aspx" target="_blank">IsWindowsServer</a></li>
+<li><a href="http://msdn.microsoft.com/en-us/library/dn424964.aspx" target="_blank">IsWindowsVersionOrGreater</a></li>
+
+
+
+
+
+
+
+
+
+
+
+			</ul>
+<p style="text-align: justify; font-family: Arial">这组函数依然只能够用来判断 (不能获取) 系统版本。而且，根据 MSDN 的说明，其中的部分依然受到清单文件影响，但未测试。</p>
+
+
+
+
+
+
+
+
+
+
+
+		</li>
+<li>
+<p style="text-align: justify; font-family: Arial"><a href="http://msdn.microsoft.com/en-us/library/aa370663.aspx" target="_blank">NetWkstaGetInfo</a></p>
+<p style="text-align: justify; font-family: Arial">这个 API 也是微软官方推荐的获取系统版本号的替代品之一。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">#include &lt;windows.h&gt;
+#include &lt;lm.h&gt;
+#pragma comment(lib, "netapi32.lib")
+
+DWORD PASCAL GetVersion( void )
+{
+	DWORD dwVersion = 0;
+	WKSTA_INFO_100 *wkstaInfo = NULL;
+	NET_API_STATUS netStatus = NetWkstaGetInfo(NULL, 100, (BYTE **)&amp;wkstaInfo);
+	if (netStatus == NERR_Success)
+	{
+		DWORD dwMajVer = wkstaInfo-&gt;wki100_ver_major;
+		DWORD dwMinVer = wkstaInfo-&gt;wki100_ver_minor;
+		dwVersion = (DWORD)MAKELONG(dwMinVer, dwMajVer);
+		NetApiBufferFree(wkstaInfo);
+	}
+	return dwVersion;
+}</pre>
+</div>
+<p style="text-align: justify; font-family: Arial">经测试，获取的版本正常，不受兼容性和清单文件的影响，但在 dll 中调用会失败。</p>
+</li>
+</ul>
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial">非官方备用方案</p>
+<p style="text-align: justify; font-family: Arial">这里提供一些在往上搜索到的其他方案。由于部分使用了系统内部接口甚至数据结构，不保证后续依然有效。</p>
+<ul>
+<li>
+<p style="text-align: justify; font-family: Arial">查询 kernel32.dll 版本</p>
+<p style="text-align: justify; font-family: Arial">通常情况下 kernel32.dll 的版本号和系统是同步的，但如果微软哪天不遵守这个约定，这个方法就不好用了。有的程序则是查询 ntoskrnl.exe 的版本信息，原理类似。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">#include &lt;windows.h&gt;
+#include &lt;shlwapi.h&gt;
+#pragma comment(lib, "shlwapi.lib")
+#pragma comment(lib, "version.lib")
+
+DWORD PASCAL GetKernelVersion( void )
+{
+	DWORD dwVersion = 0;
+	WCHAR szDLLName[MAX_PATH] = { 0 };
+	HRESULT hr = SHGetFolderPathW(NULL, CSIDL_SYSTEM, NULL, SHGFP_TYPE_CURRENT, szDLLName);
+	if ((hr == S_OK) &amp;&amp; PathAppendW(szDLLName, L"kernel32.dll"))
+	{
+		DWORD dwVerInfoSize = GetFileVersionInfoSizeW(szDLLName, NULL);
+		if (dwVerInfoSize &gt; 0)
+		{
+			HANDLE hHeap = GetProcessHeap();
+			LPVOID pvVerInfoData = HeapAlloc(hHeap, HEAP_ZERO_MEMORY, dwVerInfoSize);
+			if (pvVerInfoData != NULL)
+			{
+				if (GetFileVersionInfoW(szDLLName, 0, dwVerInfoSize, pvVerInfoData))
+				{
+					UINT ulLength = 0;
+					VS_FIXEDFILEINFO *pvffi = NULL;
+					if (VerQueryValueW(pvVerInfoData, L"\\", (LPVOID *)&amp;pvffi, &amp;ulLength))
+					{
+						dwVersion = pvffi-&gt;dwFileVersionMS;
+					}
+				}
+				HeapFree(hHeap, 0, pvVerInfoData);
+			}
+		}
+	}
+	return dwVersion;
+}</pre>
+</div>
+<p style="text-align: justify; font-family: Arial">很不幸，经测试，如果程序没有嵌入清单文件，在 Windows 8.1 或 Windows 10，这个方法获取的结果也是 6.2，也就是说仍然受到清单文件的影响，有可能得到错误的结果。</p>
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial">读取 kernel32.dll 版本</p>
+<p style="text-align: justify; font-family: Arial">什么，还有个读取？那么查询和读取有什么分别？没看到上面最后一行吗，连获取文件版本信息的 API 都拿不到正确结果了，微软还有什么能相信？好吧，你不给我正确结果，我就直接分析二进制总行了吧！</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">#include &lt;windows.h&gt;
+
+DWORD PASCAL ReadKernelVersion( void )
+{
+	DWORD dwVersion = 0;
+	HMODULE hinstDLL = LoadLibraryExW(L"kernel32.dll", NULL, LOAD_LIBRARY_AS_DATAFILE);
+	if (hinstDLL != NULL)
+	{
+		HRSRC hResInfo = FindResource(hinstDLL, MAKEINTRESOURCE(VS_VERSION_INFO), RT_VERSION);
+		if (hResInfo != NULL)
+		{
+			HGLOBAL hResData = LoadResource(hinstDLL, hResInfo);
+			if (hResData != NULL)
+			{
+				static const WCHAR wszVerInfo[] = L"VS_VERSION_INFO";
+				struct VS_VERSIONINFO {
+					WORD wLength;
+					WORD wValueLength;
+					WORD wType;
+					WCHAR szKey[ARRAYSIZE(wszVerInfo)];
+					VS_FIXEDFILEINFO Value;
+					WORD Children[];
+				} *lpVI = (struct VS_VERSIONINFO *)LockResource(hResData);
+				if ( (lpVI != NULL) &amp;&amp; (lstrcmpiW(lpVI-&gt;szKey, wszVerInfo) == 0) &amp;&amp; (lpVI-&gt;wValueLength &gt; 0) )
+				{
+					dwVersion = lpVI-&gt;Value.dwFileVersionMS;
+				}
+			}
+		}
+		FreeLibrary(hinstDLL);
+	}
+	return dwVersion;
+}</pre>
+</div>
+<p style="text-align: justify; font-family: Arial">很高兴的告诉大家，这个结果即使在 Windows 8.1 或 Windows 10 上，也都依然是正确的。</p>
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial">读取 PEB 数据结构</p>
+<p style="text-align: justify; font-family: Arial">PEB 结构是 Windows 系统的内部接口，读取的数据是最底层的，但是也正因为是内部结构，微软随时有可能变动。下面的结构体只是简略定义，对不需要或者不重点关注的成员进行了省略或者使用了 PVOID 指针来代替。务必注意，此方法仅供参考，如后期 Windows 系统变更数据结构，造成任何蓝屏死机问题，本人概不负责。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">#include &lt;windows.h&gt;
+
+typedef struct _PEB {
+	BOOLEAN InheritedAddressSpace;
+	BOOLEAN ReadImageFileExecOptions;
+	BOOLEAN BeingDebugged;
+	BOOLEAN BitField;
+	HANDLE Mutant;
+	PVOID ImageBaseAddress;
+	PVOID Ldr;
+	PVOID ProcessParameters;
+	PVOID SubSystemData;
+	PVOID ProcessHeap;
+	PVOID FastPebLock;
+	PVOID AtlThunkSListPtr;
+	PVOID SparePtr2;
+	ULONG EnvironmentUpdateCount;
+	PVOID KernelCallbackTable;
+	ULONG SystemReserved[1];
+	ULONG SpareUlong;
+	PVOID FreeList;
+	ULONG TlsExpansionCounter;
+	PVOID TlsBitmap;
+	ULONG TlsBitmapBits[2];
+	PVOID ReadOnlySharedMemoryBase;
+	PVOID ReadOnlySharedMemoryHeap;
+	PVOID *ReadOnlyStaticServerData;
+	PVOID AnsiCodePageData;
+	PVOID OemCodePageData;
+	PVOID UnicodeCaseTableData;
+	ULONG NumberOfProcessors;
+	ULONG NtGlobalFlag;
+	LARGE_INTEGER CriticalSectionTimeout;
+	SIZE_T HeapSegmentReserve;
+	SIZE_T HeapSegmentCommit;
+	SIZE_T HeapDeCommitTotalFreeThreshold;
+	SIZE_T HeapDeCommitFreeBlockThreshold;
+	ULONG NumberOfHeaps;
+	ULONG MaximumNumberOfHeaps;
+	PVOID *ProcessHeaps;
+	PVOID GdiSharedHandleTable;
+	PVOID ProcessStarterHelper;
+	ULONG GdiDCAttributeList;
+	PVOID LoaderLock;
+	ULONG OSMajorVersion;
+	ULONG OSMinorVersion;
+	USHORT OSBuildNumber;
+	USHORT OSCSDVersion;
+	ULONG OSPlatformId;
+} PEB, *PPEB;
+
+typedef struct _TEB {
+	NT_TIB NtTib;
+	PVOID EnvironmentPointer;
+	struct {
+		HANDLE UniqueProcess;
+		HANDLE UniqueThread;
+	} ClientId;
+	PVOID ActiveRpcHandle;
+	PVOID ThreadLocalStoragePointer;
+	PEB *ProcessEnvironmentBlock;
+} TEB, *PTEB;
+
+DWORD PASCAL GetVersionPEB( void )
+{
+	DWORD dwVersion = 0;
+	TEB *lpTeb = NtCurrentTeb();
+	if (lpTeb != NULL)
+	{
+		PEB *lpPeb = lpTeb-&gt;ProcessEnvironmentBlock;
+		if (lpPeb != NULL)
+		{
+			DWORD dwMajVer = lpPeb-&gt;OSMajorVersion;
+			DWORD dwMinVer = lpPeb-&gt;OSMinorVersion;
+			dwVersion = (DWORD)MAKELONG(dwMinVer, dwMajVer);
+		}
+	}
+	return dwVersion;
+}</pre>
+</div>
+<p style="text-align: justify; font-family: Arial">再次很高兴的告诉你，这个结果截止 Windows 10，也都能获取到正确的版本号。</p>
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial">RtlGetVersion</p>
+<p style="text-align: justify; font-family: Arial">使用时通常都是从 ntdll.dll 中动态加载，本人就不列出详细代码，仅以静态调用作为示例。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">NTSTATUS NTAPI RtlGetVersion(
+	RTL_OSVERSIONINFOW *lpVersionInformation
+);
+
+DWORD PASCAL GetVersionRtl( void )
+{
+	DWORD dwVersion = 0;
+	RTL_OSVERSIONINFOEXW osvi = { 0 };
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	NTSTATUS status = RtlGetVersion((RTL_OSVERSIONINFOW *)&amp;osvi);
+	if (status == STATUS_SUCCESS)
+	{
+		DWORD dwMajVer = osvi.dwMajorVersion;
+		DWORD dwMinVer = osvi.dwMinorVersion;
+		dwVersion = (DWORD)MAKELONG(dwMinVer, dwMajVer);
+	}
+	return dwVersion;
+}</pre>
+</div>
+<p style="text-align: justify; font-family: Arial">很遗憾，在我的 Windows 10 上获取的结果是 6.2，仍可能受到清单文件的影响。</p>
+</li>
+<li>
+<p style="text-align: justify; font-family: Arial">RtlGetNtVersionNumbers</p>
+<p style="text-align: justify; font-family: Arial">同上，从 ntdll.dll 中加载。此接口系高手反编译所得，微软并未放出任何文档，请谨慎使用。Windows 2000 不支持，Windows XP 起支持。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:cpp;gutter:true;">void NTAPI RtlGetNtVersionNumbers(
+	DWORD *lpdwMajorVersion,
+	DWORD *lpdwMinorVersion,
+	DWORD *lpdwBuildNumber
+);
+
+DWORD PASCAL GetVersionRtl( void )
+{
+	DWORD dwMajorVersion = 0;
+	DWORD dwMinorVersion = 0;
+	RtlGetNtVersionNumbers(&amp;dwMajorVersion, &amp;dwMinorVersion, NULL);
+	DWORD dwVersion = (DWORD)MAKELONG(dwMinorVersion, dwMajorVersion);
+	return dwVersion;
+}</pre>
+</div>
+<p style="text-align: justify; font-family: Arial">在 Windows 10 上获取的结果是 10.0，目前看来是不会出问题的。</p>
+</li>
+</ul>
+</li>
+</ul></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory"></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info">
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"></div>
+</div>
+
+
+		</div>
+		<p class="postfoot">
+			posted on <span id="post-date">2016-11-23 18:55</span> <a href='http://www.cnblogs.com/jiake/'>贾可</a> 阅读(<span id="post_view_count">...</span>) 评论(<span id="post_comment_count">...</span>)  <a href ="https://i.cnblogs.com/EditPosts.aspx?postid=6093780" rel="nofollow">编辑</a> <a href="#" onclick="AddToWz(6093780);return false;">收藏</a>
+		</p>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=253453,cb_entryId=6093780,cb_blogApp=currentBlogApp,cb_blogUserGuid='1a538a8b-6dc3-e211-8d02-90b11c0b17d6',cb_entryCreatedDate='2016/11/23 18:55:00';loadViewCount(cb_entryId);</script>
+	
+	</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id='comment_form' class='commentform'>
+<a name='commentform'></a>
+<div id='divCommentShow'></div>
+<div id='comment_nav'><span id='span_refresh_tips'></span><a href='javascript:void(0);' onclick='return RefreshCommentList();' id='lnk_RefreshComments' runat='server' clientidmode='Static'>刷新评论</a><a href='#' onclick='return RefreshPage();'>刷新页面</a><a href='#top'>返回顶部</a></div>
+<div id='comment_form_container'></div>
+<div class='ad_text_commentbox' id='ad_text_under_commentbox'></div>
+<div id='ad_t2'></div>
+<div id='opt_under_post'></div>
+<div id='ad_c1' class='c_ad_block'></div>
+<div id='under_post_news'></div>
+<div id='ad_c2' class='c_ad_block'></div>
+<div id='under_post_kb'></div>
+<div id='HistoryToday' class='c_ad_block'></div>
+<script type='text/javascript'>
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+</div>
+<div id="leftmenu">
+
+
+<h3>导航</h3>
+<ul>
+<li>
+<a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a></li>
+<li>
+<a id="blog_nav_myhome" class="two_words" href="http://www.cnblogs.com/jiake/">首页</a></li>
+<li>
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li>
+<a id="blog_nav_contact" accesskey="9" class="two_words" rel="nofollow" href="https://msg.cnblogs.com/send/%E8%B4%BE%E5%8F%AF">联系</a></li>
+<li>
+<a id="blog_nav_rss" class="two_words" href="http://www.cnblogs.com/jiake/rss">订阅</a>
+<a id="blog_nav_rss_image" href="http://www.cnblogs.com/jiake/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>
+</li>
+<li>
+<a id="blog_nav_admin" class="two_words" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+<div id="blog-calendar" style="display:none"></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+<meta name="vs_showGrid" content="False">
+
+<h3>公告</h3>
+<div id="blog-news"></div><script type="text/javascript">loadBlogNews();</script>
+
+<div id="blog-sidecolumn"></div><script type="text/javascript">loadBlogSideColumn();</script>
+
+</div>
+</div>
+<div class="clear"></div>
+<div id="footer">
+
+<p id="footer">
+	Powered by: 
+	<br />
+	
+	<a id="Footer1_Hyperlink3" NAME="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br />
+	Copyright &copy; 贾可
+</p>
+</div>
+</div>
+
+</body>
+</html>

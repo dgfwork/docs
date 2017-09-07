@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RubyGems 镜像 - 淘宝网</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/bootstrap.min.css" type="text/css" media="screen">
+    <link rel="stylesheet" href="/master.css" type="text/css" media="screen">
+    <link rel="shortcut icon" href="/favicon.png" />
+    <meta name="apple-mobile-web-app-capable" content="no">
+    <meta content='True' name='HandheldFriendly' />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="keywords" content="Ruby Gems, Gem, RubyGems 中国, RubyGems 镜像, Gem 镜像" />
+  </head>
+  <body>
+    <div id="mainbox" class="container">
+	<div class="row">
+  <div class="col-xs-4"><h1>RubyGems 镜像</h1></div>
+  <div class="col-xs-6"><a class="ad-banner" target="_blank" href="https://click.aliyun.com/m/5231/"><img src="https://crp-public.oss-cn-hangzhou.aliyuncs.com/ruby/lALOWDAqKjzNA-g_1000_60.png_620x10000q90.jpg" ></a></div>
+</div>
+
+<!--
+      <div class="box sync_info">
+        <s>
+        这是一个完整 rubygems.org 镜像，你可以用此代替官方版本，同步频率目前为<span class="time">15分钟一次</span>以保证尽量与官方服务同步。
+        </s><br />
+      </div>
+-->
+      <div class="box sync_info">
+RubyGems 镜像的管理工作以后将交由 <a href='http://gems.ruby-china.org/'>Ruby China</a> 负责，以便能有更多的社区爱好者参与进来，保持持续发展。
+      </div>
+      <div class="box sync_info">
+本站将不在继续维护，本站的维护者已经或即将参与到 <a href='http://gems.ruby-china.org/'>Ruby China 镜像</a> 的维护工作中，目前已将安装请求重定向到 <a href='http://gems.ruby-china.org/'>Ruby China 镜像</a>，请大家注意更换本地的 Gem Source。
+      </div>
+
+      <div class="box">
+        <h5>如何使用？</h5>
+        <div class="highlight">
+          <pre><span class="nv">$ </span>gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/
+<span class="nv">$ </span>gem sources -l
+*** CURRENT SOURCES ***
+
+https://gems.ruby-china.org
+<span class="c"># 请确保只有 gems.ruby-china.org</span>
+<span class="nv">$ </span>gem install rails</pre>
+        </div>
+
+        <h5>如果你使用 Gemfile 和 Bundle (例如：Rails 项目)</h5>
+        你可以用 Bundler 的 <a href="http://bundler.io/v1.5/bundle_config.html#gem-source-mirrors">Gem 源代码镜像命令</a>。
+        <div class="highlight">
+          <pre><span class="nv">$ </span>bundle config mirror.https://rubygems.org https://gems.ruby-china.org</pre>
+        </div>
+
+        这样你不用改你的 Gemfile 的 source。
+        <div class="highlight">
+          <pre><span class="n">source</span> <span class="s1">'https://rubygems.org/'</span>
+<span class="n">gem</span> <span class="s1">'rails'</span><span class="p">,</span> <span class="s1">'4.1.0'</span>
+<span class="o">.</span><span class="n">.</span><span class="o">.</span></pre>
+        </div>
+      </div>
+
+      <div class="box ruby_list">
+        <h5>Ruby 源代码镜像</h5>
+        <div id="other_links" style="margin-bottom:20px;">
+          <a href="/mirrors/ruby" class="btn">Ruby 源代码下载镜像</a>
+        </div>
+        <p>本镜像来源于 <a href="http://cache.ruby-lang.org" target="_blank">cache.ruby-lang.org</a> 用于改善国内 Ruby 安装的速度。</p>
+        <ul style="font-size:14px;margin:10px 40px 30px 40px;">
+          <li><a href="/mirrors/ruby/ruby-2.3.0.tar.gz">ruby-2.3.0.tar.gz</a></li>
+          <li><a href="/mirrors/ruby/2.2/ruby-2.2.4.tar.gz">ruby-2.2.4.tar.gz</a></li>
+          <li><a href="/mirrors/ruby/2.1/ruby-2.1.7.tar.gz">ruby-2.1.7.tar.gz</a></li>
+        </ul>
+        <p>修改 RVM ，改用本站作为下载源, 提高安装速度。</p>
+        <h6>For Mac</h6>
+        <div class="highlight"><pre><span class="nv">$ </span>sed -i .bak -E <span class="s1">'s!https?://cache.ruby-lang.org/pub/ruby!https://ruby.taobao.org/mirrors/ruby!'</span> <span class="nv">$rvm_path</span>/config/db</pre></div>
+        <h6>For Linux</h6>
+        <div class="highlight"><pre><span class="nv">$ </span>sed -i -E <span class="s1">'s!https?://cache.ruby-lang.org/pub/ruby!https://ruby.taobao.org/mirrors/ruby!'</span> <span class="nv">$rvm_path</span>/config/db</pre></div>
+      </div>
+
+      <div class="box">
+        <h5>常见问题</h5>
+        <ol>
+          <li>
+            <p>Q: 为何我新发布的 Gem 在淘宝源上面无法安装？</p>
+            <p>A: 由于同步是定期执行的，新发布的 Gem 可能没有那么快同步过来，你需要稍等一段时间后才能使用。</p>
+          </li>
+          <li>
+            <p>Q: 已经换成淘宝源了，但 <code>bundle install</code> 或 <code>gem install xxx</code> 的时候卡住很久不动？</p>
+            <p>A: 这有可能是你网络问题，或者没有正确的好 gem 的源，你可以尝试 <code>gem install xxx -V</code> 并把执行过程的结果在 Ruby China 上面发帖求助。</p>
+          </li>
+          <li>
+            <p>Q: <code>gem install xxx</code> 的时候遇到错误信息包含：“Error fetching data: Errno::ETIMEDOUT: Operation timed out - connect(2)”</p>
+            <p>A: 网络问题导致请求淘宝服务器被连接重置了，在遇到此类情况的时候，你可以尝试换一台机器或网络尝试安装，看是否还有同样的问题，以确定是淘宝镜像服务器的问题还是你的环境问题，如果你换了环境仍然有问题，请上 Ruby China 发帖求助。</p>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="pull-right">
+          <a href="http://taobao.com" target="_blank"><img src="///rubygems-china.oss.aliyuncs.com/public/T1ogqgXfXeXXXXXXXX-168-42.png" style="width:80px;" /></a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

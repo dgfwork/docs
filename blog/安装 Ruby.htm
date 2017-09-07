@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    
+    <title>安装 Ruby</title>
+    
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+
+    <link rel="stylesheet" type="text/css" href="/stylesheets/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/main.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/pygments.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/mobile.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/print.css">
+    <link href='https://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic&amp;subset=latin,cyrillic,greek,vietnamese' rel='stylesheet' type='text/css'>
+    <link rel="canonical" href="https://www.ruby-lang.org/zh_cn/documentation/installation/">
+
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    
+    <link href="/zh_cn/feeds/news.rss" rel="alternate" title="最新消息（RSS）" type="application/rss+xml">
+
+
+    <script type="text/javascript" src="/javascripts/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/page.js"></script>
+    
+  </head>
+
+  
+
+  <body>
+    <div id="header">
+      <div id="header_content" class="container">
+        <a href="/zh_cn/">
+          <h1>Ruby</h1>
+          <h2>程序员最好的朋友</h2>
+        </a>
+
+        <div class="site-links">
+          <a href="/zh_cn/" class="home">Home</a>
+          
+
+  <a href="/zh_cn/downloads/">下载</a>
+
+  <a href="/zh_cn/documentation/">文档</a>
+
+  <a href="/zh_cn/libraries/">代码库</a>
+
+  <a href="/zh_cn/community/">社区</a>
+
+  <a href="/zh_cn/news/">新闻</a>
+
+  <a href="/zh_cn/security/">安全</a>
+
+  <a href="/zh_cn/about/">关于 Ruby</a>
+
+
+          <a href="#" class="menu selected">Menu</a>
+        </div>
+
+        <div id="search-box">
+          
+<form id="search-form" action="https://www.google.com/cse">
+  <table class="fieldset">
+    <tr>
+      <td>
+        <input class="field" type="text" name="q" size="31" style="background: white url(//www.google.com/coop/intl/zh_cn/images/google_custom_search_watermark.gif) left no-repeat" onfocus="this.style.background='white'" onblur="if (/^\s*$/.test(this.value)) this.style.background='white url(//www.google.com/coop/intl/zh_cn/images/google_custom_search_watermark.gif) left no-repeat'"/>
+      </td>
+      <td>
+        
+        <input type="hidden" name="ie" value="UTF-8" />
+        <input class="button" type="submit" name="sa" value="搜索" />
+      </td>
+    </tr>
+  </table>
+</form>
+
+        </div>
+      </div>
+    </div>
+
+    <div id="page">
+      
+
+
+      <div id="main-wrapper" class="container">
+        <div id="main">
+          <div id="content-wrapper">
+  
+<h1>安装 Ruby</h1>
+
+
+
+  <div id="content">
+    <p class="summary">可以使用多种工具安装 Ruby。本页介绍如何使用主流的包管理系统和第三方工具管理和安装 Ruby，以及如何通过源码编译安装。</p>
+
+<h2>选择安装方式</h2>
+
+<p>安装 Ruby 的方式有多种：</p>
+
+<ul>
+  <li>如果使用的是类 UNIX 操作系统，使用系统的<strong>包管理器</strong>是最简单的安装方式。但是，包管理器中的 Ruby 版本通常都不是最新的。</li>
+  <li><strong>安装工具</strong>能够安装指定的一个或多个 Ruby 版本。有针对 Windows 的安装包。</li>
+  <li><strong>管理工具</strong>能帮助你在系统中安装的多个 Ruby 版本之间切换。</li>
+  <li>最后，也可以<strong>通过源码编译安装 Ruby</strong>。</li>
+</ul>
+
+<p>下面概述针对不同需求和不同平台的安装方式。</p>
+
+<ul>
+  <li><a href="#package-management-systems">包管理系统</a>
+    <ul>
+      <li><a href="#apt">Debian, Ubuntu</a></li>
+      <li><a href="#yum">CentOS, Fedora, RHEL</a></li>
+      <li><a href="#portage">Gentoo</a></li>
+      <li><a href="#pacman">Arch Linux</a></li>
+      <li><a href="#homebrew">OS X</a></li>
+      <li><a href="#solaris">Solaris, OpenIndiana</a></li>
+      <li><a href="#other-systems">其他发行版</a></li>
+    </ul>
+  </li>
+  <li><a href="#installers">安装工具</a>
+    <ul>
+      <li><a href="#ruby-build">ruby-build</a></li>
+      <li><a href="#ruby-install">ruby-install</a></li>
+      <li><a href="#rubyinstaller">RubyInstaller</a> (Windows)</li>
+      <li><a href="#railsinstaller">RailsInstaller 和 Ruby Stack</a></li>
+    </ul>
+  </li>
+  <li><a href="#managers">管理工具</a>
+    <ul>
+      <li><a href="#chruby">chruby</a></li>
+      <li><a href="#rbenv">rbenv</a></li>
+      <li><a href="#rvm">RVM</a></li>
+      <li><a href="#uru">uru</a></li>
+    </ul>
+  </li>
+  <li><a href="#building-from-source">通过源码编译安装</a></li>
+</ul>
+
+<h2 id="package-management-systems">包管理系统</h2>
+
+<p>如果不能自己编译 Ruby，也不想使用第三方工具，可以使用系统中的包管理器安装 Ruby。</p>
+
+<p>许多 Ruby 社区的成员强烈建议，应该使用第三方工具来安装 Ruby，不要用系统的包管理器。详细的优缺点超出了本页的讨论范畴，基本原因是大多数系统包管理器里的 Ruby 版本比较老。如果想使用最新的 Ruby 版本，要确保包的名称正确，或者使用后面列出的工具。</p>
+
+<h3 id="apt">apt（Debian 或 Ubuntu）</h3>
+
+<p>Debian GNU/Linux 和 Ubuntu 使用 apt 包管理器。用法如下：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>sudo apt-get install ruby-full</code></pre></figure>
+
+<p>撰写本文时，在 Debian 和 Ubuntu 下，<code>ruby-full</code> 包提供的是老旧的 Ruby 1.9.3。</p>
+
+<h3 id="yum">yum（CentOS、Fedora 或 RHEL）</h3>
+
+<p>CentOS、Fedora 和 RHEL 使用 yum 包管理器。用法如下：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>sudo yum install ruby</code></pre></figure>
+
+<p>安装的 Ruby 版本通常是发行版发行日能打包的最新版。</p>
+
+<h3 id="portage">portage（Gentoo）</h3>
+
+<p>Gentoo 使用 portage 包管理器。</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>sudo emerge dev-lang/ruby</code></pre></figure>
+
+<p>一般来说，这将安装 1.9 和 2.0 版本，不过还有更多版本可供安装。如果想安装指定的版本，要在 <code>make.conf</code> 文件中设置 <code>RUBY_TARGETS</code>。详见 <a href="http://www.gentoo.org/proj/en/prog_lang/ruby/">Gentoo Ruby Project 网站</a>。</p>
+
+<h3 id="pacman">pacman（Arch Linux）</h3>
+
+<p>Arch Linux 使用 pacman 包管理器。要安装 Ruby，只需要执行下述命令：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>sudo pacman -S ruby</code></pre></figure>
+
+<p>这将安装最新的 Ruby 稳定版。</p>
+
+<h3 id="homebrew">Homebrew（OS X）</h3>
+
+<p>OS X El Capitan、Yosemite 和 Mavericks 内置了 Ruby 2.0。OS X Mountain Lion、Lion 和 Snow Leopard 内置了 Ruby 1.8.7。</p>
+
+<p>许多 OS X 用户使用 <a href="http://brew.sh/">Homebrew</a> 作为包管理器。用 Homebrew 能够非常简单地获取到最新版的 Ruby：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>brew install ruby</code></pre></figure>
+
+<p>这将安装最新版的 Ruby。</p>
+
+<h3 id="solaris">Solaris 和 OpenIndiana</h3>
+
+<p><a href="http://www.sunfreeware.com">Sunfreeware</a> 上的 Solaris 8 到 10 内置了 Ruby 1.8.7，<a href="http://www.blastwave.org">Blastwave</a> 同样如此。Ruby 1.9.2p0 在 <a href="http://www.sunfreeware.com">Sunfreeware</a> 上也有，但是这一版已经过时。</p>
+
+<p>若想在 <a href="http://openindiana.org/">OpenIndiana</a> 上安装 Ruby，要使用 <a href="http://opensolaris.org/os/project/pkg/">Image Packaging System (IPS)</a> 客户端。这将直接从 OpenSolaris 代码库安装 Ruby 1.9 和 RubyGems：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>pkg install runtime/ruby-18</code></pre></figure>
+
+<p>然而，第三方工具或许是获取最新版 Ruby 更好的方法。</p>
+
+<h3 id="other-systems">其它发行版</h3>
+
+<p>在其它操作系统中，可以使用包管理器在包仓库中搜索 Ruby，或许使用第三方工具是更好的选择。</p>
+
+<h2 id="installers">安装工具</h2>
+
+<p>如果系统或者包管理器提供的 Ruby 版本已经过时，可以使用第三方安装工具来安装更新的版本。其中许多工具允许在同一个系统中安装多个 Ruby 版本，相关的工具能帮你在不同的版本之间切换。如果打算用 <a href="#rvm">RVM</a> 作为版本管理工具，不需要其它的安装工具，它自己就具有这些功能。</p>
+
+<h3 id="ruby-build">ruby-build</h3>
+
+<p><a href="https://github.com/rbenv/ruby-build#readme">ruby-build</a> 是 <a href="#rbenv">rbenv</a> 的一个插件，能在任意目录中编译和安装不同版本的 Ruby。ruby-build 也可以不依赖 rbenv 而单独使用。支持的平台有 OS X、Linux 和其它类 UNIX 操作系统。</p>
+
+<h3 id="ruby-install">ruby-install</h3>
+
+<p><a href="https://github.com/postmodern/ruby-install#readme">ruby-install</a> 能在任意目录中编译和安装不同版本的 Ruby。还有个兄弟工具，<a href="#chruby">chruby</a>，可以用来切换不同的 Ruby 版本。支持的平台有 OS X、Linux 和其它类 UNIX 操作系统。</p>
+
+<h3 id="rubyinstaller">RubyInstaller</h3>
+
+<p>如果使用 Windows，有个不错的项目能帮你安装 Ruby：<a href="https://rubyinstaller.org/">RubyInstaller</a>。它能帮你在 Windows 中安装所需的所有 Ruby 开发环境。</p>
+
+<p>下载、运行，即可!</p>
+
+<h3 id="railsinstaller">RailsInstaller 和 Ruby Stack</h3>
+
+<p>如果是为了使用 Ruby on Rails 而安装 Ruby，可以使用下列安装工具：</p>
+
+<ul>
+  <li><a href="http://railsinstaller.org/">RailsInstaller</a>，使用的是 RubyInstaller，但包括了其它能够帮助 Rails 开发的工具。支持 OS X 和 Windows。</li>
+  <li><a href="http://bitnami.com/stack/ruby/installer">Bitnami Ruby Stack</a>，提供了完整的 Rails 开发环境。支持 OS X、Linux、Windows、虚拟机和云镜像。</li>
+</ul>
+
+<h2 id="managers">管理工具</h2>
+
+<p>许多 Ruby 程序员使用 Ruby 管理工具管理不同版本的 Ruby。这些管理工具有很多额外的优点，但没有官方支持。不过，这些工具背后的社群都乐于助人。</p>
+
+<h3 id="chruby">chruby</h3>
+
+<p><a href="https://github.com/postmodern/chruby#readme">chruby</a> 用于在不同的 Ruby 版本之间切换。chruby 能够管理用 <a href="#ruby-install">ruby-install</a> 或者通过源码编译安装的 Ruby。</p>
+
+<h3 id="rbenv">rbenv</h3>
+
+<p><a href="https://github.com/rbenv/rbenv#readme">rbenv</a> 用于管理系统中安装的多个 Ruby 版本。它不能直接安装 Ruby，但有个流行的插件叫 <a href="#ruby-build">ruby-build</a> 能够安装 Ruby。这两个工具都支持 OS X、Linux 和其它类 UNIX 操作系统。</p>
+
+<h3 id="rvm">RVM（“Ruby Version Manager”）</h3>
+
+<p><a href="http://rvm.io/">RVM</a> 能在系统中安装和管理多个 Ruby 版本。同时还能管理不同的 gem 集。支持 OS X、Linux 和其它类 UNIX 操作系统。</p>
+
+<h2 id="uru">uru</h2>
+
+<p><a href="https://bitbucket.org/jonforums/uru">Uru</a> 是一个轻量级的命令行工具，支持多平台，能够帮你在 OS X、Linux 和 Windows 上使用不同的 Ruby 版本。</p>
+
+<h2 id="building-from-source">通过源码编译安装</h2>
+
+<p>当然，也可以通过源码安装 Ruby。<a href="/zh_cn/downloads/">下载</a>，解压，然后执行：</p>
+
+<figure class="highlight"><pre><code class="language-sh" data-lang="sh"><span class="gp">$ </span>./configure
+<span class="gp">$ </span>make
+<span class="gp">$ </span>sudo make install</code></pre></figure>
+
+<p>默认情况下，Ruby 安装到 <code>/usr/local</code> 目录。如果想使用其他目录，可以把 <code>--prefix=DIR</code> 选项传给 <code>./configure</code> 脚本。</p>
+
+<p>因为无法使用任何工具来管理通过源码编译安装的 Ruby，所以使用第三方工具或者包管理器或许是更好的选择。</p>
+
+
+  </div>
+</div>
+<hr class="hidden-modern" />
+
+<div id="sidebar-wrapper">
+  <div id="sidebar">
+    
+
+
+
+
+<div class="navigation">
+  <h3><strong>试用</strong>，其实很简单！</h3>
+
+  <ul class="menu">
+    <li><a href="http://tryruby.org/">在浏览器中试用 Ruby（英文）</a></li>
+
+    
+    <li><a href="/zh_cn/documentation/quickstart/">20 分钟体验 Ruby</a></li>
+    
+
+    
+    <li><a href="/zh_cn/documentation/ruby-from-other-languages/">从其它语言转到 Ruby</a></li>
+    
+  </ul>
+</div>
+
+
+
+<div class="navigation">
+  <h3><strong>探索</strong>新的世界</h3>
+  <ul class="menu">
+    
+    <li><a href="/zh_cn/documentation/">文档</a></li>
+    
+
+    
+
+    
+
+    
+    <li><a href="/zh_cn/libraries/">代码库</a></li>
+    
+
+    
+    <li><a href="/zh_cn/documentation/success-stories/">成功案例</a></li>
+    
+  </ul>
+</div>
+
+
+
+<div class="navigation">
+  <h3><strong>加入</strong>友善及日益壮大的社区</h3>
+  <ul>
+    
+    <li><a href="/zh_cn/community/mailing-lists/">邮件列表</a>: 联系喜爱 Ruby 的朋友
+</li>
+    
+
+    
+    <li><a href="/zh_cn/community/user-groups/">用户组</a>: 参与 Ruby 爱好者活动
+</li>
+    
+
+    
+    <li><a href="/zh_cn/community/weblogs/">博客</a>: 阅读 Ruby 相关的博客
+</li>
+    
+
+    
+    <li><a href="/zh_cn/community/ruby-core/">Ruby 核心</a>: 帮助开发 Ruby 语言
+</li>
+    
+
+    
+    <li><a href="https://bugs.ruby-lang.org/">问题跟踪</a>: 报告或帮助解决 Ruby 的问题
+</li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+    <h3>订阅</h3>
+    <p><a href="/zh_cn/feeds/news.rss">最新消息（RSS）</a></p>
+
+
+  </div>
+</div>
+<hr class="hidden-modern" />
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="footer">
+        <div class="site-links">
+          
+
+  <a href="/zh_cn/downloads/">下载</a>
+
+  <a href="/zh_cn/documentation/">文档</a>
+
+  <a href="/zh_cn/libraries/">代码库</a>
+
+  <a href="/zh_cn/community/">社区</a>
+
+  <a href="/zh_cn/news/">新闻</a>
+
+  <a href="/zh_cn/security/">安全</a>
+
+  <a href="/zh_cn/about/">关于 Ruby</a>
+
+
+        </div>
+
+        <p>
+
+  本站其他语言版本：
+
+<a href="/bg/">Български</a>,
+<a href="/de/">Deutsch</a>,
+<a href="/en/">English</a>,
+<a href="/es/">Español</a>,
+<a href="/fr/">Français</a>,
+<a href="/id/">Bahasa Indonesia</a>,
+<a href="/it/">Italiano</a>,
+<a href="/ja/">日本語</a>,
+<a href="/ko/">한국어</a>,
+<a href="/pl/">polski</a>,
+<a href="/pt/">Português</a>,
+<a href="/ru/">Русский</a>,
+<a href="/tr/">Türkçe</a>,
+<a href="/vi/">Tiếng Việt</a>,
+<a href="/zh_cn/">简体中文</a>,
+<a href="/zh_tw/">繁體中文</a>.
+</p>
+
+        
+  <p><a href="/zh_cn/about/website/">本站</a>由 Ruby 社区的成员共同维护。
+</p>
+
+
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-620926-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </body>
+</html>

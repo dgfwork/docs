@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>用 Travis CI 自動部署網站到 GitHub | Zespia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="長久以來，Hexo 官網都是由我手動在本機產生靜態檔案後，再 push 到 GitHub 上。這種方式對於簡單的網誌來說或許很輕鬆，但是對於偶爾會有 Pull Request 的專案來說就比較麻煩了。
+在合併了 Pull Request 後，我必須自行把最新的 commit 拉到本機後再手動部署，有時比較忙就會擺爛，因此你會發現，雖然 Pull Request 已經被合併了，Hexo 網站本身卻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用 Travis CI 自動部署網站到 GitHub">
+<meta property="og:url" content="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/index.html">
+<meta property="og:site_name" content="Zespia">
+<meta property="og:description" content="長久以來，Hexo 官網都是由我手動在本機產生靜態檔案後，再 push 到 GitHub 上。這種方式對於簡單的網誌來說或許很輕鬆，但是對於偶爾會有 Pull Request 的專案來說就比較麻煩了。
+在合併了 Pull Request 後，我必須自行把最新的 commit 拉到本機後再手動部署，有時比較忙就會擺爛，因此你會發現，雖然 Pull Request 已經被合併了，Hexo 網站本身卻">
+<meta property="og:image" content="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/48083477.png">
+<meta property="og:image" content="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/deploy_key.png">
+<meta property="og:updated_time" content="2016-07-25T18:31:42.982Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用 Travis CI 自動部署網站到 GitHub">
+<meta name="twitter:description" content="長久以來，Hexo 官網都是由我手動在本機產生靜態檔案後，再 push 到 GitHub 上。這種方式對於簡單的網誌來說或許很輕鬆，但是對於偶爾會有 Pull Request 的專案來說就比較麻煩了。
+在合併了 Pull Request 後，我必須自行把最新的 commit 拉到本機後再手動部署，有時比較忙就會擺爛，因此你會發現，雖然 Pull Request 已經被合併了，Hexo 網站本身卻">
+<meta name="twitter:image" content="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/48083477.png">
+<meta name="twitter:creator" content="@tommy351">
+<link rel="publisher" href="108777679171675240000">
+<meta property="fb:admins" content="100000247608790">
+<link rel="alternative" href="/atom.xml" title="Zespia" type="application/atom+xml">
+<link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="/css/style.css">
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4910098-7']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+</head>
+<body>
+<div id="container">
+<div id="wrap">
+<header id="header">
+<div id="banner"></div>
+<div id="header-outer" class="outer">
+<div id="header-title" class="inner">
+<h1 id="logo-wrap">
+<a href="/" id="logo">Zespia</a>
+</h1>
+</div>
+<div id="header-inner" class="inner">
+<nav id="main-nav">
+<a id="main-nav-toggle" class="nav-icon"></a>
+<a class="main-nav-link" href="/">Home</a>
+<a class="main-nav-link" href="/archives">Archives</a>
+<a class="main-nav-link" href="https://github.com/tommy351">GitHub</a>
+</nav>
+<nav id="sub-nav">
+<a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+<a id="nav-search-btn" class="nav-icon" title="Search"></a>
+</nav>
+<div id="search-form-wrap">
+<form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://zespia.tw"></form>
+</div>
+</div>
+</div>
+</header>
+<div class="outer">
+<section id="main"><article id="post-continuous-deployment-to-github-with-travis" class="article article-type-post" itemscope itemprop="blogPost">
+<div class="article-meta">
+<a href="/blog/2015/01/21/continuous-deployment-to-github-with-travis/" class="article-date">
+<time datetime="2015-01-21T00:00:00.000Z" itemprop="datePublished">Jan 21 2015</time>
+</a>
+</div>
+<div class="article-inner">
+<header class="article-header">
+<h1 class="article-title" itemprop="name">
+用 Travis CI 自動部署網站到 GitHub
+</h1>
+</header>
+<div class="article-entry" itemprop="articleBody">
+<img src="/blog/2015/01/21/continuous-deployment-to-github-with-travis/48083477.png" alt="志田 - 熊 (id=48083477)" title="志田 - 熊 (id=48083477)">
+<p>長久以來，Hexo 官網都是由我手動在本機產生靜態檔案後，再 push 到 GitHub 上。這種方式對於簡單的網誌來說或許很輕鬆，但是對於偶爾會有 Pull Request 的專案來說就比較麻煩了。</p>
+<p>在合併了 Pull Request 後，我必須自行把最新的 commit 拉到本機後再手動部署，有時比較忙就會擺爛，因此你會發現，雖然 Pull Request 已經被合併了，Hexo 網站本身卻仍未更新的情況。</p>
+<a id="more"></a>
+<h2 id="開始之前"><a href="#開始之前" class="headerlink" title="開始之前"></a>開始之前</h2><p>在開始之前，請先申請 Travis CI 帳號，把你的 GitHub repo 新增到 Travis CI 上，如果還沒建立 <code>.travis.yml</code> 的話，請先製作一個新的 <code>.travis.yml</code>。</p>
+<h2 id="Deploy-Key"><a href="#Deploy-Key" class="headerlink" title="Deploy Key"></a>Deploy Key</h2><p>因此，我花了一個晚上嘗試出了透過免費的 Travis CI 服務自動佈署的方法，首先你必須用 <code>ssh-keygen</code> 製作一個 SSH Key，供 GitHub 當作 Deploy key 使用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh-keygen -t rsa -C <span class="string">"<a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="7b02140e09241e161a12173b1e031a160b171e55181416">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script>"</span></div></pre></td></tr></table></figure>
+<p>在製作 SSH key 時，請把 passphrase 留空，因為在 Travis 上輸入密碼很麻煩，我目前還找不到比較簡便的方式，如果各位知道的話歡迎提供給我。</p>
+<p>當 SSH key 製作完成後，複製 Public key 到 GitHub 上的 Deploy key 欄位，如下：</p>
+<img src="/blog/2015/01/21/continuous-deployment-to-github-with-travis/deploy_key.png" alt="deploy_key.png" title="">
+<h2 id="加密-Private-Key"><a href="#加密-Private-Key" class="headerlink" title="加密 Private Key"></a>加密 Private Key</h2><p>首先，安裝 Travis 的命令列工具：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gem install travis</div></pre></td></tr></table></figure>
+<p>在安裝完畢後，透過命令列工具登入到 Travis：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ travis login --auto</div></pre></td></tr></table></figure>
+<p>如此一來，我們就能透過 Travis 提供的命令列工具加密剛剛所製作的 Private key，並把它上傳到 Travis 上供日後使用。</p>
+<p>假設 Private key 的檔案名稱為 <code>ssh_key</code>， Travis 會加密並產生 <code>ssh_key.enc</code>，並自動在 <code>.travis.yml</code> 的 <code>before_install</code> 欄位中，自動插入解密指令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ travis encrypt-file ssh_key --add</div></pre></td></tr></table></figure>
+<p>正常來說 Travis 會自動解析目前的 repo 並把 Private key 上傳到相對應的 repo，但有時可能會秀逗，這時你必須在指令後加上 <code>-r</code> 選項來指定 repo 名稱，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ travis encrypt-file ssh_key --add -r hexojs/site</div></pre></td></tr></table></figure>
+<h2 id="設定-travis-yml"><a href="#設定-travis-yml" class="headerlink" title="設定 .travis.yml"></a>設定 .travis.yml</h2><p>把剛剛製作的 <code>ssh_key.enc</code> 移至 <code>.travis/ssh_key.enc</code>，並在 <code>.travis</code> 資料夾中建立 <code>ssh_config</code> 檔案，指定 Travis 上的 SSH 設定。</p>
+<figure class="highlight plain"><figcaption><span>ssh_config</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Host github.com</div><div class="line">  User git</div><div class="line">  StrictHostKeyChecking no</div><div class="line">  IdentityFile ~/.ssh/id_rsa</div><div class="line">  IdentitiesOnly yes</div></pre></td></tr></table></figure>
+<p>因為剛剛修改了 <code>ssh_key.enc</code> 的位址，所以我們要順帶修改剛剛 Travis 在 <code>.travis.yml</code> 幫我們插入的那條解密指令。請注意，<strong>不要照抄這段指令</strong>，每個人的環境變數都不一樣。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- openssl aes-256-cbc -K <span class="variable">$encrypted_06b8e90ac19b_key</span> -iv <span class="variable">$encrypted_06b8e90ac19b_iv</span> -in .travis/ssh_key.enc -out ~/.ssh/id_rsa <span class="_">-d</span></div></pre></td></tr></table></figure>
+<p>這條指令會利用 openssl 解密 Private key，並把解密後的檔案存放在 <code>~/.ssh/id_rsa</code>，接著指定這個檔案的權限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- chmod 600 ~/.ssh/id_rsa</div></pre></td></tr></table></figure>
+<p>然後，把 Private key 加入到系統中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- <span class="built_in">eval</span> $(ssh-agent)</div><div class="line">- ssh-add ~/.ssh/id_rsa</div></pre></td></tr></table></figure>
+<p>記得剛剛我們製作的 <code>ssh_config</code> 檔案嗎？別忘了把他複製到 <code>~/.ssh</code> 資料夾：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">- cp .travis/ssh_config ~/.ssh/config</div></pre></td></tr></table></figure>
+<p>為了讓 <code>git</code> 操作能順利進行，我們必須先設定 <code>git</code> 的使用者資訊：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">- git config --global user.name <span class="string">"Tommy Chen"</span></div><div class="line">- git config --global user.email <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="2f5b404242561c1a1e6f48424e4643014c4042">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></div></pre></td></tr></table></figure>
+<p>最後的結果可能如下，如果你和我一樣使用 Hexo 的話可以參考看看：</p>
+<figure class="highlight yaml"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line"><span class="attr">language:</span> node_js</div><div class="line"></div><div class="line"><span class="attr">node_js:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">"0.10"</span></div><div class="line"></div><div class="line"><span class="attr">before_install:</span></div><div class="line">  <span class="comment"># Decrypt the private key</span></div><div class="line"><span class="bullet">  -</span> openssl aes<span class="bullet">-256</span>-cbc -K $encrypted_06b8e90ac19b_key -iv $encrypted_06b8e90ac19b_iv -in .travis/ssh_key.enc -out ~/.ssh/id_rsa -d</div><div class="line">  <span class="comment"># Set the permission of the key</span></div><div class="line"><span class="bullet">  -</span> chmod <span class="number">600</span> ~/.ssh/id_rsa</div><div class="line">  <span class="comment"># Start SSH agent</span></div><div class="line"><span class="bullet">  -</span> eval $(ssh-agent)</div><div class="line">  <span class="comment"># Add the private key to the system</span></div><div class="line"><span class="bullet">  -</span> ssh-add ~/.ssh/id_rsa</div><div class="line">  <span class="comment"># Copy SSH config</span></div><div class="line"><span class="bullet">  -</span> cp .travis/ssh_config ~/.ssh/config</div><div class="line">  <span class="comment"># Set Git config</span></div><div class="line"><span class="bullet">  -</span> git config --global user.name <span class="string">"Tommy Chen"</span></div><div class="line"><span class="bullet">  -</span> git config --global user.email <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="deaab1b3b3a7edebef9eb9b3bfb7b2f0bdb1b3">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script></div><div class="line">  <span class="comment"># Install Hexo</span></div><div class="line"><span class="bullet">  -</span> npm install <a class="__cf_email__" href="/cdn-cgi/l/email-protection" data-cfemail="9cf4f9e4f3dcfef9e8fd">[email&#160;protected]</a><script data-cfhash='f9e31' type="text/javascript">/* <![CDATA[ */!function(t,e,r,n,c,a,p){try{t=document.currentScript||function(){for(t=document.getElementsByTagName('script'),e=t.length;e--;)if(t[e].getAttribute('data-cfhash'))return t[e]}();if(t&&(c=t.previousSibling)){p=t.parentNode;if(a=c.getAttribute('data-cfemail')){for(e='',r='0x'+a.substr(0,2)|0,n=2;a.length-n;n+=2)e+='%'+('0'+('0x'+a.substr(n,2)^r).toString(16)).slice(-2);p.replaceChild(document.createTextNode(decodeURIComponent(e)),c)}p.removeChild(t)}}catch(u){}}()/* ]]> */</script> -g</div><div class="line">  <span class="comment"># Clone the repository</span></div><div class="line"><span class="bullet">  -</span> git clone https://github.com/hexojs/hexojs.github.io .deploy</div><div class="line"></div><div class="line"><span class="attr">script:</span></div><div class="line"><span class="bullet">  -</span> hexo generate</div><div class="line"><span class="bullet">  -</span> hexo deploy</div><div class="line"></div><div class="line"><span class="attr">branches:</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> master</div></pre></td></tr></table></figure>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>已經好久沒更新網誌了，這次的題圖維持傳統，和本文完全沒有任何關係，而是這季一部名為「<a href="http://www.yurikuma.jp/" target="_blank" rel="external">ユリ熊嵐</a>」的動畫，從標題完全看不出來在演啥小，就算看了內容也不懂！不過這動畫有種神奇的魔力會讓人想看下去呢，真不可思議。</p>
+</div>
+<footer class="article-footer">
+<a data-url="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/" data-id="cir2df3b8002933d3kejt1amf" class="article-share-link">Share</a>
+<a href="https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/#disqus_thread" class="article-comment-link">Comments</a>
+<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GitHub/">GitHub</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Travis-CI/">Travis CI</a></li></ul>
+</footer>
+</div>
+<nav id="article-nav">
+<a href="/blog/2015/06/12/fetch-illegal-invocation-error/" id="article-nav-newer" class="article-nav-link-wrap">
+<strong class="article-nav-caption">Newer</strong>
+<div class="article-nav-title">
+Fetch 壓縮後會在 Chrome 上發生 Illegal Invocation 錯誤
+</div>
+</a>
+<a href="/blog/2014/07/28/use-google-analytics-api-on-server/" id="article-nav-older" class="article-nav-link-wrap">
+<strong class="article-nav-caption">Older</strong>
+<div class="article-nav-title">在伺服器上使用 Google Analytics API</div>
+</a>
+</nav>
+</article>
+<section id="comments">
+<div id="disqus_thread">
+<noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</section>
+</div>
+<footer id="footer">
+<div class="outer">
+<div id="footer-info" class="inner">
+&copy; 2016 SkyArrow<br>
+Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+</div>
+</div>
+</footer>
+</div>
+<nav id="mobile-nav">
+<a href="/" class="mobile-nav-link">Home</a>
+<a href="/archives" class="mobile-nav-link">Archives</a>
+<a href="https://github.com/tommy351" class="mobile-nav-link">GitHub</a>
+</nav>
+<script>
+  var disqus_shortname = 'zespiatw';
+  
+  var disqus_url = 'https://zespia.tw/blog/2015/01/21/continuous-deployment-to-github-with-travis/';
+  
+  (function(){
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = '//go.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script src="/js/script.js"></script>
+</div>
+</body>
+</html>
