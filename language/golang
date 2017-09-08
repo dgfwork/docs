@@ -1,0 +1,77 @@
+# Go语言入门
+
+## 简介
+> Go is an open source programming language that makes it easy to build simple, reliable, and efficient software.
+
+
+- 开放源代码编程语言。
+- 它让构建简单、可靠、高效的软件更加容易。
+
+## 安装或升级
+
+### 下载压缩包(https://golang.org/dl/)
+### 解压到_GOROOT_
+
+```sh
+# Linux
+$ [sudo] tar -C /usr/local -xvf go$VERSION.$OS-$ARCH.tar.gz
+
+```
+### 配置环境变量
+- GOROOT
+Go 编译器的根路径
+```
+export GOROOT=/usr/local/go
+```
+
+- GOPATH
+项目路径. 所有的项目都会以此为根路径。
+```sh
+export GOPATH=~/go_workspace
+```
+
+- PATH
+```sh
+export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
+```
+
+## 使用
+## 一个简单go程序
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("hello world")
+}
+```
+## 一个简单的go项目
+## 数据类型
+- int, int8, int16, int32, int64
+- byte, uint8, uint16, uint32, uint64, rune
+- float32, float64
+- bool
+- string
+- complex128, complex64
+- map
+- array, slice
+- interface
+- interface{}
+
+## 跨平台
+GOOS=windows go build
+
+## 有啥不一样
+- 高级语法, 静态性能
+- 自省
+- goroutine(协程)
+- 强大的开发团队
+![Brad Fitzpatrick](https://avatars0.githubusercontent.com/u/2621?v=3&s=100)
+Rob Pike
+
+## 学习资源
+- [开始](https://golang.org/doc/install)
+- [FAQ](https://golang.org/doc/faq)
+- [高效的Go](https://golang.org/doc/effective_go.html)
+- [Go语言圣经](https://www.2goo.info/media/html/gopl-zh-gh-pages/)
